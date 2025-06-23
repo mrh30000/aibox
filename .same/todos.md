@@ -20,10 +20,10 @@
 - [x] 设置项目结构
 
 ### 2. 数据模型设计
-- [ ] 设计AI工具实体
-- [ ] 设计AI新闻实体
-- [ ] 设计AI项目实体
-- [ ] 设计分类实体
+- [x] 设计AI工具实体 (MongoDB BSON Type: String for ID, class `ToolEntity` created)
+- [x] 设计AI新闻实体 (MongoDB BSON Type: String for ID, class `NewsEntity` created)
+- [x/o] 设计AI项目实体 (MongoDB BSON Type: String for ID, class `ProjectEntity` created)
+- [x] 设计分类实体 (MongoDB BSON Type: String for ID, class `CategoryEntity` created, supports hierarchy)
 
 ### 3. 前端页面实现
 - [x] 创建首页布局
@@ -54,12 +54,12 @@
 - [x] 创建示例项目数据
 
 ### 7. 数据库集成 (MongoDB)
-- [ ] in_progress 安装MongoDB相关依赖
-- [ ] 设计数据库模式(Schema)
-- [ ] 创建Mongoose模型
-- [ ] 更新服务层使用数据库
-- [ ] 数据迁移和初始化
-- [ ] 测试数据库功能
+- [x] 安装MongoDB相关依赖 (`@nestjs/mongoose`, `mongoose` confirmed)
+- [x] 设计数据库模式(Schema) (Mongoose schemas created for Tool, News, Project, Category in `src/schemas/`)
+- [x] 创建Mongoose模型 (Models registered in respective feature modules: `ToolsModule`, `NewsModule`, `ProjectsModule`, `CategoriesModule`)
+- [x] 更新服务层使用数据库 (Services created/updated for all entities, using Mongoose models for CRUD)
+- [x] 数据迁移和初始化 (Seeder module and service created with sample data for all entities; runs on dev startup)
+- [x] 测试数据库功能 (Basic E2E tests for Tools API CRUD operations created: `test/tools.e2e-spec.ts`)
 
 ### 8. 部署和优化
 - [x] 配置生产环境设置

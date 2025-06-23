@@ -57,6 +57,68 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Dockerization
+
+This project includes a `Dockerfile` for containerizing the application.
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/get-started) installed on your system.
+
+### Building the Docker Image
+
+To build the Docker image for this application, navigate to the project root directory (where the `Dockerfile` is located) and run:
+
+```bash
+docker build -t aibase-clone .
+```
+(Replace `aibase-clone` with your preferred image name if desired.)
+
+### Running the Application with Docker
+
+Once the image is built, you can run it as a container:
+
+```bash
+docker run -p 3000:3000 --name aibase-app aibase-clone
+```
+
+This command will:
+- Run the `aibase-clone` image.
+- Map port 3000 of the container to port 3000 on your host machine.
+- Name the container `aibase-app` for easier management.
+
+The application should then be accessible at `http://localhost:3000`.
+
+To run the container in detached mode (in the background):
+```bash
+docker run -d -p 3000:3000 --name aibase-app aibase-clone
+```
+
+To pass environment variables (e.g., for database connection or seeding):
+```bash
+docker run -d -p 3000:3000 \
+  -e NODE_ENV=development \
+  -e SEED_DB=true \
+  -e DATABASE_URI="mongodb://your_mongo_host:27017/your_db_name" \
+  --name aibase-app aibase-clone
+```
+**Note:** For production, ensure `DATABASE_URI` points to your production MongoDB instance and manage secrets appropriately (e.g., using Docker secrets or environment variable injection from your orchestration platform). `SEED_DB=true` is typically only for development.
+
+### Using Docker Compose (Optional - if `docker-compose.yml` is added)
+
+If a `docker-compose.yml` file is provided for local development (e.g., to run the app and a MongoDB container together):
+
+```bash
+# Start services defined in docker-compose.yml
+docker-compose up
+
+# Start in detached mode
+docker-compose up -d
+
+# Stop services
+docker-compose down
+```
+
 ## Deployment
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.

@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aibase-clone-app
+    ports:
+      - "3000:3000" # Map host port 3000 to container port 3000
+    environment:
+      # Ensure these environment variables are used by your NestJS app (e.g., in main.ts or config files)
+      - NODE_ENV=development
+      - PORT=3000
+      # The DATABASE_URI will point to the mongo service within the Docker network
+      - DATABASE_URI=mongodb://mongo:27017/aibox_dev # 'mongo' is the service name of the MongoDB container
+      - SEED_DB=true # Enable seeding for development
+    volumes:
+      # Optional: Mount local source code for live reloading during development (if your Dockerfile setup supports it)
+      # This is more common if you are not using a multi-stage build for dev or have a dev-specific Dockerfile stage.
+      # For a compiled build (like the current Dockerfile), this might not give live reload for TS changes without extra tooling.
+      # - .:/usr/src/app # Mounts current directory to /usr/src/app in container
+      # - /usr/src/app/node_modules # Exclude node_modules from being overwritten by local mount
+      # - /usr/src/app/dist # Exclude dist from being overwritten if you build locally and want to use that
+    depends_on:
+      - mongo # Ensures mongo service starts before the app service
+    networks:
+      - aibase-network
+
+  mongo:
+    image: mongo:latest # Use the latest official MongoDB image
+    container_name: aibase-clone-mongo
+    ports:
+      - "27017:27017" # Map host port 27017 to container port 27017 for direct DB access if needed
+    volumes:
+      - mongo-data:/data/db # Persist MongoDB data using a named volume
+    environment:
+      # Optional: set MongoDB root user and password if needed
+      # - MONGO_INITDB_ROOT_USERNAME=admin
+      # - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=aibox_dev # Creates this database on init if it doesn't exist
+    networks:
+      - aibase-network
+
+volumes:
+  mongo-data: # Defines the named volume for MongoDB data persistence
+
+networks:
+  aibase-network: # Defines a custom bridge network for services to communicate
+    driver: bridge

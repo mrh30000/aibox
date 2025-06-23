@@ -1,67 +1,40 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+// Using a class for structure, Mongoose schema will be defined separately.
+// This entity will guide the Mongoose schema.
 
-@Entity('tools')
-export class Tool {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ type: 'varchar', length: 200 })
+export class ToolEntity {
+  id: string; // MongoDB uses string IDs
   name: string;
-
-  @Column({ type: 'text' })
   description: string;
-
-  @Column({ type: 'varchar', length: 100 })
-  category: string;
-
-  @Column({ type: 'varchar', length: 500, nullable: true })
-  icon: string;
-
-  @Column({ type: 'varchar', length: 50 })
-  visitors: string;
-
-  @Column({ type: 'varchar', length: 20 })
-  change: string;
-
-  @Column({ type: 'decimal', precision: 3, scale: 2, default: 0 })
-  rating: number;
-
-  @Column({ type: 'boolean', default: true })
-  isActive: boolean;
-
-  @Column({ type: 'boolean', default: false })
-  isFeatured: boolean;
-
-  @Column({ type: 'simple-array', nullable: true })
-  tags: string[];
-
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  longDescription?: string; // For more detailed descriptions
+  category: string; // This might become a CategoryEntity relation later
+  subCategory?: string; // e.g. "图片清晰放大修复" under "AI绘画"
+  iconUrl?: string; // URL for the tool's icon
+  imageUrl?: string; // URL for a larger promotional image
   websiteUrl: string;
+  tags?: string[];
+  language: 'zh' | 'en' | 'other'; // Based on website (e.g. "灵码 IDE" is zh)
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
-  apiUrl: string;
+  // Fields from the "最新推荐" section of aibase.com/zh/tools
+  // Some of these might be derived or managed differently with MongoDB
+  // visitors?: string; // e.g., "2.5k" - might be dynamic
+  // change?: string; // e.g., "+500" - might be dynamic
+  rating?: number; // e.g. 4.5
 
-  @Column({ type: 'json', nullable: true })
-  pricing: {
-    free: boolean;
-    plans: Array<{
-      name: string;
-      price: number;
-      features: string[];
-    }>;
-  };
+  isFeatured?: boolean; // To mark tools for "热门推荐" sections
 
-  @Column({ type: 'json', nullable: true })
-  stats: {
-    totalUsers: string;
-    satisfaction: string;
-    avgRating: number;
-    languages: number;
-  };
+  // Pricing info - simplified for now, can be expanded
+  hasFreeTrial?: boolean;
+  isFreemium?: boolean;
+  pricingModel?: 'subscription' | 'one-time' | 'usage-based' | 'free' | 'contact_us';
+  pricingDetails?: string; // Text description of pricing if complex
 
-  @CreateDateColumn()
+  // Additional useful fields
+  developer?: string;
+  useCases?: string[]; // What is this tool good for?
+  features?: string[]; // Key features
+
+  // Timestamps
   createdAt: Date;
-
-  @UpdateDateColumn()
   updatedAt: Date;
+  publishedAt?: Date; // When the tool was made public on the platform
 }

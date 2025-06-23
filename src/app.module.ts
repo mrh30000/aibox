@@ -4,26 +4,28 @@ import { AppService } from './app.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { MongooseModule } from '@nestjs/mongoose';
 import { join } from 'path';
-import { ToolsController } from './api/tools/tools.controller';
-import { NewsController } from './api/news/news.controller';
-import { ProjectsController } from './api/projects/projects.controller';
-import { Tool, ToolSchema } from './schemas/tool.schema';
-import { News, NewsSchema } from './schemas/news.schema';
 import { databaseConfig } from './config/database.config';
+import { ToolsModule } from './api/tools/tools.module';
+import { NewsModule } from './api/news/news.module';
+import { ProjectsModule } from './api/projects/projects.module';
+import { CategoriesModule } from './api/categories/categories.module';
+import { SeederModule } from './database/seeder.module'; // Import SeederModule
+// Controllers are now part of their respective modules, remove direct import here if not used by AppController
 
 @Module({
   imports: [
     MongooseModule.forRoot(databaseConfig.uri),
-    MongooseModule.forFeature([
-      { name: Tool.name, schema: ToolSchema },
-      { name: News.name, schema: NewsSchema },
-    ]),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
       exclude: ['/api*'],
     }),
+    ToolsModule,
+    NewsModule,
+    ProjectsModule,
+    CategoriesModule,
+    SeederModule, // Add SeederModule to imports
   ],
-  controllers: [AppController, ToolsController, NewsController, ProjectsController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

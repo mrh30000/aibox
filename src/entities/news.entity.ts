@@ -1,58 +1,28 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+// Using a class for structure, Mongoose schema will be defined separately.
+// This entity will guide the Mongoose schema.
 
-@Entity('news')
-export class News {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ type: 'varchar', length: 500 })
+export class NewsEntity {
+  id: string; // MongoDB uses string IDs
   title: string;
+  excerpt: string; // Short summary of the news
+  content: string; // Full content, likely HTML or Markdown
+  imageUrl?: string; // URL for the main image of the news article
 
-  @Column({ type: 'text', nullable: true })
-  content: string;
+  category: string; // This might become a CategoryEntity relation later
+  tags?: string[];
 
-  @Column({ type: 'text', nullable: true })
-  excerpt: string;
+  author?: string; // Name of the author or source
+  sourceUrl?: string; // Link to the original article if aggregated
 
-  @Column({ type: 'varchar', length: 100 })
-  category: string;
+  publishedAt: Date; // Date when the news was published
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
-  image: string;
+  isFeatured?: boolean; // To mark news for prominent display
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  author: string;
+  // Engagement metrics - these might be updated frequently
+  views?: number;
+  // likes?: number; // Simplified for now, can add later if needed
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
-  readTime: string;
-
-  @Column({ type: 'simple-array', nullable: true })
-  tags: string[];
-
-  @Column({ type: 'boolean', default: true })
-  isPublished: boolean;
-
-  @Column({ type: 'boolean', default: false })
-  isFeatured: boolean;
-
-  @Column({ type: 'int', default: 0 })
-  views: number;
-
-  @Column({ type: 'int', default: 0 })
-  likes: number;
-
-  @Column({ type: 'int', default: 0 })
-  shares: number;
-
-  @Column({ type: 'int', default: 0 })
-  comments: number;
-
-  @Column({ type: 'timestamp', nullable: true })
-  publishedAt: Date;
-
-  @CreateDateColumn()
+  // Timestamps
   createdAt: Date;
-
-  @UpdateDateColumn()
   updatedAt: Date;
 }

@@ -1,0 +1,629 @@
+{{!< layout}}
+
+<!-- 页面头部 -->
+<section class="page-header">
+    <div class="section-container">
+        <h1 class="page-title">AI工具库</h1>
+        <p class="page-subtitle">发现最优秀的AI工具，提升工作效率</p>
+
+        <div class="tools-filters">
+            <div class="filter-section">
+                <h3>按分类筛选</h3>
+                <div class="category-filters">
+                    {{#each categories}}
+                    <div class="category-filter {{#if @first}}active{{/if}}" data-category="{{name}}">
+                        <span class="category-icon">{{icon}}</span>
+                        <span class="category-name">{{name}}</span>
+                        <span class="category-count">{{count}}</span>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>排序方式</h3>
+                <select class="sort-select">
+                    <option value="popularity">按热度排序</option>
+                    <option value="newest">最新收录</option>
+                    <option value="rating">按评分排序</option>
+                    <option value="free">免费优先</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 工具网格 -->
+<section class="tools-grid-section">
+    <div class="section-container">
+        <div class="tools-header">
+            <div class="tools-count">
+                <span>共找到 <strong>{{tools.length}}</strong> 个AI工具</span>
+            </div>
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid">⊞ 网格</button>
+                <button class="view-btn" data-view="list">☰ 列表</button>
+            </div>
+        </div>
+
+        <div class="tools-grid" id="toolsGrid">
+            {{#each tools}}
+            <div class="tool-card-detailed" data-category="{{category}}">
+                <div class="tool-header">
+                    <img src="{{icon}}" alt="{{name}}" class="tool-icon-large">
+                    <div class="tool-basic-info">
+                        <h3 class="tool-name">{{name}}</h3>
+                        <p class="tool-category">{{category}}</p>
+                    </div>
+                    <div class="tool-rating">
+                        <div class="stars">★★★★☆</div>
+                        <span class="rating-score">4.5</span>
+                    </div>
+                </div>
+
+                <div class="tool-description">
+                    <p>{{description}}</p>
+                </div>
+
+                <div class="tool-features">
+                    <span class="feature-tag">免费试用</span>
+                    <span class="feature-tag">API接口</span>
+                    <span class="feature-tag">多语言</span>
+                </div>
+
+                <div class="tool-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">用户数</span>
+                        <span class="stat-value">{{visitors}}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">增长率</span>
+                        <span class="stat-value positive">{{change}}</span>
+                    </div>
+                </div>
+
+                <div class="tool-actions">
+                    <button class="tool-btn primary">立即试用</button>
+                    <button class="tool-btn secondary">了解更多</button>
+                    <button class="tool-btn icon" title="收藏">♡</button>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+
+        <!-- 加载更多 -->
+        <div class="load-more-section">
+            <button class="load-more-btn">加载更多工具</button>
+        </div>
+    </div>
+</section>
+
+<!-- 推荐工具侧边栏 -->
+<aside class="tools-sidebar">
+    <div class="sidebar-section">
+        <h3 class="sidebar-title">本周热门</h3>
+        <div class="trending-tools">
+            <div class="trending-tool">
+                <img src="https://ext.same-assets.com/155488376/946268843.jpeg" alt="ChatGPT" class="trending-icon">
+                <div class="trending-info">
+                    <h4>ChatGPT</h4>
+                    <span class="trending-change">+158%</span>
+                </div>
+            </div>
+            <div class="trending-tool">
+                <img src="https://ext.same-assets.com/155488376/614836080.jpeg" alt="Claude" class="trending-icon">
+                <div class="trending-info">
+                    <h4>Claude 4</h4>
+                    <span class="trending-change">+92%</span>
+                </div>
+            </div>
+            <div class="trending-tool">
+                <img src="https://ext.same-assets.com/155488376/214188947.jpeg" alt="灵码IDE" class="trending-icon">
+                <div class="trending-info">
+                    <h4>灵码 IDE</h4>
+                    <span class="trending-change">+67%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-section">
+        <h3 class="sidebar-title">AI新闻</h3>
+        <div class="sidebar-news">
+            <div class="news-item-small">
+                <h4>DeepSeek R1 正式开源</h4>
+                <span class="news-time">2小时前</span>
+            </div>
+            <div class="news-item-small">
+                <h4>GPT-5 预计明年发布</h4>
+                <span class="news-time">5小时前</span>
+            </div>
+            <div class="news-item-small">
+                <h4>AI视频生成技术突破</h4>
+                <span class="news-time">1天前</span>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<style>
+.page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 60px 0 40px 0;
+    margin-bottom: 40px;
+}
+
+.page-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.page-subtitle {
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.tools-filters {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: start;
+}
+
+.filter-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.category-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.category-filter.active {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.category-filter:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.category-count {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.sort-select {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.tools-grid-section {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.tools-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.tools-count {
+    color: #666;
+    font-size: 14px;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 8px;
+}
+
+.view-btn {
+    padding: 8px 12px;
+    border: 1px solid #e1e5e9;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.view-btn.active {
+    background: #56b3ce;
+    color: white;
+    border-color: #56b3ce;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.tool-card-detailed {
+    background: white;
+    border: 1px solid #e1e5e9;
+    border-radius: 12px;
+    padding: 24px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tool-card-detailed:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+.tool-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.tool-icon-large {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.tool-basic-info {
+    flex: 1;
+}
+
+.tool-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #151719;
+    margin-bottom: 4px;
+}
+
+.tool-category {
+    color: #666;
+    font-size: 12px;
+    margin: 0;
+}
+
+.tool-rating {
+    text-align: right;
+}
+
+.stars {
+    color: #ffc107;
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.rating-score {
+    font-size: 12px;
+    color: #666;
+}
+
+.tool-description {
+    margin-bottom: 16px;
+}
+
+.tool-description p {
+    color: #495057;
+    line-height: 1.5;
+    font-size: 14px;
+    margin: 0;
+}
+
+.tool-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.feature-tag {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.tool-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #151719;
+}
+
+.stat-value.positive {
+    color: #22c55e;
+}
+
+.tool-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.tool-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s;
+    flex: 1;
+}
+
+.tool-btn.primary {
+    background: #56b3ce;
+    color: white;
+}
+
+.tool-btn.primary:hover {
+    background: #4a9bb8;
+}
+
+.tool-btn.secondary {
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #e1e5e9;
+}
+
+.tool-btn.secondary:hover {
+    background: #e9ecef;
+}
+
+.tool-btn.icon {
+    flex: none;
+    width: 36px;
+    padding: 8px;
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #e1e5e9;
+}
+
+.load-more-section {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.load-more-btn {
+    background: #56b3ce;
+    color: white;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.load-more-btn:hover {
+    background: #4a9bb8;
+}
+
+.tools-sidebar {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.sidebar-section {
+    background: white;
+    border: 1px solid #e1e5e9;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.sidebar-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #151719;
+    margin-bottom: 16px;
+}
+
+.trending-tools {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.trending-tool {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.trending-tool:hover {
+    background: #f8f9fa;
+}
+
+.trending-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.trending-info {
+    flex: 1;
+}
+
+.trending-info h4 {
+    font-size: 14px;
+    font-weight: 500;
+    color: #151719;
+    margin: 0 0 2px 0;
+}
+
+.trending-change {
+    font-size: 12px;
+    color: #22c55e;
+    font-weight: 500;
+}
+
+.sidebar-news {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.news-item-small {
+    padding: 12px 0;
+    border-bottom: 1px solid #f5f5f7;
+}
+
+.news-item-small:last-child {
+    border-bottom: none;
+}
+
+.news-item-small h4 {
+    font-size: 13px;
+    font-weight: 500;
+    color: #151719;
+    margin: 0 0 4px 0;
+    line-height: 1.4;
+}
+
+.news-time {
+    font-size: 11px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .tools-grid-section {
+        grid-template-columns: 1fr;
+    }
+
+    .tools-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tools-filters {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .category-filters {
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 分类筛选功能
+    const categoryFilters = document.querySelectorAll('.category-filter');
+    const toolCards = document.querySelectorAll('.tool-card-detailed');
+
+    categoryFilters.forEach(filter => {
+        filter.addEventListener('click', function() {
+            // 移除其他active类
+            categoryFilters.forEach(f => f.classList.remove('active'));
+            this.classList.add('active');
+
+            const selectedCategory = this.dataset.category;
+
+            // 筛选工具卡片
+            toolCards.forEach(card => {
+                const cardCategory = card.dataset.category;
+                if (selectedCategory === '全部' || cardCategory === selectedCategory) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // 视图切换
+    const viewBtns = document.querySelectorAll('.view-btn');
+    const toolsGrid = document.getElementById('toolsGrid');
+
+    viewBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            viewBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const view = this.dataset.view;
+            if (view === 'list') {
+                toolsGrid.classList.add('list-view');
+            } else {
+                toolsGrid.classList.remove('list-view');
+            }
+        });
+    });
+
+    // 收藏功能
+    const favoriteButtons = document.querySelectorAll('.tool-btn.icon');
+    favoriteButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (this.textContent === '♡') {
+                this.textContent = '♥';
+                this.style.color = '#ef4444';
+            } else {
+                this.textContent = '♡';
+                this.style.color = '#495057';
+            }
+        });
+    });
+});
+</script>

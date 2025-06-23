@@ -1,0 +1,720 @@
+{{!< layout}}
+
+<!-- 页面头部 -->
+<section class="page-header">
+    <div class="section-container">
+        <h1 class="page-title">AI开源项目</h1>
+        <p class="page-subtitle">探索最新的AI开源项目，推动技术创新</p>
+
+        <div class="projects-stats">
+            <div class="stat-card">
+                <div class="stat-number">3,200+</div>
+                <div class="stat-label">开源项目</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">85K+</div>
+                <div class="stat-label">GitHub Stars</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">120+</div>
+                <div class="stat-label">活跃项目</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">技术分类</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 项目分类导航 -->
+<section class="categories-navigation">
+    <div class="section-container">
+        <div class="category-tabs">
+            <div class="category-tab active" data-category="all">
+                <span class="tab-icon">🏆</span>
+                <span class="tab-text">热门项目</span>
+                <span class="tab-count">3179</span>
+            </div>
+            <div class="category-tab" data-category="tts">
+                <span class="tab-icon">🎵</span>
+                <span class="tab-text">TTS</span>
+                <span class="tab-count">13</span>
+            </div>
+            <div class="category-tab" data-category="deepseek">
+                <span class="tab-icon">🧠</span>
+                <span class="tab-text">Deepseek</span>
+                <span class="tab-count">32</span>
+            </div>
+            <div class="category-tab" data-category="stt">
+                <span class="tab-icon">🎤</span>
+                <span class="tab-text">STT</span>
+                <span class="tab-count">5</span>
+            </div>
+            <div class="category-tab" data-category="agent">
+                <span class="tab-icon">🤖</span>
+                <span class="tab-text">Agent</span>
+                <span class="tab-count">217</span>
+            </div>
+            <div class="category-tab" data-category="diffusion">
+                <span class="tab-icon">🎨</span>
+                <span class="tab-text">Stable Diffusion</span>
+                <span class="tab-count">11</span>
+            </div>
+            <div class="category-tab" data-category="chatbot">
+                <span class="tab-icon">💬</span>
+                <span class="tab-text">Chatbot</span>
+                <span class="tab-count">39</span>
+            </div>
+            <div class="category-tab" data-category="mcp">
+                <span class="tab-icon">🔗</span>
+                <span class="tab-text">MCP</span>
+                <span class="tab-count">1894</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 项目列表 -->
+<section class="projects-list-section">
+    <div class="section-container">
+        <div class="projects-header">
+            <div class="sort-options">
+                <label>排序方式：</label>
+                <select class="sort-select">
+                    <option value="stars">按 Stars 排序</option>
+                    <option value="updated">最近更新</option>
+                    <option value="created">最新创建</option>
+                    <option value="growth">增长最快</option>
+                </select>
+            </div>
+            <div class="time-filter">
+                <button class="time-btn active">今日</button>
+                <button class="time-btn">本周</button>
+                <button class="time-btn">本月</button>
+                <button class="time-btn">全部</button>
+            </div>
+        </div>
+
+        <div class="projects-grid">
+            <!-- 热门AI开源项目 -->
+            <div class="project-category-section" data-category="all">
+                <div class="category-header">
+                    <h2>热门AI开源项目</h2>
+                    <span class="category-desc">3179 repositories</span>
+                </div>
+                <div class="projects-list">
+                    <div class="project-item">
+                        <div class="project-rank">#1</div>
+                        <div class="project-avatar">
+                            <span class="avatar-letter">M</span>
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-name">MLLMCelltype</h3>
+                            <p class="project-description">机器学习细胞类型分析工具，提供高精度的细胞分类和识别功能</p>
+                            <div class="project-tags">
+                                <span class="tag">Python</span>
+                                <span class="tag">Machine Learning</span>
+                                <span class="tag">Bioinformatics</span>
+                            </div>
+                        </div>
+                        <div class="project-stats">
+                            <div class="stat-item">
+                                <span class="stat-icon">⭐</span>
+                                <span class="stat-value">68</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">📈</span>
+                                <span class="stat-value growth">+68</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">🍴</span>
+                                <span class="stat-value">12</span>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <button class="action-btn primary">查看详情</button>
+                            <button class="action-btn secondary">GitHub</button>
+                        </div>
+                    </div>
+
+                    <div class="project-item">
+                        <div class="project-rank">#2</div>
+                        <div class="project-avatar">
+                            <span class="avatar-letter">M</span>
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-name">Mcp Containers</h3>
+                            <p class="project-description">容器化MCP部署解决方案，简化AI模型的部署和管理流程</p>
+                            <div class="project-tags">
+                                <span class="tag">Docker</span>
+                                <span class="tag">Kubernetes</span>
+                                <span class="tag">DevOps</span>
+                            </div>
+                        </div>
+                        <div class="project-stats">
+                            <div class="stat-item">
+                                <span class="stat-icon">⭐</span>
+                                <span class="stat-value">50</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">📈</span>
+                                <span class="stat-value growth">+50</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">🍴</span>
+                                <span class="stat-value">8</span>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <button class="action-btn primary">查看详情</button>
+                            <button class="action-btn secondary">GitHub</button>
+                        </div>
+                    </div>
+
+                    <div class="project-item">
+                        <div class="project-rank">#3</div>
+                        <div class="project-avatar">
+                            <span class="avatar-letter">S</span>
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-name">Scira Mcp Chat</h3>
+                            <p class="project-description">基于MCP协议的智能聊天系统，支持多模态对话交互</p>
+                            <div class="project-tags">
+                                <span class="tag">TypeScript</span>
+                                <span class="tag">Chat</span>
+                                <span class="tag">MCP</span>
+                            </div>
+                        </div>
+                        <div class="project-stats">
+                            <div class="stat-item">
+                                <span class="stat-icon">⭐</span>
+                                <span class="stat-value">41</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">📈</span>
+                                <span class="stat-value growth">+41</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">🍴</span>
+                                <span class="stat-value">6</span>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <button class="action-btn primary">查看详情</button>
+                            <button class="action-btn secondary">GitHub</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TTS项目 -->
+            <div class="project-category-section" data-category="tts" style="display: none;">
+                <div class="category-header">
+                    <h2>TTS 语音合成</h2>
+                    <span class="category-desc">13 repositories</span>
+                </div>
+                <div class="projects-list">
+                    <div class="project-item">
+                        <div class="project-rank">#1</div>
+                        <div class="project-avatar">
+                            <span class="avatar-letter">B</span>
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-name">Bert VITS2 MNN</h3>
+                            <p class="project-description">基于BERT的语音合成模型，支持多种语言和音色</p>
+                            <div class="project-tags">
+                                <span class="tag">Python</span>
+                                <span class="tag">TTS</span>
+                                <span class="tag">BERT</span>
+                            </div>
+                        </div>
+                        <div class="project-stats">
+                            <div class="stat-item">
+                                <span class="stat-icon">⭐</span>
+                                <span class="stat-value">15</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">📈</span>
+                                <span class="stat-value growth">+15</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">🍴</span>
+                                <span class="stat-value">3</span>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <button class="action-btn primary">查看详情</button>
+                            <button class="action-btn secondary">GitHub</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deepseek项目 -->
+            <div class="project-category-section" data-category="deepseek" style="display: none;">
+                <div class="category-header">
+                    <h2>Deepseek 相关项目</h2>
+                    <span class="category-desc">32 repositories</span>
+                </div>
+                <div class="projects-list">
+                    <div class="project-item">
+                        <div class="project-rank">#1</div>
+                        <div class="project-avatar">
+                            <span class="avatar-letter">E</span>
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-name">EShopLite</h3>
+                            <p class="project-description">轻量级电商解决方案，集成Deepseek AI推荐系统</p>
+                            <div class="project-tags">
+                                <span class="tag">React</span>
+                                <span class="tag">E-commerce</span>
+                                <span class="tag">AI</span>
+                            </div>
+                        </div>
+                        <div class="project-stats">
+                            <div class="stat-item">
+                                <span class="stat-icon">⭐</span>
+                                <span class="stat-value">5</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">📈</span>
+                                <span class="stat-value growth">+5</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">🍴</span>
+                                <span class="stat-value">1</span>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <button class="action-btn primary">查看详情</button>
+                            <button class="action-btn secondary">GitHub</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加载更多 -->
+        <div class="load-more-section">
+            <button class="load-more-btn">加载更多项目</button>
+        </div>
+    </div>
+</section>
+
+<style>
+.page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 60px 0 40px 0;
+    margin-bottom: 0;
+}
+
+.page-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.page-subtitle {
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.projects-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.stat-card {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.categories-navigation {
+    background: white;
+    border-bottom: 1px solid #e1e5e9;
+    padding: 20px 0;
+    position: sticky;
+    top: 64px;
+    z-index: 50;
+}
+
+.category-tabs {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 8px 0;
+}
+
+.category-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #f8f9fa;
+    border: 1px solid #e1e5e9;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.category-tab.active {
+    background: #56b3ce;
+    color: white;
+    border-color: #56b3ce;
+}
+
+.category-tab:hover:not(.active) {
+    background: #e9ecef;
+}
+
+.tab-icon {
+    font-size: 16px;
+}
+
+.tab-count {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.category-tab.active .tab-count {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.projects-list-section {
+    padding: 40px 0;
+}
+
+.projects-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.sort-options {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sort-options label {
+    font-size: 14px;
+    color: #666;
+}
+
+.sort-select {
+    padding: 8px 12px;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+}
+
+.time-filter {
+    display: flex;
+    gap: 8px;
+}
+
+.time-btn {
+    padding: 8px 16px;
+    border: 1px solid #e1e5e9;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.time-btn.active {
+    background: #56b3ce;
+    color: white;
+    border-color: #56b3ce;
+}
+
+.project-category-section {
+    margin-bottom: 48px;
+}
+
+.category-header {
+    margin-bottom: 24px;
+}
+
+.category-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #151719;
+    margin-bottom: 4px;
+}
+
+.category-desc {
+    color: #666;
+    font-size: 14px;
+}
+
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.project-item {
+    background: white;
+    border: 1px solid #e1e5e9;
+    border-radius: 12px;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: auto auto 1fr auto auto;
+    gap: 20px;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.project-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.project-rank {
+    font-size: 18px;
+    font-weight: 700;
+    color: #c16459;
+    min-width: 40px;
+}
+
+.project-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-letter {
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.project-info {
+    flex: 1;
+}
+
+.project-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #151719;
+    margin-bottom: 8px;
+}
+
+.project-description {
+    color: #495057;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.project-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    background: #f8f9fa;
+    color: #495057;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.project-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 80px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+}
+
+.stat-icon {
+    font-size: 14px;
+}
+
+.stat-value {
+    font-weight: 500;
+    color: #151719;
+}
+
+.stat-value.growth {
+    color: #22c55e;
+}
+
+.project-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s;
+    min-width: 100px;
+}
+
+.action-btn.primary {
+    background: #56b3ce;
+    color: white;
+}
+
+.action-btn.primary:hover {
+    background: #4a9bb8;
+}
+
+.action-btn.secondary {
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #e1e5e9;
+}
+
+.action-btn.secondary:hover {
+    background: #e9ecef;
+}
+
+.load-more-section {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.load-more-btn {
+    background: #56b3ce;
+    color: white;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.load-more-btn:hover {
+    background: #4a9bb8;
+}
+
+@media (max-width: 768px) {
+    .projects-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .category-tabs {
+        gap: 8px;
+    }
+
+    .project-item {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        text-align: center;
+    }
+
+    .project-stats {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .project-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .projects-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 分类切换功能
+    const categoryTabs = document.querySelectorAll('.category-tab');
+    const categorySection = document.querySelectorAll('.project-category-section');
+
+    categoryTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // 移除其他active类
+            categoryTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            const selectedCategory = this.dataset.category;
+
+            // 显示/隐藏对应的项目分类
+            categorySection.forEach(section => {
+                const sectionCategory = section.dataset.category;
+                if (selectedCategory === 'all' || sectionCategory === selectedCategory) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // 时间筛选
+    const timeBtns = document.querySelectorAll('.time-btn');
+    timeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            timeBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // 排序功能
+    const sortSelect = document.querySelector('.sort-select');
+    sortSelect.addEventListener('change', function() {
+        console.log('排序方式:', this.value);
+        // 这里可以添加实际的排序逻辑
+    });
+});
+</script>

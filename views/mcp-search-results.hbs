@@ -19,28 +19,10 @@
                 {{/each}}
             </div>
 
-            {{!-- Pagination for Search Results --}}
-            <nav class="mcp-pagination">
-                <ul>
-                    {{#if mcpSearchResultsPageData.pagination.hasPreviousPage}}
-                        <li><a href="/mcp/search?q={{mcpSearchResultsPageData.searchTermEncoded}}&page={{mcpSearchResultsPageData.pagination.previousPage}}&limit={{mcpSearchResultsPageData.pagination.limit}}">Previous</a></li>
-                    {{else}}
-                        <li class="disabled"><span>Previous</span></li>
-                    {{/if}}
-
-                    <li class="current-page">
-                        <span>Page {{mcpSearchResultsPageData.pagination.currentPage}} of {{mcpSearchResultsPageData.pagination.totalPages}}</span>
-                    </li>
-
-                    {{#if mcpSearchResultsPageData.pagination.hasNextPage}}
-                        <li><a href="/mcp/search?q={{mcpSearchResultsPageData.searchTermEncoded}}&page={{mcpSearchResultsPageData.pagination.nextPage}}&limit={{mcpSearchResultsPageData.pagination.limit}}">Next</a></li>
-                    {{else}}
-                        <li class="disabled"><span>Next</span></li>
-                    {{/if}}
-                </ul>
-            </nav>
+            {{!-- Enhanced Pagination for Search Results --}}
+            {{> pagination-controls pagination=mcpSearchResultsPageData.pagination baseUrl=mcpSearchResultsPageData.paginationBaseUrl}}
         {{else}}
-            <p>No MCP services found matching your search term "{{mcpSearchResultsPageData.searchTerm}}".</p>
+            <p>No MCP services found matching your search term "{{mcpSearchResultsPageData.searchTerm}}". Try a different search or check your spelling.</p>
         {{/if}}
     </section>
 </div>
@@ -91,5 +73,7 @@
         color: #333;
         border-color: #007bff;
     }
+    /* Ensure pagination-list styles are available if not in mcp-style.css yet */
+    /* These styles are now centralized in public/css/mcp-style.css */
 </style>
 {{/inline}}

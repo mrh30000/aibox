@@ -96,7 +96,7 @@ export class MCPPageController {
     @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit: number,
     @Query('lang') selectedLang?: string,
     @Query('verified') selectedVerifiedQueryParam?: string,
-    @Query('sort') selectedSort?: string, // Added selectedSort query parameter
+    @Query('sort') selectedSort?: string,
   ) {
     const uniqueTags = await this.mcpServicesService.getUniqueTags();
     let tagName = uniqueTags.find(t => this.generateSlug(t) === tagSlug);
@@ -114,7 +114,6 @@ export class MCPPageController {
 
     const result = await this.mcpServicesService.findAllByTag(tagName, limit, page, selectedLang, isVerifiedFilter, selectedSort);
     const availableLanguages = await this.mcpServicesService.getUniqueLanguagesForTag(tagName);
-    // Note: availableLanguages might ideally be filtered by selectedVerifiedStatus as well for accuracy.
 
     const availableSortOptions = [
         { value: 'popularity_desc', label: 'Popularity' },
@@ -124,6 +123,13 @@ export class MCPPageController {
         { value: 'name_desc', label: 'Name (Z-A)' },
     ];
 
+    // Construct baseUrl for pagination helper, excluding page itself
+    let paginationBaseUrl = `/mcp/services/tag/${tagSlug}?limit=${limit}`;
+    if (selectedLang) paginationBaseUrl += `&lang=${selectedLang}`;
+    if (selectedVerifiedQueryParam) paginationBaseUrl += `&verified=${selectedVerifiedQueryParam}`;
+    if (selectedSort) paginationBaseUrl += `&sort=${selectedSort}`;
+
+
     return {
       mcpTagPageData: {
         tagName: tagName || tagSlug,
@@ -132,17 +138,17 @@ export class MCPPageController {
         selectedLang: selectedLang,
         availableLanguages: availableLanguages,
         selectedVerifiedStatus: selectedVerifiedQueryParam,
-        selectedSort: selectedSort, // Pass selected sort option to template
-        availableSortOptions: availableSortOptions, // Pass available sort options
+        selectedSort: selectedSort,
+        availableSortOptions: availableSortOptions,
         pagination: {
           currentPage: page,
           totalPages: Math.ceil(result.total / limit),
-          hasPreviousPage: page > 1,
-          previousPage: page - 1,
-          hasNextPage: page < Math.ceil(result.total / limit),
-          nextPage: page + 1,
-          limit: limit
+          limit: limit,
+          // No need for hasPreviousPage, previousPage, hasNextPage, nextPage here if helper calculates them
+          // But they are useful for simple Prev/Next buttons if not using full number list.
+          // Helper can derive them, or they can be kept. For this helper, only currentPage, totalPages, limit are strictly needed.
         },
+        paginationBaseUrl: paginationBaseUrl, // Pass to template for the helper
       },
       currentYear: new Date().getFullYear()
     };
@@ -154,24 +160,32 @@ export class MCPPageController {
     @Query('q') searchTerm: string = '',
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit: number,
+    // Add sort to search results page as well, if desired
+    @Query('sort') selectedSort?: string,
   ) {
-    const result = await this.mcpServicesService.searchByNameOrDescription(searchTerm, limit, page);
+    // Pass selectedSort to service if searchByNameOrDescription is enhanced to use it
+    const result = await this.mcpServicesService.searchByNameOrDescription(searchTerm, limit, page /*, selectedSort */);
+
+    // Construct baseUrl for pagination helper for search results
+    let paginationBaseUrl = `/mcp/search?q=${encodeURIComponent(searchTerm)}&limit=${limit}`;
+    // if (selectedSort) paginationBaseUrl += `&sort=${selectedSort}`; // If sort added to search
+
+    // const availableSortOptions = [ ... ]; // Define if adding sort to search
 
     return {
       mcpSearchResultsPageData: {
         searchTerm: searchTerm,
-        searchTermEncoded: encodeURIComponent(searchTerm), // For use in pagination links
+        searchTermEncoded: encodeURIComponent(searchTerm),
         services: result.data,
+        // selectedSort: selectedSort, // If sort added
+        // availableSortOptions: availableSortOptions, // If sort added
         pagination: {
           currentPage: page,
           totalPages: Math.ceil(result.total / limit),
-          hasPreviousPage: page > 1,
-          previousPage: page - 1,
-          hasNextPage: page < Math.ceil(result.total / limit),
-          nextPage: page + 1,
           limit: limit,
           totalItems: result.total
         },
+        paginationBaseUrl: paginationBaseUrl, // Pass to template
       },
       currentYear: new Date().getFullYear()
     };

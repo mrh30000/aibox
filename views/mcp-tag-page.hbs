@@ -87,27 +87,10 @@
                 {{/each}}
             </div>
 
-            {{!-- Basic Pagination --}}
-            <nav class="mcp-pagination">
-                <ul>
-                    {{#if mcpTagPageData.pagination.hasPreviousPage}}
-                        <li><a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?page={{mcpTagPageData.pagination.previousPage}}">Previous</a></li>
-                    {{else}}
-                        <li class="disabled"><span>Previous</span></li>
-                    {{/if}}
-
-                    {{!-- Page numbers could be added here if desired --}}
-                    <li class="current-page"><span>Page {{mcpTagPageData.pagination.currentPage}} of {{mcpTagPageData.pagination.totalPages}}</span></li>
-
-                    {{#if mcpTagPageData.pagination.hasNextPage}}
-                        <li><a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?page={{mcpTagPageData.pagination.nextPage}}">Next</a></li>
-                    {{else}}
-                        <li class="disabled"><span>Next</span></li>
-                    {{/if}}
-                </ul>
-            </nav>
+            {{!-- Enhanced Pagination --}}
+            {{> pagination-controls pagination=mcpTagPageData.pagination baseUrl=mcpTagPageData.paginationBaseUrl}}
         {{else}}
-            <p>No MCP services found for the tag "{{mcpTagPageData.tagName}}".</p>
+            <p>No MCP services found for the tag "{{mcpTagPageData.tagName}}" with the selected filters.</p>
         {{/if}}
     </section>
 </div>
@@ -222,8 +205,11 @@
     }
     .mcp-language-filters li a.active-filter:hover,
     .mcp-status-filters li a.active-filter:hover,
-    .mcp-sort-filters li a.active-filter:hover { /* Combined common styles */
+    .mcp-sort-filters li a.active-filter:hover {
         background-color: #0056b3;
     }
+
+    /* Pagination List specific styles - can be moved to mcp-style.css */
+    /* These styles are now centralized in public/css/mcp-style.css */
 </style>
 {{/inline}}

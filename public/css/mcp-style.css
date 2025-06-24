@@ -516,3 +516,51 @@
         margin-bottom: 10px;
     }
 }
+
+/* Pagination Styles (Centralized) */
+.mcp-pagination {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.mcp-pagination-list { /* Class used by the pagination helper's output ul */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+}
+
+.mcp-pagination-list li {
+    display: inline;
+    margin: 0 2px;
+}
+
+.mcp-pagination-list li a,
+.mcp-pagination-list li span {
+    display: inline-block;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    color: #007bff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.mcp-pagination-list li a:hover {
+    background-color: #e9ecef;
+    border-color: #ddd;
+}
+
+.mcp-pagination-list li.disabled span {
+    color: #aaa;
+    background-color: #f9f9f9;
+    cursor: not-allowed;
+    border-color: #eee;
+}
+
+.mcp-pagination-list li.current-page span {
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border-color: #007bff;
+}

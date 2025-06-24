@@ -84,3 +84,4 @@
     - [x] 在标签/分类页面按 `languageOrTech` 过滤MCP服务
     - [x] 在标签/分类页面按 `isVerified` 过滤MCP服务 (All/Verified/Not Verified)
     - [x] 在标签/分类页面添加排序选项 (按评分, 热度, 名称, 最近添加等)
+    - [x] UI/UX细节: 增强分页控件 (页码,首页/末页链接)

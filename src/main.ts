@@ -58,6 +58,19 @@ async function bootstrap() {
     return availableSortOptions.some(option => option.value === selectedSort);
   });
 
+  // Register custom pagination helper
+  // Corrected import statement:
+  // import { registerPaginationHelper } from './common/hbs-helpers/pagination.helper';
+  // For now, to avoid potential TS pathing issues in this step, will require it directly if it's pure JS or ensure paths are correct.
+  // Assuming pagination.helper.ts is correctly structured to be imported.
+  // If it's not a module, the import style might differ or need to be adjusted in tsconfig.
+  // For simplicity, if it's a simple function export, the previous direct call in main.ts would work if the function was globally available
+  // or explicitly imported and called.
+
+  // Let's assume the helper file exports the function and we import it:
+  const paginationHelper = require('./common/hbs-helpers/pagination.helper');
+  paginationHelper.registerPaginationHelper();
+
 
   // 配置静态文件服务
   app.useStaticAssets(join(__dirname, '..', 'public'));

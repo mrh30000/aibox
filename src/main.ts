@@ -49,6 +49,10 @@ async function bootstrap() {
     return d.toLocaleDateString(); // Fallback
   });
 
+  hbs.registerHelper('eq', function (a, b) {
+    return a === b;
+  });
+
 
   // 配置静态文件服务
   app.useStaticAssets(join(__dirname, '..', 'public'));

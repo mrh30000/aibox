@@ -93,36 +93,31 @@ export class MCPPageController {
   async getMCPTagPage(
     @Param('tagSlug') tagSlug: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit: number, // Show more items on tag page
+    @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit: number,
+    @Query('lang') selectedLang?: string, // Added selectedLang query parameter
   ) {
-    // Convert slug back to original tag name if necessary, or ensure tags are stored/queried consistently.
-    // For this example, assuming tags are stored as they are displayed (e.g. "开发效率工具")
-    // and the slug is just for URL. We need a way to get original tag from slug if they differ significantly.
-    // A simple approach: if tags are directly used from getUniqueTags, they are the original names.
-    // The slug is generated for URL. The service's findByTag expects the original tag name.
-
-    // This is a simplification. A robust solution might involve storing slugs with categories
-    // or having a way to reverse the slug generation reliably if it involves more than lowercasing and hyphenating.
-    // For now, we'll try to find the original tag name from the list of unique tags if possible,
-    // or assume the slug can be "de-slugified" simply.
-
     const uniqueTags = await this.mcpServicesService.getUniqueTags();
     let tagName = uniqueTags.find(t => this.generateSlug(t) === tagSlug);
 
     if (!tagName) {
-        // Fallback: try to "de-slugify" (simple version)
-        tagName = tagSlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()); // This is very basic
-        // A better approach would be to query the first item with that tag to get the canonical tag name
-        // or have a separate category/tag entity.
+        // Basic de-slugification, might need improvement for complex tags
+        tagName = tagSlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        // A more robust way would be to query one item by slug if tags were stored with slugs,
+        // or to ensure generateSlug is perfectly reversible for your tag set.
+        // For now, this is a heuristic. If no exact match, service might not find items.
+        // Consider querying by slug directly if your service/schema supports it.
     }
 
-    const result = await this.mcpServicesService.findAllByTag(tagName, limit, page);
+    const result = await this.mcpServicesService.findAllByTag(tagName, limit, page, selectedLang);
+    const availableLanguages = await this.mcpServicesService.getUniqueLanguagesForTag(tagName);
 
     return {
       mcpTagPageData: {
-        tagName: tagName || tagSlug, // Display the found tag name or the slug if not found
+        tagName: tagName || tagSlug,
         tagSlug: tagSlug,
         services: result.data,
+        selectedLang: selectedLang, // Pass selected language to template
+        availableLanguages: availableLanguages, // Pass available languages for this tag
         pagination: {
           currentPage: page,
           totalPages: Math.ceil(result.total / limit),
@@ -130,7 +125,7 @@ export class MCPPageController {
           previousPage: page - 1,
           hasNextPage: page < Math.ceil(result.total / limit),
           nextPage: page + 1,
-          limit: limit // Pass limit for pagination links
+          limit: limit
         },
       },
       currentYear: new Date().getFullYear()

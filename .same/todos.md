@@ -81,3 +81,6 @@
     - [x] 创建MCP搜索结果页面 (Server-Side Rendered)
     - [x] 更新前端搜索栏以使用后端搜索
 - [ ] MCP页面进一步功能完善 (高级过滤, UI/UX细节等)
+    - [x] 在标签/分类页面按 `languageOrTech` 过滤MCP服务
+    - [ ] 在标签/分类页面按 `isVerified` 过滤MCP服务
+    - [ ] 在标签/分类页面添加排序选项 (按评分, 热度等)

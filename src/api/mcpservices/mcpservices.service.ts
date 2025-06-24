@@ -78,9 +78,13 @@ export class MCPServicesService {
   async findAllByTag(
     tag: string,
     limit: number = 10,
-    page: number = 1
+    page: number = 1,
+    languageOrTech?: string // Added languageOrTech parameter
   ): Promise<{data: MCPServceEntity[], total: number, page: number, limit: number}> {
-    const query = { tags: tag }; // Case-sensitive tag matching
+    const query: any = { tags: tag }; // Case-sensitive tag matching
+    if (languageOrTech && languageOrTech.trim() !== '') {
+      query.languageOrTech = languageOrTech;
+    }
     const skip = (page - 1) * limit;
 
     const data = await this.mcpserviceModel.find(query)

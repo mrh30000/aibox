@@ -10,6 +10,29 @@
     <section class="mcp-section">
         <h1 class="mcp-section-title">MCP Services for: {{mcpTagPageData.tagName}}</h1>
 
+        {{!-- Language Filter UI --}}
+        {{#if mcpTagPageData.availableLanguages.length}}
+        <div class="mcp-filters-bar">
+            <span class="mcp-filter-label">Filter by Language/Tech:</span>
+            <ul class="mcp-language-filters">
+                <li>
+                    <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?page=1&limit={{mcpTagPageData.pagination.limit}}"
+                       class="{{#unless mcpTagPageData.selectedLang}}active-filter{{/unless}}">
+                       All Languages
+                    </a>
+                </li>
+                {{#each mcpTagPageData.availableLanguages}}
+                <li>
+                    <a href="/mcp/services/tag/{{../mcpTagPageData.tagSlug}}?lang={{this}}&page=1&limit={{../mcpTagPageData.pagination.limit}}"
+                       class="{{#if (eq this ../mcpTagPageData.selectedLang)}}active-filter{{/if}}">
+                       {{this}}
+                    </a>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+        {{/if}}
+
         {{#if mcpTagPageData.services.length}}
             <div class="mcp-service-grid">
                 {{#each mcpTagPageData.services}}
@@ -81,6 +104,54 @@
         font-weight: bold;
         color: #333;
         border-color: #007bff;
+    }
+
+    /* Styles for Language Filter Bar */
+    .mcp-filters-bar {
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .mcp-filter-label {
+        font-weight: 500;
+        margin-right: 15px;
+        color: #333;
+    }
+    .mcp-language-filters {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .mcp-language-filters li {
+        margin-right: 10px;
+        margin-bottom: 5px; /* For wrapping */
+    }
+    .mcp-language-filters li a {
+        text-decoration: none;
+        color: #007bff;
+        padding: 5px 10px;
+        border: 1px solid transparent; /* For consistent height */
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+    .mcp-language-filters li a:hover {
+        background-color: #e9ecef;
+        border-color: #ddd;
+    }
+    .mcp-language-filters li a.active-filter {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+        border-color: #007bff;
+    }
+    .mcp-language-filters li a.active-filter:hover {
+        background-color: #0056b3;
     }
 </style>
 {{/inline}}

@@ -2,9 +2,9 @@
     <div class="mcp-hero-content">
         <h1>{{heroData.title}}</h1>
         <p class="mcp-hero-subtitle">{{heroData.subtitle}}</p>
-        <div class="mcp-search-bar-container">
-            <input type="text" placeholder="搜索MCP服务..." class="mcp-search-input">
-            <button class="mcp-search-button">搜索</button>
-        </div>
+        <form action="/mcp/search" method="GET" class="mcp-search-bar-container">
+            <input type="text" name="q" placeholder="搜索MCP服务..." class="mcp-search-input" value="{{../mcpPageData.searchTerm}}"> {{!-- Pre-fill if on search page, though this partial is for landing --}}
+            <button type="submit" class="mcp-search-button">搜索</button>
+        </form>
     </div>
 </section>

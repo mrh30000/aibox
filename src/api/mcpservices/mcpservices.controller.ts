@@ -34,6 +34,20 @@ export class MCPServicesController {
     return this.mcpservicesService.findRecent(limit);
   }
 
+  @Get('search')
+  async search(
+    @Query('q') searchTerm: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ): Promise<{data: MCPServceEntity[], total: number, page: number, limit: number}> {
+    if (!searchTerm || searchTerm.trim() === '') {
+        // Optionally, return all items or a specific message if search term is empty
+        // For now, let service handle empty search term if it's designed to list all
+        // Or throw BadRequestException: throw new BadRequestException('Search term cannot be empty');
+    }
+    return this.mcpservicesService.searchByNameOrDescription(searchTerm, limit, page);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<MCPServceEntity> {
     return this.mcpservicesService.findOne(id);

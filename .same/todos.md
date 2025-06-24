@@ -77,3 +77,7 @@
 - [x] 为MCP页面添加CSS样式 (`public/css/mcp-style.css` and Handlebars helpers)
 - [x] MCP页面测试 (手动验证页面渲染、数据、样式、基本交互)
 - [x] MCP页面功能完善 (动态分类列表, 动态页脚数据, 前端搜索, 分类浏览页面基础)
+    - [x] 实现MCP服务后端搜索 (Service & Controller methods)
+    - [x] 创建MCP搜索结果页面 (Server-Side Rendered)
+    - [x] 更新前端搜索栏以使用后端搜索
+- [ ] MCP页面进一步功能完善 (高级过滤, UI/UX细节等)

@@ -125,8 +125,14 @@
             }
             // Optional: live search on input change (can be performance intensive for many items)
             // performMCPSearch();
+    // Removed mcpSearchButton event listener as form submission handles it.
+    // Kept keyup for Enter for convenience if user doesn't click button.
         });
-    }
+    } // End of client-side search logic block - this whole block should be removed or commented out
+
+
+    // Previous client-side search logic is now REMOVED as we are using server-side search.
+    // The form in mcp-hero.hbs will handle submission to /mcp/search.
 </script>
 {{/inline}}
 

@@ -130,6 +130,36 @@ export class MCPPageController {
           previousPage: page - 1,
           hasNextPage: page < Math.ceil(result.total / limit),
           nextPage: page + 1,
+          limit: limit // Pass limit for pagination links
+        },
+      },
+      currentYear: new Date().getFullYear()
+    };
+  }
+
+  @Get('search')
+  @Render('mcp-search-results')
+  async searchMCPPage(
+    @Query('q') searchTerm: string = '',
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit: number,
+  ) {
+    const result = await this.mcpServicesService.searchByNameOrDescription(searchTerm, limit, page);
+
+    return {
+      mcpSearchResultsPageData: {
+        searchTerm: searchTerm,
+        searchTermEncoded: encodeURIComponent(searchTerm), // For use in pagination links
+        services: result.data,
+        pagination: {
+          currentPage: page,
+          totalPages: Math.ceil(result.total / limit),
+          hasPreviousPage: page > 1,
+          previousPage: page - 1,
+          hasNextPage: page < Math.ceil(result.total / limit),
+          nextPage: page + 1,
+          limit: limit,
+          totalItems: result.total
         },
       },
       currentYear: new Date().getFullYear()

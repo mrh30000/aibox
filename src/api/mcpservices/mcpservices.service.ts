@@ -92,6 +92,33 @@ export class MCPServicesService {
     return { data, total, page, limit };
   }
 
+  async searchByNameOrDescription(
+    searchTerm: string,
+    limit: number = 10,
+    page: number = 1
+  ): Promise<{data: MCPServceEntity[], total: number, page: number, limit: number}> {
+    const skip = (page - 1) * limit;
+    const query = searchTerm
+      ? {
+          $or: [
+            { name: { $regex: searchTerm, $options: 'i' } },
+            { description: { $regex: searchTerm, $options: 'i' } },
+            { tags: { $regex: searchTerm, $options: 'i' } } // Also search in tags
+          ]
+        }
+      : {};
+
+    const data = await this.mcpserviceModel.find(query)
+      .sort({ userCountOrStars: -1, rating: -1, name: 1 }) // Default sort, could add relevance later
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    const total = await this.mcpserviceModel.countDocuments(query);
+
+    return { data, total, page, limit };
+  }
+
 
   async findOne(id: string): Promise<MCPServceEntity> {
     const service = await this.mcpserviceModel.findById(id).exec();

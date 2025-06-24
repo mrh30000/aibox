@@ -1,0 +1,95 @@
+{{!< layout}} {{!-- Use the main layout --}}
+
+{{#*inline "title"}}Search Results for "{{mcpSearchResultsPageData.searchTerm}}" - MCP Services - AIbase Clone{{/inline}}
+
+{{#*inline "content"}}
+<div class="mcp-page-container">
+    {{> mcp-header }}
+
+    <section class="mcp-section">
+        <h1 class="mcp-section-title">
+            Search Results for: "{{mcpSearchResultsPageData.searchTerm}}"
+            <span class="mcp-search-result-count">({{mcpSearchResultsPageData.pagination.totalItems}} found)</span>
+        </h1>
+
+        {{#if mcpSearchResultsPageData.services.length}}
+            <div class="mcp-service-grid">
+                {{#each mcpSearchResultsPageData.services}}
+                    {{> mcp-service-card this}}
+                {{/each}}
+            </div>
+
+            {{!-- Pagination for Search Results --}}
+            <nav class="mcp-pagination">
+                <ul>
+                    {{#if mcpSearchResultsPageData.pagination.hasPreviousPage}}
+                        <li><a href="/mcp/search?q={{mcpSearchResultsPageData.searchTermEncoded}}&page={{mcpSearchResultsPageData.pagination.previousPage}}&limit={{mcpSearchResultsPageData.pagination.limit}}">Previous</a></li>
+                    {{else}}
+                        <li class="disabled"><span>Previous</span></li>
+                    {{/if}}
+
+                    <li class="current-page">
+                        <span>Page {{mcpSearchResultsPageData.pagination.currentPage}} of {{mcpSearchResultsPageData.pagination.totalPages}}</span>
+                    </li>
+
+                    {{#if mcpSearchResultsPageData.pagination.hasNextPage}}
+                        <li><a href="/mcp/search?q={{mcpSearchResultsPageData.searchTermEncoded}}&page={{mcpSearchResultsPageData.pagination.nextPage}}&limit={{mcpSearchResultsPageData.pagination.limit}}">Next</a></li>
+                    {{else}}
+                        <li class="disabled"><span>Next</span></li>
+                    {{/if}}
+                </ul>
+            </nav>
+        {{else}}
+            <p>No MCP services found matching your search term "{{mcpSearchResultsPageData.searchTerm}}".</p>
+        {{/if}}
+    </section>
+</div>
+{{/inline}}
+
+{{#*inline "styles"}}
+<link rel="stylesheet" href="/css/mcp-style.css"> {{!-- Reuse existing MCP styles --}}
+<style>
+    .mcp-search-result-count {
+        font-size: 0.9rem;
+        font-weight: normal;
+        color: #666;
+        margin-left: 10px;
+    }
+    .mcp-pagination { /* Copied from mcp-tag-page, ensure it's consistent or centralized */
+        margin-top: 30px;
+        text-align: center;
+    }
+    .mcp-pagination ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: inline-block;
+    }
+    .mcp-pagination ul li {
+        display: inline;
+        margin: 0 5px;
+    }
+    .mcp-pagination ul li a,
+    .mcp-pagination ul li span {
+        display: inline-block;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        color: #007bff;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    .mcp-pagination ul li a:hover {
+        background-color: #f0f0f0;
+    }
+    .mcp-pagination ul li.disabled span {
+        color: #aaa;
+        background-color: #f9f9f9;
+        cursor: not-allowed;
+    }
+    .mcp-pagination ul li.current-page span {
+        font-weight: bold;
+        color: #333;
+        border-color: #007bff;
+    }
+</style>
+{{/inline}}

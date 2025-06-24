@@ -80,19 +80,42 @@ export class MCPServicesService {
     limit: number = 10,
     page: number = 1,
     languageOrTech?: string,
-    isVerified?: boolean // Added isVerified parameter
+    isVerified?: boolean,
+    sortOption?: string // Added sortOption parameter
   ): Promise<{data: MCPServceEntity[], total: number, page: number, limit: number}> {
     const query: any = { tags: tag };
     if (languageOrTech && languageOrTech.trim() !== '') {
       query.languageOrTech = languageOrTech;
     }
-    if (typeof isVerified === 'boolean') { // Check if isVerified is explicitly true or false
+    if (typeof isVerified === 'boolean') {
       query.isVerified = isVerified;
     }
     const skip = (page - 1) * limit;
 
+    let sortQuery: any = { userCountOrStars: -1, rating: -1, name: 1 }; // Default sort
+
+    switch (sortOption) {
+        case 'popularity_desc':
+            sortQuery = { userCountOrStars: -1, rating: -1, name: 1 };
+            break;
+        case 'rating_desc':
+            sortQuery = { rating: -1, userCountOrStars: -1, name: 1 };
+            break;
+        case 'recent_desc':
+            // Assuming addedToPlatformAt exists and is preferred for "recent"
+            // If not, createdAt (from timestamps: true) will be used by Mongoose by default if addedToPlatformAt is null for all
+            sortQuery = { addedToPlatformAt: -1, createdAt: -1 };
+            break;
+        case 'name_asc':
+            sortQuery = { name: 1 };
+            break;
+        case 'name_desc':
+            sortQuery = { name: -1 };
+            break;
+    }
+
     const data = await this.mcpserviceModel.find(query)
-      .sort({ userCountOrStars: -1, rating: -1, name: 1 })
+      .sort(sortQuery)
       .skip(skip)
       .limit(limit)
       .exec();

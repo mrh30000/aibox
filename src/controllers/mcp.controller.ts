@@ -95,7 +95,8 @@ export class MCPPageController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit: number,
     @Query('lang') selectedLang?: string,
-    @Query('verified') selectedVerifiedQueryParam?: string, // 'true', 'false', or undefined
+    @Query('verified') selectedVerifiedQueryParam?: string,
+    @Query('sort') selectedSort?: string, // Added selectedSort query parameter
   ) {
     const uniqueTags = await this.mcpServicesService.getUniqueTags();
     let tagName = uniqueTags.find(t => this.generateSlug(t) === tagSlug);
@@ -111,8 +112,17 @@ export class MCPPageController {
       isVerifiedFilter = false;
     }
 
-    const result = await this.mcpServicesService.findAllByTag(tagName, limit, page, selectedLang, isVerifiedFilter);
-    const availableLanguages = await this.mcpServicesService.getUniqueLanguagesForTag(tagName); // This should ideally also consider the isVerified filter
+    const result = await this.mcpServicesService.findAllByTag(tagName, limit, page, selectedLang, isVerifiedFilter, selectedSort);
+    const availableLanguages = await this.mcpServicesService.getUniqueLanguagesForTag(tagName);
+    // Note: availableLanguages might ideally be filtered by selectedVerifiedStatus as well for accuracy.
+
+    const availableSortOptions = [
+        { value: 'popularity_desc', label: 'Popularity' },
+        { value: 'rating_desc', label: 'Rating' },
+        { value: 'recent_desc', label: 'Recently Added' },
+        { value: 'name_asc', label: 'Name (A-Z)' },
+        { value: 'name_desc', label: 'Name (Z-A)' },
+    ];
 
     return {
       mcpTagPageData: {
@@ -121,7 +131,9 @@ export class MCPPageController {
         services: result.data,
         selectedLang: selectedLang,
         availableLanguages: availableLanguages,
-        selectedVerifiedStatus: selectedVerifiedQueryParam, // Pass the original string for template logic
+        selectedVerifiedStatus: selectedVerifiedQueryParam,
+        selectedSort: selectedSort, // Pass selected sort option to template
+        availableSortOptions: availableSortOptions, // Pass available sort options
         pagination: {
           currentPage: page,
           totalPages: Math.ceil(result.total / limit),

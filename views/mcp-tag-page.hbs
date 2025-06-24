@@ -36,23 +36,45 @@
                 <span class="mcp-filter-label">Status:</span>
                 <ul class="mcp-status-filters">
                      <li>
-                        <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?lang={{mcpTagPageData.selectedLang}}&page=1&limit={{mcpTagPageData.pagination.limit}}"
+                        <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?lang={{mcpTagPageData.selectedLang}}&sort={{mcpTagPageData.selectedSort}}&page=1&limit={{mcpTagPageData.pagination.limit}}"
                            class="{{#unless mcpTagPageData.selectedVerifiedStatus}}active-filter{{/unless}}">
                            All
                         </a>
                     </li>
                     <li>
-                        <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?lang={{mcpTagPageData.selectedLang}}&verified=true&page=1&limit={{mcpTagPageData.pagination.limit}}"
+                        <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?lang={{mcpTagPageData.selectedLang}}&verified=true&sort={{mcpTagPageData.selectedSort}}&page=1&limit={{mcpTagPageData.pagination.limit}}"
                            class="{{#if (eq mcpTagPageData.selectedVerifiedStatus 'true')}}active-filter{{/if}}">
                            Verified
                         </a>
                     </li>
                     <li>
-                        <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?lang={{mcpTagPageData.selectedLang}}&verified=false&page=1&limit={{mcpTagPageData.pagination.limit}}"
+                        <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?lang={{mcpTagPageData.selectedLang}}&verified=false&sort={{mcpTagPageData.selectedSort}}&page=1&limit={{mcpTagPageData.pagination.limit}}"
                            class="{{#if (eq mcpTagPageData.selectedVerifiedStatus 'false')}}active-filter{{/if}}">
                            Not Verified
                         </a>
                     </li>
+                </ul>
+            </div>
+             <div class="mcp-filter-group">
+                <span class="mcp-filter-label">Sort By:</span>
+                <ul class="mcp-sort-filters">
+                    {{#each mcpTagPageData.availableSortOptions}}
+                    <li>
+                        <a href="/mcp/services/tag/{{../mcpTagPageData.tagSlug}}?lang={{../mcpTagPageData.selectedLang}}&verified={{../mcpTagPageData.selectedVerifiedStatus}}&sort={{this.value}}&page=1&limit={{../mcpTagPageData.pagination.limit}}"
+                           class="{{#if (eq this.value ../mcpTagPageData.selectedSort)}}active-filter{{/if}}">
+                            {{this.label}}
+                        </a>
+                    </li>
+                    {{/each}}
+                     {{!-- Add a "Default" sort option if selectedSort is not among availableSortOptions or to clear sort --}}
+                    {{#unless (isSortOptionSelected mcpTagPageData.selectedSort mcpTagPageData.availableSortOptions)}}
+                     <li>
+                        <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?lang={{mcpTagPageData.selectedLang}}&verified={{mcpTagPageData.selectedVerifiedStatus}}&page=1&limit={{mcpTagPageData.pagination.limit}}"
+                           class="{{#unless mcpTagPageData.selectedSort}}active-filter{{/unless}}">
+                            Default
+                        </a>
+                    </li>
+                    {{/unless}}
                 </ul>
             </div>
         </div>
@@ -190,13 +212,17 @@
         background-color: #e9ecef;
         border-color: #ddd;
     }
-    .mcp-language-filters li a.active-filter, .mcp-status-filters li a.active-filter { /* Combined common styles */
+    .mcp-language-filters li a.active-filter,
+    .mcp-status-filters li a.active-filter,
+    .mcp-sort-filters li a.active-filter { /* Combined common styles */
         background-color: #007bff;
         color: white;
         font-weight: bold;
         border-color: #007bff;
     }
-    .mcp-language-filters li a.active-filter:hover, .mcp-status-filters li a.active-filter:hover { /* Combined common styles */
+    .mcp-language-filters li a.active-filter:hover,
+    .mcp-status-filters li a.active-filter:hover,
+    .mcp-sort-filters li a.active-filter:hover { /* Combined common styles */
         background-color: #0056b3;
     }
 </style>

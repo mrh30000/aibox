@@ -53,6 +53,11 @@ async function bootstrap() {
     return a === b;
   });
 
+  hbs.registerHelper('isSortOptionSelected', function (selectedSort, availableSortOptions) {
+    if (!selectedSort || !availableSortOptions) return false;
+    return availableSortOptions.some(option => option.value === selectedSort);
+  });
+
 
   // 配置静态文件服务
   app.useStaticAssets(join(__dirname, '..', 'public'));

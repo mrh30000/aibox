@@ -1,0 +1,13 @@
+<section class="mcp-section mcp-faq-section">
+    <h2 class="mcp-section-title">常见MCP问题解答</h2>
+    <div class="mcp-faq-list">
+        {{#each faqData}}
+        <div class="mcp-faq-item">
+            <h3 class="mcp-faq-question">{{this.question}}</h3>
+            <div class="mcp-faq-answer" style="display: none;">{{!-- Initially hidden, JS can toggle --}}
+                <p>{{{this.answer}}}</p> {{!-- Use triple-stash for HTML content in answers --}}
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</section>

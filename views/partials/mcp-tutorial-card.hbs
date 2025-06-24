@@ -1,0 +1,21 @@
+<div class="mcp-tutorial-card">
+    <a href="{{this.externalTutorialUrl}}" target="_blank" class="mcp-tutorial-card-link">
+        {{#if this.imageUrl}}
+            <img src="{{this.imageUrl}}" alt="{{this.title}}" class="mcp-tutorial-card-image">
+        {{else}}
+            <img src="/images/placeholder-tutorial.png" alt="{{this.title}} placeholder" class="mcp-tutorial-card-image">
+        {{/if}}
+        <div class="mcp-tutorial-card-content">
+            <h3 class="mcp-tutorial-card-title">{{this.title}}</h3>
+            <p class="mcp-tutorial-card-summary">{{this.summary}}</p>
+            <div class="mcp-tutorial-card-footer">
+                {{#if this.publishDate}}
+                <span class="mcp-tutorial-card-date">{{#formatDate this.publishDate}}{{/formatDate}}</span> {{!-- Assuming a formatDate helper --}}
+                {{/if}}
+                {{#if this.viewCount}}
+                <span class="mcp-tutorial-card-views"><i class="fas fa-eye"></i> {{this.viewCount}}</span>
+                {{/if}}
+            </div>
+        </div>
+    </a>
+</div>

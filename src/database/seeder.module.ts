@@ -18,11 +18,13 @@ import { Category, CategorySchema } from '../../schemas/category.schema';
       { name: News.name, schema: NewsSchema },
       { name: Project.name, schema: ProjectSchema },
       { name: Category.name, schema: CategorySchema },
+      { name: MCPServce.name, schema: MCPServceSchema }, // Add MCPServce
+      { name: MCPTutorial.name, schema: MCPTutorialSchema }, // Add MCPTutorial
     ]),
     // If CategoriesService is used by other seeders to find/create categories:
     // CategoriesModule,
   ],
   providers: [SeederService],
-  exports: [SeederService], // Export if you plan to inject SeederService elsewhere (e.g. in main.ts)
+  exports: [SeederService],
 })
 export class SeederModule {}

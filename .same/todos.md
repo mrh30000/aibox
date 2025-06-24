@@ -65,4 +65,15 @@
 - [x] 配置生产环境设置
 - [x] 性能优化 (基础优化)
 - [x] SEO优化 (meta标签和结构)
+- [x] 添加Docker容器化部署 (`Dockerfile`, `.dockerignore`, `docker-compose.yml` for local dev)
 - [ ] 部署到生产环境
+
+### 9. MCP页面克隆 (mcp.aibase.cn)
+- [x] 分析网站结构和内容 (mcp.aibase.cn)
+- [x] 定义MCP服务和教程的数据模型 (Entities: `MCPServceEntity`, `MCPTutorialEntity`; Schemas: `MCPServceSchema`, `MCPTutorialSchema`)
+- [x] 创建MCP服务和教程的API端点 (Module, Controller, Service for CRUD)
+- [x] 开发MCP登录页面前端 (Handlebars templates: `mcp-landing.hbs` and partials for header, hero, info cards, service cards, tutorial cards, FAQ, footer)
+- [x] 为MCP服务和教程创建种子数据 (Seed files and updated SeederService)
+- [x] 为MCP页面添加CSS样式 (`public/css/mcp-style.css` and Handlebars helpers)
+- [x] MCP页面测试 (手动验证页面渲染、数据、样式、基本交互)
+- [ ] MCP页面功能完善 (搜索, 分类浏览, 动态页脚数据等)

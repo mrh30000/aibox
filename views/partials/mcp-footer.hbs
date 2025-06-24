@@ -1,0 +1,44 @@
+<footer class="mcp-main-footer">
+    <div class="mcp-footer-content">
+        <div class="mcp-footer-about">
+             <a href="/mcp" class="mcp-logo-link">
+                <img src="/images/aibase-logo.svg" alt="AIbase MCP Logo" class="mcp-footer-logo-img">
+            </a>
+            <p>AIbase是一个专注于MCP服务的平台，为AI开发者提供高质量的模型上下文协议服务，助力AI应用开发。</p>
+            {{!-- Placeholder for language switcher if implemented --}}
+            {{!-- <div class="mcp-language-switcher">简体中文</div> --}}
+        </div>
+        <div class="mcp-footer-links-section">
+            <h4>热门MCP服务</h4>
+            <ul>
+                {{#each footerData.popularServices}}
+                <li><a href="{{this.url}}">{{this.name}}</a></li>
+                {{/each}}
+            </ul>
+        </div>
+        <div class="mcp-footer-links-section">
+            <h4>热门MCP分类</h4>
+            <ul>
+                {{#each footerData.popularCategories}}
+                 <li><a href="/mcp/services/category/{{this.slug}}">{{this.name}}</a></li>
+                {{/each}}
+            </ul>
+        </div>
+        <div class="mcp-footer-links-section">
+            <h4>热门标签</h4>
+            <ul>
+                {{#each footerData.popularTags}}
+                <li><a href="/mcp/services/tag/{{this.slug}}">{{this.name}}</a></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+    <div class="mcp-footer-bottom">
+        <p>&copy; {{currentYear}} AIbase Clone. 备案号：闽ICP备08105208号-24 (示例)</p>
+        <nav class="mcp-footer-legal-nav">
+            <a href="/sitemap">网站地图</a>
+            <a href="/terms">用户协议</a>
+            <a href="/privacy">隐私政策</a>
+        </nav>
+    </div>
+</footer>

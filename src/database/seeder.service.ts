@@ -13,6 +13,10 @@ import { categoriesSeed } from './seeds/category.seed';
 import { toolsSeed } from './seeds/tool.seed';
 import { newsSeed } from './seeds/news.seed';
 import { projectsSeed } from './seeds/project.seed';
+import { mcpservicesSeed } from './seeds/mcpservice.seed'; // Import MCP Service seed
+import { mcptutorialsSeed } from './seeds/mcptutorial.seed'; // Import MCP Tutorial seed
+import { MCPServce } from '../../schemas/mcpservice.schema'; // Import MCPServce schema model
+import { MCPTutorial } from '../../schemas/mcptutorial.schema'; // Import MCPTutorial schema model
 
 
 @Injectable()
@@ -24,6 +28,8 @@ export class SeederService {
     @InjectModel(News.name) private readonly newsModel: Model<News>,
     @InjectModel(Project.name) private readonly projectModel: Model<Project>,
     @InjectModel(Category.name) private readonly categoryModel: Model<Category>,
+    @InjectModel(MCPServce.name) private readonly mcpServiceModel: Model<MCPServce>, // Inject MCPServce model
+    @InjectModel(MCPTutorial.name) private readonly mcpTutorialModel: Model<MCPTutorial>, // Inject MCPTutorial model
     // Potentially inject CategoriesService if complex category lookup/creation is needed by other seeders
     // private readonly categoriesService: CategoriesService,
   ) {}
@@ -35,6 +41,9 @@ export class SeederService {
     await this.seedTools();
     await this.seedNews();
     await this.seedProjects();
+    await this.seedMCPServices();
+    await this.seedMCPTutorials();
+
 
     this.logger.log('Database seeding completed.');
   }
@@ -45,10 +54,7 @@ export class SeederService {
     if (existingCategoriesCount === 0) {
       for (const categoryData of categoriesSeed) {
         // Simple slug generation, can be more robust
-        const slug = categoryData.name.toLowerCase().replace(/\s+/g, '-');
-        // If parentCategory is a name, we might need to find its ID first.
-        // For simplicity, seed data should use slugs or have a way to map.
-        // Here, assuming parentCategory in seed data is a slug of an already seeded/to-be-seeded parent.
+        const slug = categoryData.slug || categoryData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 
         let parentId = null;
         if (categoryData.parentCategorySlug) {
@@ -59,8 +65,11 @@ export class SeederService {
                 this.logger.warn(`Parent category with slug "${categoryData.parentCategorySlug}" not found for "${categoryData.name}". Seeding as top-level.`);
             }
         }
-
-        await this.categoryModel.create({ ...categoryData, slug, parentCategory: parentId });
+        try {
+            await this.categoryModel.create({ ...categoryData, slug, parentCategory: parentId });
+        } catch (error) {
+            this.logger.error(`Error seeding category "${categoryData.name}": ${error.message}`);
+        }
       }
       this.logger.log('Categories seeded.');
     } else {
@@ -73,7 +82,6 @@ export class SeederService {
     const existingToolsCount = await this.toolModel.countDocuments();
     if (existingToolsCount === 0) {
       for (const toolData of toolsSeed) {
-        // If toolData.category is a category name/slug, find the category ID first
         const category = await this.categoryModel.findOne({ slug: toolData.categorySlug }).exec();
         if (category) {
           await this.toolModel.create({ ...toolData, category: category._id }); // Store category ID
@@ -120,6 +128,36 @@ export class SeederService {
       this.logger.log('Projects seeded.');
     } else {
       this.logger.log('Projects collection is not empty. Skipping seeding.');
+    }
+  }
+
+  private async seedMCPServices() {
+    this.logger.log('Seeding MCP Services...');
+    const existingCount = await this.mcpServiceModel.countDocuments();
+    if (existingCount === 0) {
+      try {
+        await this.mcpServiceModel.insertMany(mcpservicesSeed);
+        this.logger.log('MCP Services seeded.');
+      } catch (error) {
+        this.logger.error(`Error seeding MCP Services: ${error.message}`);
+      }
+    } else {
+      this.logger.log('MCP Services collection is not empty. Skipping seeding.');
+    }
+  }
+
+  private async seedMCPTutorials() {
+    this.logger.log('Seeding MCP Tutorials...');
+    const existingCount = await this.mcpTutorialModel.countDocuments();
+    if (existingCount === 0) {
+       try {
+        await this.mcpTutorialModel.insertMany(mcptutorialsSeed);
+        this.logger.log('MCP Tutorials seeded.');
+      } catch (error) {
+        this.logger.error(`Error seeding MCP Tutorials: ${error.message}`);
+      }
+    } else {
+      this.logger.log('MCP Tutorials collection is not empty. Skipping seeding.');
     }
   }
 }

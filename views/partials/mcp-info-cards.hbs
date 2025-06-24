@@ -1,0 +1,20 @@
+<section class="mcp-info-cards-section">
+    {{#each cardsData}}
+    <div class="mcp-info-card">
+        {{#if this.isComingSoon}}
+            <div class="mcp-info-card-content coming-soon">
+                <h3>{{this.title}}</h3>
+                <p>{{this.description}}</p>
+                <span>即将上线，敬请期待</span>
+            </div>
+        {{else}}
+            <a href="{{this.link}}" class="mcp-info-card-link">
+                <div class="mcp-info-card-content">
+                    <h3>{{this.title}}</h3>
+                    <p>{{this.description}}</p>
+                </div>
+            </a>
+        {{/if}}
+    </div>
+    {{/each}}
+</section>

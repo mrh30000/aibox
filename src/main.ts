@@ -20,6 +20,7 @@ async function bootstrap() {
   });
 
   hbs.registerHelper('formatNumber', function(num: number) {
+    if (typeof num !== 'number') return num; // Handle non-numeric gracefully
     if (num >= 1000000) {
       return (num / 1000000).toFixed(1) + 'M';
     } else if (num >= 1000) {
@@ -27,6 +28,27 @@ async function bootstrap() {
     }
     return num.toString();
   });
+
+  hbs.registerHelper('formatDate', function(date: Date | string, format: string = 'YYYY-MM-DD HH:mm:ss') {
+    if (!date) return '';
+    const d = new Date(date);
+    // Basic date formatting, for more complex needs, a library like date-fns or moment would be better
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    const hours = ('0' + d.getHours()).slice(-2);
+    const minutes = ('0' + d.getMinutes()).slice(-2);
+    const seconds = ('0' + d.getSeconds()).slice(-2);
+
+    if (format === 'YYYY-MM-DD HH:mm:ss') {
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+    if (format === 'YYYY-MM-DD') {
+        return `${year}-${month}-${day}`;
+    }
+    return d.toLocaleDateString(); // Fallback
+  });
+
 
   // 配置静态文件服务
   app.useStaticAssets(join(__dirname, '..', 'public'));

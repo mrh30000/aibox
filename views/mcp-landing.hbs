@@ -1,0 +1,83 @@
+{{!< layout}} {{!-- Use the main layout --}}
+
+{{#*inline "title"}}MCP Service Hub - AIbase Clone{{/inline}}
+
+{{#*inline "content"}}
+<div class="mcp-page-container">
+    {{> mcp-header}}
+
+    {{> mcp-hero heroData=mcpPageData.hero }}
+
+    {{> mcp-info-cards cardsData=mcpPageData.infoCards }}
+
+    <section class="mcp-section">
+        <h2 class="mcp-section-title">热门推荐MCP服务</h2>
+        <div class="mcp-service-grid">
+            {{#each mcpPageData.featuredServices}}
+                {{> mcp-service-card this}}
+            {{/each}}
+        </div>
+    </section>
+
+    <section class="mcp-section">
+        <h2 class="mcp-section-title">最近更新MCP</h2>
+        <div class="mcp-service-grid">
+            {{#each mcpPageData.recentServices}}
+                {{> mcp-service-card this}}
+            {{/each}}
+        </div>
+    </section>
+
+    {{!-- Dynamically generate categorized MCP service sections --}}
+    {{#each mcpPageData.categorizedServices}}
+    <section class="mcp-section">
+        <h2 class="mcp-section-title">{{this.categoryName}}</h2>
+        <div class="mcp-service-grid">
+            {{#each this.services}}
+            {{> mcp-service-card this}}
+            {{/each}}
+        </div>
+        {{#if this.hasMore}}
+        <div class="mcp-view-all-link">
+            <a href="/mcp/services/category/{{this.categorySlug}}">查看全部 &gt;</a>
+        </div>
+        {{/if}}
+    </section>
+    {{/each}}
+
+
+    <section class="mcp-section mcp-tutorials-section">
+        <h2 class="mcp-section-title">MCP使用教程</h2>
+        <div class="mcp-tutorial-grid">
+            {{#each mcpPageData.tutorials}}
+                {{> mcp-tutorial-card this}}
+            {{/each}}
+        </div>
+         {{!-- Placeholder for "View All Tutorials" if needed --}}
+    </section>
+
+    {{> mcp-faq faqData=mcpPageData.faqItems }}
+
+</div>
+{{/inline}}
+
+{{#*inline "scripts"}}
+{{!-- Add any MCP page specific scripts here if needed --}}
+<script>
+    // Example: simple interaction for FAQ items if they are collapsible
+    document.querySelectorAll('.mcp-faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const answer = question.nextElementSibling;
+            if (answer && answer.classList.contains('mcp-faq-answer')) {
+                answer.style.display = answer.style.display === 'none' || answer.style.display === '' ? 'block' : 'none';
+                question.classList.toggle('active');
+            }
+        });
+    });
+</script>
+{{/inline}}
+
+{{!-- Define any MCP page specific styles here, or link a separate CSS file --}}
+{{#*inline "styles"}}
+<link rel="stylesheet" href="/css/mcp-style.css">
+{{/inline}}

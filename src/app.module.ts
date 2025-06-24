@@ -23,9 +23,11 @@ import { SeederModule } from './database/seeder.module'; // Import SeederModule
     NewsModule,
     ProjectsModule,
     CategoriesModule,
-    SeederModule, // Add SeederModule to imports
+    SeederModule,
+    MCPServicesModule, // Add MCPServicesModule
+    MCPTutorialsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, MCPPageController], // Add MCPPageController
   providers: [AppService],
 })
 export class AppModule {}

@@ -62,18 +62,71 @@
 {{/inline}}
 
 {{#*inline "scripts"}}
-{{!-- Add any MCP page specific scripts here if needed --}}
 <script>
-    // Example: simple interaction for FAQ items if they are collapsible
+    // FAQ Toggle
     document.querySelectorAll('.mcp-faq-question').forEach(question => {
         question.addEventListener('click', () => {
             const answer = question.nextElementSibling;
             if (answer && answer.classList.contains('mcp-faq-answer')) {
-                answer.style.display = answer.style.display === 'none' || answer.style.display === '' ? 'block' : 'none';
-                question.classList.toggle('active');
+                const isHidden = answer.style.display === 'none' || answer.style.display === '';
+                answer.style.display = isHidden ? 'block' : 'none';
+                question.classList.toggle('active', isHidden);
             }
         });
     });
+
+    // Client-side search for MCP Services
+    const mcpSearchInput = document.querySelector('.mcp-search-input');
+    const mcpSearchButton = document.querySelector('.mcp-search-button');
+
+    function performMCPSearch() {
+        const searchTerm = mcpSearchInput.value.toLowerCase().trim();
+        const serviceCards = document.querySelectorAll('.mcp-service-grid .mcp-service-card'); // Target cards within grids
+
+        serviceCards.forEach(card => {
+            const titleElement = card.querySelector('.mcp-service-card-title');
+            const descriptionElement = card.querySelector('.mcp-service-card-description');
+
+            const title = titleElement ? titleElement.textContent.toLowerCase() : '';
+            const description = descriptionElement ? descriptionElement.textContent.toLowerCase() : '';
+
+            if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                card.style.display = ''; // Show card
+            } else {
+                card.style.display = 'none'; // Hide card
+            }
+        });
+
+        // Also need to handle visibility of section titles if all cards within a section are hidden.
+        // This is a bit more complex and might be better handled by re-rendering or a more robust filtering library.
+        // For now, just filtering cards.
+        document.querySelectorAll('.mcp-section').forEach(section => {
+            const grid = section.querySelector('.mcp-service-grid');
+            if (grid) {
+                const visibleCards = Array.from(grid.querySelectorAll('.mcp-service-card')).filter(card => card.style.display !== 'none');
+                const sectionTitle = section.querySelector('.mcp-section-title');
+                if (sectionTitle && sectionTitle.textContent.includes("MCP服务")) { // Only apply to service sections
+                     if (visibleCards.length === 0 && searchTerm) {
+                        // Optionally hide the whole section or its title if no results and search is active
+                        // section.style.display = 'none'; // This might be too aggressive
+                     } else {
+                        // section.style.display = '';
+                     }
+                }
+            }
+        });
+    }
+
+    if (mcpSearchButton && mcpSearchInput) {
+        mcpSearchButton.addEventListener('click', performMCPSearch);
+        mcpSearchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                performMCPSearch();
+            }
+            // Optional: live search on input change (can be performance intensive for many items)
+            // performMCPSearch();
+        });
+    }
 </script>
 {{/inline}}
 

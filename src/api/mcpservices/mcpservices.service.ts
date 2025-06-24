@@ -49,9 +49,7 @@ export class MCPServicesService {
   }
 
   async findFeatured(limit: number = 8): Promise<MCPServceEntity[]> {
-    // Example: find where isFeatured is true or sort by rating/stars
-    // For now, let's sort by userCountOrStars and rating as a proxy for "featured"
-    return this.mcpserviceModel.find()
+    return this.mcpserviceModel.find({ isVerified: true }) // Prioritize verified ones or use a dedicated isFeatured field if added
         .sort({ userCountOrStars: -1, rating: -1 })
         .limit(limit)
         .exec();
@@ -59,9 +57,39 @@ export class MCPServicesService {
 
   async findRecent(limit: number = 8): Promise<MCPServceEntity[]> {
     return this.mcpserviceModel.find()
-        .sort({ addedToPlatformAt: -1, createdAt: -1 }) // Sort by when added or created
+        .sort({ addedToPlatformAt: -1, createdAt: -1 })
         .limit(limit)
         .exec();
+  }
+
+  async getUniqueTags(): Promise<string[]> {
+    try {
+      const distinctTags = await this.mcpserviceModel.distinct('tags').exec();
+      // Filter out any null or empty string tags if they might exist
+      return distinctTags.filter(tag => tag && tag.trim() !== '');
+    } catch (error) {
+      // Handle error, e.g., log it and return an empty array
+      console.error("Error fetching unique tags:", error);
+      return [];
+    }
+  }
+
+  // Updated findAll to be more flexible, or could be a new findByTag method
+  async findAllByTag(
+    tag: string,
+    limit: number = 10,
+    page: number = 1
+  ): Promise<{data: MCPServceEntity[], total: number, page: number, limit: number}> {
+    const query = { tags: tag }; // Case-sensitive tag matching
+    const skip = (page - 1) * limit;
+
+    const data = await this.mcpserviceModel.find(query)
+      .sort({ userCountOrStars: -1, rating: -1, name: 1 })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+    const total = await this.mcpserviceModel.countDocuments(query);
+    return { data, total, page, limit };
   }
 
 

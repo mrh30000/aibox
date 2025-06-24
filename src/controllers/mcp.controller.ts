@@ -12,32 +12,32 @@ export class MCPPageController {
     // @Inject(FaqService) private readonly faqService: FaqService // If FAQ is dynamic
   ) {}
 
+  private generateSlug(text: string): string {
+    if (!text) return '';
+    return text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+  }
+
   @Get()
   @Render('mcp-landing')
   async getMCPPage() {
     const featuredServices = await this.mcpServicesService.findFeatured(8);
     const recentServices = await this.mcpServicesService.findRecent(8);
-    const tutorialsResult = await this.mcpTutorialsService.findAll(4); // Get 4 tutorials
+    const tutorialsResult = await this.mcpTutorialsService.findAll(4);
 
-    // Placeholder for categorized services. This would involve more complex logic:
-    // 1. Get all unique tags/categories from MCP services.
-    // 2. For each category, fetch a few services.
-    // This is simplified for now.
-    const exampleCategorizedServices = [
-      {
-        categoryName: "开发效率工具",
-        categorySlug: "developer-tools", // for "View All" link
-        services: await this.mcpServicesService.findAll("开发效率工具", 4, 1).then(res => res.data), // Assuming findAll can filter by tag
-        hasMore: true // Logic to determine if there are more than 4 services in this category
-      },
-      {
-        categoryName: "聊天机器人",
-        categorySlug: "chatbots",
-        services: await this.mcpServicesService.findAll("聊天机器人", 4, 1).then(res => res.data),
-        hasMore: true
-      },
-      // Add more categories as needed
-    ];
+    const uniqueTags = await this.mcpServicesService.getUniqueTags();
+    const categorizedServices = [];
+
+    for (const tagName of uniqueTags.slice(0, 5)) { // Limit to 5 categories on landing page for brevity
+        const servicesForTag = await this.mcpServicesService.findAllByTag(tagName, 4, 1);
+        if (servicesForTag.data && servicesForTag.data.length > 0) {
+            categorizedServices.push({
+                categoryName: tagName,
+                categorySlug: this.generateSlug(tagName),
+                services: servicesForTag.data,
+                hasMore: servicesForTag.total > 4
+            });
+        }
+    }
 
     // Placeholder for FAQ data
     const faqItems = [
@@ -47,21 +47,16 @@ export class MCPPageController {
       // Add more FAQs from the target site
     ];
 
-    // Placeholder for Footer Data
-    const footerData = {
-        popularServices: [ // Example data, should be fetched or configured
-            { name: "Figma Context MCP", url: "#"},
-            { name: "Duckduckgo MCP Server", url: "#"},
-        ],
-        popularCategories: [ // Example, these should be actual categories from your system
-            { name: "图像与视频处理", slug: "image-video-processing" },
-            { name: "数据库", slug: "databases" },
-        ],
-        popularTags: [ // Example tags
-            { name: "AI集成", slug: "ai-integration" },
-            { name: "API服务", slug: "api-service" },
-        ]
-    };
+    // Dynamic Footer Data
+    const popularMcpServices = await this.mcpServicesService.findFeatured(7); // Get 7 for footer
+    const popularMcpCategoriesRaw = await this.mcpServicesService.getUniqueTags();
+    const popularMcpCategories = popularMcpCategoriesRaw.slice(0, 7).map(tag => ({ // Get 7 tags for footer
+        name: tag,
+        slug: this.generateSlug(tag)
+    }));
+    // For "Popular Tags" in footer, we can reuse the same logic or develop a different one if tags have counts etc.
+    // For simplicity, reusing the category tags for "Popular Tags" section as well.
+    const popularMcpFooterTags = popularMcpCategories.slice(0, 7);
 
 
     return {
@@ -78,17 +73,66 @@ export class MCPPageController {
         ],
         featuredServices,
         recentServices,
-        categorizedServices: exampleCategorizedServices, // Replace with dynamic fetching logic
+        categorizedServices: categorizedServices,
         tutorials: tutorialsResult.data,
         faqItems,
-        footerData,
+        footerData: { // Populating footerData dynamically
+            popularServices: popularMcpServices.map(s => ({ name: s.name, url: s.externalServiceUrl || '#' })),
+            popularCategories: popularMcpCategories,
+            popularTags: popularMcpFooterTags
+        },
       },
       currentYear: new Date().getFullYear() // For footer copyright
     };
   }
 
   // Add more routes for specific MCP category pages, service detail pages, etc.
-  // e.g., @Get('services/category/:categorySlug')
-  // @Render('mcp-category-page')
-  // async getMCPCategoryPage(@Param('categorySlug') categorySlug: string) { ... }
+
+  @Get('services/tag/:tagSlug')
+  @Render('mcp-tag-page')
+  async getMCPTagPage(
+    @Param('tagSlug') tagSlug: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit: number, // Show more items on tag page
+  ) {
+    // Convert slug back to original tag name if necessary, or ensure tags are stored/queried consistently.
+    // For this example, assuming tags are stored as they are displayed (e.g. "开发效率工具")
+    // and the slug is just for URL. We need a way to get original tag from slug if they differ significantly.
+    // A simple approach: if tags are directly used from getUniqueTags, they are the original names.
+    // The slug is generated for URL. The service's findByTag expects the original tag name.
+
+    // This is a simplification. A robust solution might involve storing slugs with categories
+    // or having a way to reverse the slug generation reliably if it involves more than lowercasing and hyphenating.
+    // For now, we'll try to find the original tag name from the list of unique tags if possible,
+    // or assume the slug can be "de-slugified" simply.
+
+    const uniqueTags = await this.mcpServicesService.getUniqueTags();
+    let tagName = uniqueTags.find(t => this.generateSlug(t) === tagSlug);
+
+    if (!tagName) {
+        // Fallback: try to "de-slugify" (simple version)
+        tagName = tagSlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()); // This is very basic
+        // A better approach would be to query the first item with that tag to get the canonical tag name
+        // or have a separate category/tag entity.
+    }
+
+    const result = await this.mcpServicesService.findAllByTag(tagName, limit, page);
+
+    return {
+      mcpTagPageData: {
+        tagName: tagName || tagSlug, // Display the found tag name or the slug if not found
+        tagSlug: tagSlug,
+        services: result.data,
+        pagination: {
+          currentPage: page,
+          totalPages: Math.ceil(result.total / limit),
+          hasPreviousPage: page > 1,
+          previousPage: page - 1,
+          hasNextPage: page < Math.ceil(result.total / limit),
+          nextPage: page + 1,
+        },
+      },
+      currentYear: new Date().getFullYear()
+    };
+  }
 }

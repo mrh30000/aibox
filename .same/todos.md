@@ -76,4 +76,4 @@
 - [x] 为MCP服务和教程创建种子数据 (Seed files and updated SeederService)
 - [x] 为MCP页面添加CSS样式 (`public/css/mcp-style.css` and Handlebars helpers)
 - [x] MCP页面测试 (手动验证页面渲染、数据、样式、基本交互)
-- [ ] MCP页面功能完善 (搜索, 分类浏览, 动态页脚数据等)
+- [x] MCP页面功能完善 (动态分类列表, 动态页脚数据, 前端搜索, 分类浏览页面基础)

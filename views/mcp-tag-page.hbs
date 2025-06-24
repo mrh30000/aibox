@@ -1,0 +1,86 @@
+{{!< layout}} {{!-- Use the main layout --}}
+
+{{#*inline "title"}}{{mcpTagPageData.tagName}} - MCP Services - AIbase Clone{{/inline}}
+
+{{#*inline "content"}}
+<div class="mcp-page-container">
+    {{!-- You might want a simplified header or the same mcp-header --}}
+    {{> mcp-header }}
+
+    <section class="mcp-section">
+        <h1 class="mcp-section-title">MCP Services for: {{mcpTagPageData.tagName}}</h1>
+
+        {{#if mcpTagPageData.services.length}}
+            <div class="mcp-service-grid">
+                {{#each mcpTagPageData.services}}
+                    {{> mcp-service-card this}}
+                {{/each}}
+            </div>
+
+            {{!-- Basic Pagination --}}
+            <nav class="mcp-pagination">
+                <ul>
+                    {{#if mcpTagPageData.pagination.hasPreviousPage}}
+                        <li><a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?page={{mcpTagPageData.pagination.previousPage}}">Previous</a></li>
+                    {{else}}
+                        <li class="disabled"><span>Previous</span></li>
+                    {{/if}}
+
+                    {{!-- Page numbers could be added here if desired --}}
+                    <li class="current-page"><span>Page {{mcpTagPageData.pagination.currentPage}} of {{mcpTagPageData.pagination.totalPages}}</span></li>
+
+                    {{#if mcpTagPageData.pagination.hasNextPage}}
+                        <li><a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?page={{mcpTagPageData.pagination.nextPage}}">Next</a></li>
+                    {{else}}
+                        <li class="disabled"><span>Next</span></li>
+                    {{/if}}
+                </ul>
+            </nav>
+        {{else}}
+            <p>No MCP services found for the tag "{{mcpTagPageData.tagName}}".</p>
+        {{/if}}
+    </section>
+</div>
+{{/inline}}
+
+{{#*inline "styles"}}
+<link rel="stylesheet" href="/css/mcp-style.css"> {{!-- Reuse existing MCP styles --}}
+<style>
+    .mcp-pagination {
+        margin-top: 30px;
+        text-align: center;
+    }
+    .mcp-pagination ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: inline-block;
+    }
+    .mcp-pagination ul li {
+        display: inline;
+        margin: 0 5px;
+    }
+    .mcp-pagination ul li a,
+    .mcp-pagination ul li span {
+        display: inline-block;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        color: #007bff;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    .mcp-pagination ul li a:hover {
+        background-color: #f0f0f0;
+    }
+    .mcp-pagination ul li.disabled span {
+        color: #aaa;
+        background-color: #f9f9f9;
+        cursor: not-allowed;
+    }
+    .mcp-pagination ul li.current-page span {
+        font-weight: bold;
+        color: #333;
+        border-color: #007bff;
+    }
+</style>
+{{/inline}}

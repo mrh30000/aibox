@@ -90,7 +90,10 @@
             {{!-- Enhanced Pagination --}}
             {{> pagination-controls pagination=mcpTagPageData.pagination baseUrl=mcpTagPageData.paginationBaseUrl}}
         {{else}}
-            <p>No MCP services found for the tag "{{mcpTagPageData.tagName}}" with the selected filters.</p>
+            <p class="mcp-no-results">
+                No MCP services found for "{{mcpTagPageData.tagName}}" with the current filters.
+                Try adjusting your filters or <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?limit={{mcpTagPageData.pagination.limit}}">view all services in this category</a>.
+            </p>
         {{/if}}
     </section>
 </div>

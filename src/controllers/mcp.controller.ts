@@ -166,26 +166,28 @@ export class MCPPageController {
     // Pass selectedSort to service if searchByNameOrDescription is enhanced to use it
     const result = await this.mcpServicesService.searchByNameOrDescription(searchTerm, limit, page /*, selectedSort */);
 
-    // Construct baseUrl for pagination helper for search results
     let paginationBaseUrl = `/mcp/search?q=${encodeURIComponent(searchTerm)}&limit=${limit}`;
-    // if (selectedSort) paginationBaseUrl += `&sort=${selectedSort}`; // If sort added to search
+    // if (selectedSort) paginationBaseUrl += `&sort=${selectedSort}`;
 
-    // const availableSortOptions = [ ... ]; // Define if adding sort to search
+    // Data for the hero partial if reused on search page
+    const heroOverrideData = {
+        title: "MCP Service Search", // Or keep it same as landing if design prefers
+        // Subtitle can be omitted or specific to search results
+    };
 
     return {
       mcpSearchResultsPageData: {
         searchTerm: searchTerm,
         searchTermEncoded: encodeURIComponent(searchTerm),
         services: result.data,
-        // selectedSort: selectedSort, // If sort added
-        // availableSortOptions: availableSortOptions, // If sort added
         pagination: {
           currentPage: page,
           totalPages: Math.ceil(result.total / limit),
           limit: limit,
           totalItems: result.total
         },
-        paginationBaseUrl: paginationBaseUrl, // Pass to template
+        paginationBaseUrl: paginationBaseUrl,
+        heroOverride: heroOverrideData // Pass data for hero partial
       },
       currentYear: new Date().getFullYear()
     };

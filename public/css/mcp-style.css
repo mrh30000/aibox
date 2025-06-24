@@ -564,3 +564,41 @@
     background-color: #007bff;
     border-color: #007bff;
 }
+
+/* No Results Message Styling */
+.mcp-no-results {
+    padding: 25px;
+    margin-top: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    text-align: center;
+    color: #495057;
+    font-size: 1.1em;
+}
+
+.mcp-no-results p {
+    margin-bottom: 10px;
+}
+
+.mcp-no-results ul {
+    list-style-type: disc;
+    padding-left: 20px; /* Relative to its container, which is centered */
+    display: inline-block; /* Allows text-align:left to work on the ul itself */
+    text-align: left;
+    margin-top: 10px;
+    font-size: 0.95em;
+}
+
+.mcp-no-results ul li {
+    margin-bottom: 5px;
+}
+
+.mcp-no-results a {
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.mcp-no-results a:hover {
+    color: #0056b3;
+}

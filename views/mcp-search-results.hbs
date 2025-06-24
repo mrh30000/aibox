@@ -6,6 +6,10 @@
 <div class="mcp-page-container">
     {{> mcp-header }}
 
+    {{!-- Re-use hero partial for consistent search bar, passing the search term --}}
+    {{> mcp-hero heroData=(lookup mcpSearchResultsPageData 'heroOverride') searchTerm=mcpSearchResultsPageData.searchTerm }}
+
+
     <section class="mcp-section">
         <h1 class="mcp-section-title">
             Search Results for: "{{mcpSearchResultsPageData.searchTerm}}"
@@ -22,7 +26,16 @@
             {{!-- Enhanced Pagination for Search Results --}}
             {{> pagination-controls pagination=mcpSearchResultsPageData.pagination baseUrl=mcpSearchResultsPageData.paginationBaseUrl}}
         {{else}}
-            <p>No MCP services found matching your search term "{{mcpSearchResultsPageData.searchTerm}}". Try a different search or check your spelling.</p>
+            <div class="mcp-no-results">
+                <p>No MCP services found for "<strong>{{mcpSearchResultsPageData.searchTerm}}</strong>".</p>
+                <p>Suggestions:</p>
+                <ul>
+                    <li>Make sure all words are spelled correctly.</li>
+                    <li>Try different keywords.</li>
+                    <li>Try more general keywords.</li>
+                    <li>Try searching for broader categories or tags.</li>
+                </ul>
+            </div>
         {{/if}}
     </section>
 </div>

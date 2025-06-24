@@ -79,11 +79,15 @@ export class MCPServicesService {
     tag: string,
     limit: number = 10,
     page: number = 1,
-    languageOrTech?: string // Added languageOrTech parameter
+    languageOrTech?: string,
+    isVerified?: boolean // Added isVerified parameter
   ): Promise<{data: MCPServceEntity[], total: number, page: number, limit: number}> {
-    const query: any = { tags: tag }; // Case-sensitive tag matching
+    const query: any = { tags: tag };
     if (languageOrTech && languageOrTech.trim() !== '') {
       query.languageOrTech = languageOrTech;
+    }
+    if (typeof isVerified === 'boolean') { // Check if isVerified is explicitly true or false
+      query.isVerified = isVerified;
     }
     const skip = (page - 1) * limit;
 

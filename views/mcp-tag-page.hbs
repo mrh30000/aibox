@@ -13,23 +13,48 @@
         {{!-- Language Filter UI --}}
         {{#if mcpTagPageData.availableLanguages.length}}
         <div class="mcp-filters-bar">
-            <span class="mcp-filter-label">Filter by Language/Tech:</span>
-            <ul class="mcp-language-filters">
-                <li>
-                    <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?page=1&limit={{mcpTagPageData.pagination.limit}}"
-                       class="{{#unless mcpTagPageData.selectedLang}}active-filter{{/unless}}">
-                       All Languages
-                    </a>
-                </li>
-                {{#each mcpTagPageData.availableLanguages}}
-                <li>
-                    <a href="/mcp/services/tag/{{../mcpTagPageData.tagSlug}}?lang={{this}}&page=1&limit={{../mcpTagPageData.pagination.limit}}"
-                       class="{{#if (eq this ../mcpTagPageData.selectedLang)}}active-filter{{/if}}">
-                       {{this}}
-                    </a>
-                </li>
-                {{/each}}
-            </ul>
+            <div class="mcp-filter-group">
+                <span class="mcp-filter-label">Language/Tech:</span>
+                <ul class="mcp-language-filters">
+                    <li>
+                        <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?verified={{mcpTagPageData.selectedVerifiedStatus}}&page=1&limit={{mcpTagPageData.pagination.limit}}"
+                           class="{{#unless mcpTagPageData.selectedLang}}active-filter{{/unless}}">
+                           All
+                        </a>
+                    </li>
+                    {{#each mcpTagPageData.availableLanguages}}
+                    <li>
+                        <a href="/mcp/services/tag/{{../mcpTagPageData.tagSlug}}?lang={{this}}&verified={{../mcpTagPageData.selectedVerifiedStatus}}&page=1&limit={{../mcpTagPageData.pagination.limit}}"
+                           class="{{#if (eq this ../mcpTagPageData.selectedLang)}}active-filter{{/if}}">
+                           {{this}}
+                        </a>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="mcp-filter-group">
+                <span class="mcp-filter-label">Status:</span>
+                <ul class="mcp-status-filters">
+                     <li>
+                        <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?lang={{mcpTagPageData.selectedLang}}&page=1&limit={{mcpTagPageData.pagination.limit}}"
+                           class="{{#unless mcpTagPageData.selectedVerifiedStatus}}active-filter{{/unless}}">
+                           All
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?lang={{mcpTagPageData.selectedLang}}&verified=true&page=1&limit={{mcpTagPageData.pagination.limit}}"
+                           class="{{#if (eq mcpTagPageData.selectedVerifiedStatus 'true')}}active-filter{{/if}}">
+                           Verified
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/mcp/services/tag/{{mcpTagPageData.tagSlug}}?lang={{mcpTagPageData.selectedLang}}&verified=false&page=1&limit={{mcpTagPageData.pagination.limit}}"
+                           class="{{#if (eq mcpTagPageData.selectedVerifiedStatus 'false')}}active-filter{{/if}}">
+                           Not Verified
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
         {{/if}}
 
@@ -121,36 +146,57 @@
         margin-right: 15px;
         color: #333;
     }
-    .mcp-language-filters {
+    .mcp-filters-bar {
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 4px;
+        display: flex;
+        /* align-items: center; */ /* Removed for multiple groups */
+        flex-wrap: wrap;
+        gap: 20px; /* Gap between filter groups */
+    }
+    .mcp-filter-group {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .mcp-filter-label {
+        font-weight: 500;
+        margin-right: 10px; /* Reduced margin */
+        color: #333;
+    }
+    .mcp-language-filters, .mcp-status-filters { /* Combined common styles */
         list-style: none;
         padding: 0;
         margin: 0;
         display: flex;
         flex-wrap: wrap;
     }
-    .mcp-language-filters li {
+    .mcp-language-filters li, .mcp-status-filters li { /* Combined common styles */
         margin-right: 10px;
         margin-bottom: 5px; /* For wrapping */
     }
-    .mcp-language-filters li a {
+    .mcp-language-filters li a, .mcp-status-filters li a { /* Combined common styles */
         text-decoration: none;
         color: #007bff;
         padding: 5px 10px;
-        border: 1px solid transparent; /* For consistent height */
+        border: 1px solid transparent;
         border-radius: 4px;
         font-size: 0.9em;
+        display: inline-block; /* Ensure proper padding and border */
     }
-    .mcp-language-filters li a:hover {
+    .mcp-language-filters li a:hover, .mcp-status-filters li a:hover { /* Combined common styles */
         background-color: #e9ecef;
         border-color: #ddd;
     }
-    .mcp-language-filters li a.active-filter {
+    .mcp-language-filters li a.active-filter, .mcp-status-filters li a.active-filter { /* Combined common styles */
         background-color: #007bff;
         color: white;
         font-weight: bold;
         border-color: #007bff;
     }
-    .mcp-language-filters li a.active-filter:hover {
+    .mcp-language-filters li a.active-filter:hover, .mcp-status-filters li a.active-filter:hover { /* Combined common styles */
         background-color: #0056b3;
     }
 </style>

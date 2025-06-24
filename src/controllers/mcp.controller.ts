@@ -94,30 +94,34 @@ export class MCPPageController {
     @Param('tagSlug') tagSlug: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit: number,
-    @Query('lang') selectedLang?: string, // Added selectedLang query parameter
+    @Query('lang') selectedLang?: string,
+    @Query('verified') selectedVerifiedQueryParam?: string, // 'true', 'false', or undefined
   ) {
     const uniqueTags = await this.mcpServicesService.getUniqueTags();
     let tagName = uniqueTags.find(t => this.generateSlug(t) === tagSlug);
 
     if (!tagName) {
-        // Basic de-slugification, might need improvement for complex tags
         tagName = tagSlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-        // A more robust way would be to query one item by slug if tags were stored with slugs,
-        // or to ensure generateSlug is perfectly reversible for your tag set.
-        // For now, this is a heuristic. If no exact match, service might not find items.
-        // Consider querying by slug directly if your service/schema supports it.
     }
 
-    const result = await this.mcpServicesService.findAllByTag(tagName, limit, page, selectedLang);
-    const availableLanguages = await this.mcpServicesService.getUniqueLanguagesForTag(tagName);
+    let isVerifiedFilter: boolean | undefined = undefined;
+    if (selectedVerifiedQueryParam === 'true') {
+      isVerifiedFilter = true;
+    } else if (selectedVerifiedQueryParam === 'false') {
+      isVerifiedFilter = false;
+    }
+
+    const result = await this.mcpServicesService.findAllByTag(tagName, limit, page, selectedLang, isVerifiedFilter);
+    const availableLanguages = await this.mcpServicesService.getUniqueLanguagesForTag(tagName); // This should ideally also consider the isVerified filter
 
     return {
       mcpTagPageData: {
         tagName: tagName || tagSlug,
         tagSlug: tagSlug,
         services: result.data,
-        selectedLang: selectedLang, // Pass selected language to template
-        availableLanguages: availableLanguages, // Pass available languages for this tag
+        selectedLang: selectedLang,
+        availableLanguages: availableLanguages,
+        selectedVerifiedStatus: selectedVerifiedQueryParam, // Pass the original string for template logic
         pagination: {
           currentPage: page,
           totalPages: Math.ceil(result.total / limit),

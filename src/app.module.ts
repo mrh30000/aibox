@@ -24,10 +24,12 @@ import { SeederModule } from './database/seeder.module'; // Import SeederModule
     ProjectsModule,
     CategoriesModule,
     SeederModule,
-    MCPServicesModule, // Add MCPServicesModule
+    MCPServicesModule,
     MCPTutorialsModule,
+    InfoCardsModule,
+    FAQItemsModule, // Add FAQItemsModule
   ],
-  controllers: [AppController, MCPPageController], // Add MCPPageController
+  controllers: [AppController, MCPPageController],
   providers: [AppService],
 })
 export class AppModule {}

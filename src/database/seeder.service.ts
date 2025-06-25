@@ -13,10 +13,15 @@ import { categoriesSeed } from './seeds/category.seed';
 import { toolsSeed } from './seeds/tool.seed';
 import { newsSeed } from './seeds/news.seed';
 import { projectsSeed } from './seeds/project.seed';
-import { mcpservicesSeed } from './seeds/mcpservice.seed'; // Import MCP Service seed
-import { mcptutorialsSeed } from './seeds/mcptutorial.seed'; // Import MCP Tutorial seed
-import { MCPServce } from '../../schemas/mcpservice.schema'; // Import MCPServce schema model
-import { MCPTutorial } from '../../schemas/mcptutorial.schema'; // Import MCPTutorial schema model
+import { mcpservicesSeed } from './seeds/mcpservice.seed';
+import { mcptutorialsSeed } from './seeds/mcptutorial.seed';
+import { infocardsSeed } from './seeds/infocard.seed'; // Import InfoCard seed
+import { faqitemsSeed } from './seeds/faqitem.seed'; // Import FAQItem seed
+
+import { MCPServce } from '../../schemas/mcpservice.schema';
+import { MCPTutorial } from '../../schemas/mcptutorial.schema';
+import { InfoCard } from '../../schemas/infocard.schema'; // Import InfoCard schema model
+import { FAQItem } from '../../schemas/faqitem.schema'; // Import FAQItem schema model
 
 
 @Injectable()
@@ -28,10 +33,10 @@ export class SeederService {
     @InjectModel(News.name) private readonly newsModel: Model<News>,
     @InjectModel(Project.name) private readonly projectModel: Model<Project>,
     @InjectModel(Category.name) private readonly categoryModel: Model<Category>,
-    @InjectModel(MCPServce.name) private readonly mcpServiceModel: Model<MCPServce>, // Inject MCPServce model
-    @InjectModel(MCPTutorial.name) private readonly mcpTutorialModel: Model<MCPTutorial>, // Inject MCPTutorial model
-    // Potentially inject CategoriesService if complex category lookup/creation is needed by other seeders
-    // private readonly categoriesService: CategoriesService,
+    @InjectModel(MCPServce.name) private readonly mcpServiceModel: Model<MCPServce>,
+    @InjectModel(MCPTutorial.name) private readonly mcpTutorialModel: Model<MCPTutorial>,
+    @InjectModel(InfoCard.name) private readonly infoCardModel: Model<InfoCard>, // Inject InfoCard model
+    @InjectModel(FAQItem.name) private readonly faqItemModel: Model<FAQItem>, // Inject FAQItem model
   ) {}
 
   async seedAll() {
@@ -43,6 +48,8 @@ export class SeederService {
     await this.seedProjects();
     await this.seedMCPServices();
     await this.seedMCPTutorials();
+    await this.seedInfoCards(); // Add InfoCards to seed process
+    await this.seedFAQItems(); // Add FAQItems to seed process
 
 
     this.logger.log('Database seeding completed.');
@@ -158,6 +165,39 @@ export class SeederService {
       }
     } else {
       this.logger.log('MCP Tutorials collection is not empty. Skipping seeding.');
+    }
+  }
+
+  private async seedInfoCards() {
+    this.logger.log('Seeding InfoCards...');
+    const existingCount = await this.infoCardModel.countDocuments({ targetAudience: 'mcpPage' });
+    if (existingCount === 0) {
+      try {
+        // Filter seed data just in case, though it's already specific
+        const mcpInfoCards = infocardsSeed.filter(card => card.targetAudience === 'mcpPage');
+        await this.infoCardModel.insertMany(mcpInfoCards);
+        this.logger.log('MCP InfoCards seeded.');
+      } catch (error) {
+        this.logger.error(`Error seeding MCP InfoCards: ${error.message}`);
+      }
+    } else {
+      this.logger.log('MCP InfoCards (for mcpPage) collection is not empty. Skipping seeding.');
+    }
+  }
+
+  private async seedFAQItems() {
+    this.logger.log('Seeding FAQItems...');
+    const existingCount = await this.faqItemModel.countDocuments({ category: 'mcpGeneral' });
+    if (existingCount === 0) {
+       try {
+        const mcpFAQItems = faqitemsSeed.filter(item => item.category === 'mcpGeneral');
+        await this.faqItemModel.insertMany(mcpFAQItems);
+        this.logger.log('MCP FAQItems seeded.');
+      } catch (error) {
+        this.logger.error(`Error seeding MCP FAQItems: ${error.message}`);
+      }
+    } else {
+      this.logger.log('MCP FAQItems (for mcpGeneral) collection is not empty. Skipping seeding.');
     }
   }
 }

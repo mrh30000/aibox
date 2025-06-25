@@ -18,11 +18,11 @@ import { Category, CategorySchema } from '../../schemas/category.schema';
       { name: News.name, schema: NewsSchema },
       { name: Project.name, schema: ProjectSchema },
       { name: Category.name, schema: CategorySchema },
-      { name: MCPServce.name, schema: MCPServceSchema }, // Add MCPServce
-      { name: MCPTutorial.name, schema: MCPTutorialSchema }, // Add MCPTutorial
+      { name: MCPServce.name, schema: MCPServceSchema },
+      { name: MCPTutorial.name, schema: MCPTutorialSchema },
+      { name: InfoCard.name, schema: InfoCardSchema }, // Add InfoCard
+      { name: FAQItem.name, schema: FAQItemSchema }, // Add FAQItem
     ]),
-    // If CategoriesService is used by other seeders to find/create categories:
-    // CategoriesModule,
   ],
   providers: [SeederService],
   exports: [SeederService],

@@ -1,15 +1,17 @@
-import { Controller, Get, Render, Inject } from '@nestjs/common';
+import { Controller, Get, Render, Inject, Param, Query, DefaultValuePipe, ParseIntPipe } from '@nestjs/common';
 import { MCPServicesService } from '../api/mcpservices/mcpservices.service';
 import { MCPTutorialsService } from '../api/mcptutorials/mcptutorials.service';
-// Potentially a service to get FAQ data if it becomes dynamic
-// import { FaqService } from '../api/faq/faq.service';
+import { InfoCardsService } from '../api/infocards/infocards.service'; // Import InfoCardsService
+import { FAQItemsService } from '../api/faqitems/faqitems.service'; // Import FAQItemsService
 
-@Controller('mcp') // Base route for all MCP pages
+
+@Controller('mcp')
 export class MCPPageController {
   constructor(
     private readonly mcpServicesService: MCPServicesService,
     private readonly mcpTutorialsService: MCPTutorialsService,
-    // @Inject(FaqService) private readonly faqService: FaqService // If FAQ is dynamic
+    private readonly infoCardsService: InfoCardsService, // Inject InfoCardsService
+    private readonly faqItemsService: FAQItemsService, // Inject FAQItemsService
   ) {}
 
   private generateSlug(text: string): string {
@@ -39,13 +41,8 @@ export class MCPPageController {
         }
     }
 
-    // Placeholder for FAQ data
-    const faqItems = [
-      { question: "什么是MCP (Model Context Protocol)？", answer: "MCP（Model Context Protocol）是一种开放标准协议，允许AI模型与外部工具和服务进行交互。它为大型语言模型（LLMs）提供了一种标准化的方式来访问和操作外部数据、API和服务..." },
-      { question: "如何在我的开发环境中设置MCP服务器？", answer: "设置MCP服务器通常需要以下步骤：1) 安装所需的MCP客户端...具体步骤可能因不同的MCP服务和客户端而略有不同。" },
-      { question: "MCP与传统API调用有什么区别?", answer: "MCP与传统API调用的主要区别在于：1) MCP提供了一个统一的接口...5) MCP支持会话上下文..." },
-      // Add more FAQs from the target site
-    ];
+    const infoCards = await this.infoCardsService.findAll('mcpPage');
+    const faqItems = await this.faqItemsService.findAll('mcpGeneral');
 
     // Dynamic Footer Data
     const popularMcpServices = await this.mcpServicesService.findFeatured(7); // Get 7 for footer
@@ -63,20 +60,15 @@ export class MCPPageController {
       mcpPageData: {
         hero: {
           title: "发现全球优质MCP服务 构建强大AI智能体",
-          subtitle: `一站式整合MCP服务器和客户端，当前已收录 ${await this.mcpServicesService.findAll(undefined,1,1).then(r => r.total)}个` // Fetch total count
+          subtitle: `一站式整合MCP服务器和客户端，当前已收录 ${await this.mcpServicesService.findAll(undefined,1,1).then(r => r.total)}个`
         },
-        infoCards: [
-          { title: "AIbase MCP 实验场", description: "在线访问使用 AIbase 平台托管的各类 MCP Server", isComingSoon: true },
-          { title: "MCP Inspector", description: "使用 MCP 官方测试通在线测试的 MCP Server", link: "/mcp/inspector" }, // Placeholder link
-          { title: "AIbase MCP 教程与实践", description: "了解和学习 MCP，观看和改造最佳实践", link: "/mcp/tutorials" }, // Placeholder link
-          { title: "MCP 客户端使用攻略", description: "掌握 MCP 客户端的配置与使用技巧，提升开发效率", link: "/mcp/client-guides" } // Placeholder link
-        ],
+        infoCards: infoCards, // Use fetched data
         featuredServices,
         recentServices,
         categorizedServices: categorizedServices,
         tutorials: tutorialsResult.data,
-        faqItems,
-        footerData: { // Populating footerData dynamically
+        faqItems: faqItems, // Use fetched data
+        footerData: {
             popularServices: popularMcpServices.map(s => ({ name: s.name, url: s.externalServiceUrl || '#' })),
             popularCategories: popularMcpCategories,
             popularTags: popularMcpFooterTags

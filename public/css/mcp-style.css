@@ -1,57 +1,70 @@
 /* MCP Page Specific Styles - mcp-style.css */
 
+:root {
+    --mcp-primary-blue: #007bff; /* Main interactive color, e.g., links, buttons, active states */
+    --mcp-primary-blue-darker: #0056b3; /* Hover state for primary blue */
+    --mcp-text-dark: #333333; /* Primary text, headings */
+    --mcp-text-medium: #555555; /* Secondary text, descriptions */
+    --mcp-text-light: #6c757d; /* Lighter text, subtitles, footer text */
+    --mcp-text-on-dark: #f8f9fa; /* Text for dark backgrounds like footer */
+    --mcp-text-disabled: #aaaaaa;
+
+    --mcp-bg-light: #f8f9fa; /* Light background for sections like hero, or disabled items */
+    --mcp-bg-white: #ffffff; /* Card backgrounds, main page background */
+    --mcp-bg-dark-footer: #343a40; /* Footer background */
+
+    --mcp-border-light: #eeeeee; /* Light borders for headers, FAQ items */
+    --mcp-border-medium: #dee2e6; /* Medium borders for cards, input fields */
+    --mcp-border-dark-footer: #495057; /* Border within dark footer */
+
+    --mcp-verified-green: #28a745;
+    --mcp-star-yellow: #ffc107;
+    --mcp-tech-badge-bg: #e9ecef;
+}
+
 /* General Page Container */
 .mcp-page-container {
     max-width: 1300px;
     margin: 0 auto;
     padding: 0 15px;
-    font-family: 'Inter', sans-serif; /* Assuming Inter is used, or inherit from layout */
+    font-family: 'Inter', sans-serif;
+    color: var(--mcp-text-medium); /* Default text color */
 }
 
-/* Header Styles (if specific adjustments needed beyond main style.css) */
+/* Header Styles */
 .mcp-main-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--mcp-border-light);
 }
 
 .mcp-logo-container .mcp-logo-link {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: #333;
+    color: var(--mcp-text-dark);
 }
 
 .mcp-logo-img {
-    height: 32px; /* Adjust as needed */
+    height: 32px;
     margin-right: 8px;
 }
 
 .mcp-logo-text {
     font-size: 1.5rem;
     font-weight: bold;
-}
-
-.mcp-main-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-}
-
-.mcp-main-nav ul li {
-    margin-left: 25px;
+    color: var(--mcp-text-dark); /* Ensure logo text is dark */
 }
 
 .mcp-main-nav ul li a {
     text-decoration: none;
-    color: #555;
+    color: var(--mcp-text-medium);
     font-weight: 500;
 }
 .mcp-main-nav ul li a:hover {
-    color: #007bff; /* Example hover color */
+    color: var(--mcp-primary-blue);
 }
 
 
@@ -59,66 +72,63 @@
 .mcp-hero-section {
     text-align: center;
     padding: 40px 20px;
-    background-color: #f8f9fa; /* Light background for hero */
+    background-color: var(--mcp-bg-light);
     border-radius: 8px;
     margin-top: 20px;
 }
 
 .mcp-hero-content h1 {
-    font-size: 2.5rem;
-    color: #333;
+    font-size: 2.5rem; /* Target: "发现全球优质MCP服务 构建强大AI智能体" */
+    color: var(--mcp-text-dark);
     margin-bottom: 0.5rem;
+    font-weight: 600; /* Adjusted for prominence */
 }
 
 .mcp-hero-subtitle {
-    font-size: 1.2rem;
-    color: #666;
+    font-size: 1.2rem; /* Target: "一站式整合MCP服务器和客户端..." */
+    color: var(--mcp-text-light);
     margin-bottom: 1.5rem;
-}
-
-.mcp-search-bar-container {
-    display: flex;
-    justify-content: center;
-    max-width: 600px;
-    margin: 0 auto;
 }
 
 .mcp-search-input {
     flex-grow: 1;
     padding: 10px 15px;
     font-size: 1rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--mcp-border-medium);
     border-radius: 4px 0 0 4px;
     outline: none;
 }
+.mcp-search-input:focus {
+    border-color: var(--mcp-primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
 
 .mcp-search-button {
     padding: 10px 20px;
     font-size: 1rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
+    background-color: var(--mcp-primary-blue);
+    color: var(--mcp-bg-white);
+    border: 1px solid var(--mcp-primary-blue); /* Added border for consistency */
     border-radius: 0 4px 4px 0;
     cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
 }
 .mcp-search-button:hover {
-    background-color: #0056b3;
+    background-color: var(--mcp-primary-blue-darker);
+    border-color: var(--mcp-primary-blue-darker);
 }
 
 /* Info Cards Section */
-.mcp-info-cards-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-}
-
 .mcp-info-card {
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
+    background-color: var(--mcp-bg-white);
+    border: 1px solid var(--mcp-border-medium); /* Consistent border */
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04); /* Softer shadow */
+    transition: box-shadow 0.3s ease;
+}
+.mcp-info-card:hover {
+     box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Enhanced hover shadow */
 }
 .mcp-info-card-link {
     text-decoration: none;
@@ -126,479 +136,320 @@
     display: block;
     padding: 20px;
 }
-.mcp-info-card-link:hover {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-.mcp-info-card-content {
-    padding: 20px; /* For non-link version */
-}
 
-.mcp-info-card-content.coming-soon {
-    text-align: center;
-    opacity: 0.7;
-}
 .mcp-info-card-content.coming-soon span {
-    display: block;
-    margin-top: 10px;
     font-weight: bold;
-    color: #007bff;
+    color: var(--mcp-primary-blue);
 }
-
 
 .mcp-info-card-content h3 {
-    font-size: 1.3rem;
-    color: #333;
+    font-size: 1.25rem; /* Slightly adjusted */
+    color: var(--mcp-text-dark);
     margin-bottom: 10px;
+    font-weight: 600;
 }
 
 .mcp-info-card-content p {
-    font-size: 0.95rem;
-    color: #555;
-    line-height: 1.5;
+    font-size: 0.9rem; /* Slightly smaller for descriptions */
+    color: var(--mcp-text-medium);
+    line-height: 1.6; /* Improved line height */
 }
 
 /* General Section Styling */
-.mcp-section {
-    margin-top: 40px;
-    margin-bottom: 40px;
-}
-
 .mcp-section-title {
-    font-size: 1.8rem;
-    color: #333;
-    margin-bottom: 20px;
+    font-size: 1.75rem; /* Adjusted */
+    color: var(--mcp-text-dark);
+    margin-bottom: 25px; /* Increased margin */
     padding-bottom: 10px;
-    border-bottom: 2px solid #007bff;
+    border-bottom: 3px solid var(--mcp-primary-blue); /* Thicker border */
     display: inline-block;
+    font-weight: 600;
 }
 
 /* MCP Service Card Grid */
-.mcp-service-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-}
-
 .mcp-service-card {
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
+    background-color: var(--mcp-bg-white);
+    border: 1px solid var(--mcp-border-medium);
+    border-radius: 6px; /* Slightly less rounded */
     overflow: hidden;
-    transition: box-shadow 0.3s ease;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 .mcp-service-card:hover {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.mcp-service-card-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
+    transform: translateY(-3px); /* Subtle lift effect */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 
 .mcp-service-card-image-container {
-    width: 100%;
-    height: 150px; /* Fixed height for image container */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    background-color: #f5f5f5; /* Placeholder bg */
-}
-.mcp-service-card-image {
-    max-width: 80%; /* Adjust as needed, e.g. for logos */
-    max-height: 80%;
-    object-fit: contain; /* Use 'contain' for logos, 'cover' for scenic images */
-}
-
-.mcp-service-card-content {
-    padding: 15px;
+    background-color: var(--mcp-bg-light);
 }
 
 .mcp-service-card-title {
-    font-size: 1.2rem;
+    font-size: 1.15rem; /* Adjusted */
     font-weight: 600;
-    color: #333;
-    margin-bottom: 8px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: var(--mcp-text-dark);
 }
 .mcp-verified-badge {
     font-size: 0.7rem;
-    background-color: #28a745; /* Green for verified */
-    color: white;
-    padding: 2px 6px;
-    border-radius: 3px;
-    margin-left: 5px;
+    background-color: var(--mcp-verified-green);
+    color: var(--mcp-bg-white);
+    padding: 3px 7px; /* Adjusted padding */
+    border-radius: 4px; /* Consistent rounding */
+    margin-left: 8px; /* Increased margin */
     vertical-align: middle;
+    font-weight: 500; /* Added weight */
 }
 
 .mcp-service-card-description {
-    font-size: 0.9rem;
-    color: #555;
-    line-height: 1.4;
-    height: 3.8em; /* Approx 3 lines of text */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    margin-bottom: 10px;
+    font-size: 0.875rem; /* Adjusted */
+    color: var(--mcp-text-medium);
+    line-height: 1.5; /* Improved line height */
+    height: 4.2em; /* Approx 3 lines (0.875 * 1.5 * 3) */
 }
 
 .mcp-service-card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.85rem;
-    color: #777;
+    font-size: 0.8rem; /* Adjusted */
+    color: var(--mcp-text-light);
 }
 .mcp-service-card-tech {
-    background-color: #e9ecef;
-    padding: 3px 8px;
+    background-color: var(--mcp-tech-badge-bg);
+    color: var(--mcp-text-medium); /* Darker text for badge */
+    padding: 4px 8px; /* Adjusted padding */
     border-radius: 4px;
-    font-size: 0.8rem;
-}
-.mcp-service-card-stats {
-    display: flex;
-    align-items: center;
-}
-.mcp-service-card-stats span {
-    margin-left: 10px;
+    font-size: 0.75rem; /* Slightly smaller */
 }
 .mcp-service-card-stats i {
-    margin-right: 3px;
-    color: #ffc107; /* Star color */
+    color: var(--mcp-star-yellow);
 }
 .mcp-service-card-stats .fa-users {
-    color: #007bff; /* Users icon color */
+    color: var(--mcp-primary-blue);
 }
 
-.mcp-view-all-link {
-    text-align: right;
-    margin-top: 15px;
-}
 .mcp-view-all-link a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 500;
+    color: var(--mcp-primary-blue);
 }
 .mcp-view-all-link a:hover {
-    text-decoration: underline;
+    color: var(--mcp-primary-blue-darker);
 }
 
-
-/* MCP Tutorial Grid */
-.mcp-tutorial-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Often fewer tutorials, so larger cards */
-    gap: 20px;
-}
-
+/* MCP Tutorial Card */
 .mcp-tutorial-card {
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: box-shadow 0.3s ease;
+    background-color: var(--mcp-bg-white);
+    border: 1px solid var(--mcp-border-medium);
+    border-radius: 6px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 .mcp-tutorial-card:hover {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.mcp-tutorial-card-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-
-.mcp-tutorial-card-image {
-    width: 100%;
-    height: 180px; /* Or aspect-ratio: 16/9; */
-    object-fit: cover;
-    display: block;
-}
-
-.mcp-tutorial-card-content {
-    padding: 15px;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 
 .mcp-tutorial-card-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem; /* Adjusted */
     font-weight: 600;
-    color: #333;
-    margin-bottom: 8px;
-    /* For multi-line title ellipsis if needed */
-    /* height: 2.6em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical; */
+    color: var(--mcp-text-dark);
 }
 
 .mcp-tutorial-card-summary {
-    font-size: 0.9rem;
-    color: #555;
+    font-size: 0.875rem;
+    color: var(--mcp-text-medium);
     line-height: 1.5;
-    height: 4.5em; /* Approx 3 lines */
-    overflow: hidden;
-    text-overflow: ellipsis;
-     display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    margin-bottom: 10px;
+    height: 4.2em; /* Approx 3 lines */
 }
 
 .mcp-tutorial-card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.85rem;
-    color: #777;
-    margin-top: 10px;
-}
-.mcp-tutorial-card-footer i {
-    margin-right: 4px;
+    font-size: 0.8rem;
+    color: var(--mcp-text-light);
 }
 
 
 /* FAQ Section */
 .mcp-faq-section {
-    background-color: #fff; /* Optional: different background for FAQ */
-    padding: 20px;
+    background-color: var(--mcp-bg-white);
+    padding: 25px; /* Increased padding */
     border-radius: 8px;
     margin-top: 40px;
+    border: 1px solid var(--mcp-border-light); /* Added subtle border */
 }
 
 .mcp-faq-item {
-    border-bottom: 1px solid #eee;
-    padding: 15px 0;
-}
-.mcp-faq-item:last-child {
-    border-bottom: none;
+    border-bottom: 1px solid var(--mcp-border-light); /* Lighter border */
 }
 
 .mcp-faq-question {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: #007bff;
-    cursor: pointer;
-    position: relative;
-    padding-right: 20px; /* Space for an arrow */
+    font-size: 1.1rem; /* Adjusted */
+    font-weight: 500; /* Slightly less heavy */
+    color: var(--mcp-primary-blue);
 }
-.mcp-faq-question::after {
-    content: '▼'; /* Collapsed state */
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.9em;
-    transition: transform 0.2s ease-in-out;
-}
-.mcp-faq-question.active::after {
-    transform: translateY(-50%) rotate(180deg); /* Expanded state */
-}
-
 
 .mcp-faq-answer {
-    font-size: 1rem;
-    color: #555;
-    line-height: 1.6;
-    margin-top: 10px;
-    padding-left: 10px; /* Optional indent for answer */
+    font-size: 0.95rem; /* Adjusted */
+    color: var(--mcp-text-medium);
+    line-height: 1.65; /* Improved line height */
+    padding-left: 0; /* Removed indent, handled by p margin */
 }
-.mcp-faq-answer p {
-    margin-bottom: 0.5em;
+.mcp-faq-answer p, .mcp-faq-answer ul, .mcp-faq-answer ol {
+    margin-bottom: 0.75em;
+}
+.mcp-faq-answer ul, .mcp-faq-answer ol {
+    padding-left: 20px; /* Standard indent for lists */
 }
 
 
-/* Footer Styles (if specific adjustments needed beyond main style.css) */
+/* Footer Styles */
 .mcp-main-footer {
-    background-color: #343a40; /* Dark footer example */
-    color: #f8f9fa;
-    padding: 40px 0 20px 0;
-    margin-top: 50px;
-}
-
-.mcp-footer-content {
-    max-width: 1300px;
-    margin: 0 auto;
-    padding: 0 15px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-bottom: 30px;
-}
-.mcp-footer-logo-img {
-    height: 30px; /* Adjust as needed */
-    margin-bottom: 10px;
-    filter: brightness(0) invert(1); /* If logo is dark and needs to be white on dark bg */
+    background-color: var(--mcp-bg-dark-footer);
+    color: var(--mcp-text-on-dark);
 }
 
 .mcp-footer-about p {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: #adb5bd;
-    margin-bottom: 15px;
+    color: var(--mcp-text-light); /* Lighter variant from root */
 }
 
 .mcp-footer-links-section h4 {
-    font-size: 1.1rem;
-    color: #fff;
-    margin-bottom: 15px;
-}
-
-.mcp-footer-links-section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.mcp-footer-links-section ul li {
-    margin-bottom: 8px;
+    color: var(--mcp-bg-white); /* Pure white for headings on dark */
 }
 
 .mcp-footer-links-section ul li a {
-    text-decoration: none;
-    color: #adb5bd;
-    font-size: 0.9rem;
+    color: var(--mcp-text-light);
 }
 .mcp-footer-links-section ul li a:hover {
-    color: #fff;
-    text-decoration: underline;
+    color: var(--mcp-bg-white);
 }
 
 .mcp-footer-bottom {
-    text-align: center;
-    padding-top: 20px;
-    border-top: 1px solid #495057;
-    font-size: 0.85rem;
-    color: #adb5bd;
-}
-.mcp-footer-bottom p {
-    margin-bottom: 5px;
+    border-top: 1px solid var(--mcp-border-dark-footer);
+    color: var(--mcp-text-light);
 }
 .mcp-footer-legal-nav a {
-    color: #adb5bd;
-    text-decoration: none;
-    margin: 0 8px;
+    color: var(--mcp-text-light);
 }
 .mcp-footer-legal-nav a:hover {
-    color: #fff;
-    text-decoration: underline;
+    color: var(--mcp-bg-white);
 }
 
-/* Font Awesome Icons (ensure Font Awesome is linked in your main layout or here) */
-/* @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"); */
-/* If not globally available, you might need to add this to layout.hbs */
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .mcp-hero-content h1 {
-        font-size: 2rem;
-    }
-    .mcp-hero-subtitle {
-        font-size: 1rem;
-    }
-    .mcp-section-title {
-        font-size: 1.5rem;
-    }
-    .mcp-service-grid, .mcp-tutorial-grid, .mcp-info-cards-section {
-        grid-template-columns: 1fr; /* Stack cards on smaller screens */
-    }
-    .mcp-main-nav ul {
-        flex-direction: column; /* Example: Stack nav items for mobile */
-    }
-    .mcp-main-nav ul li {
-        margin-left: 0;
-        margin-bottom: 10px;
-    }
+/* Filter Bar Styles from mcp-tag-page.hbs, now centralized */
+.mcp-filters-bar {
+    margin-bottom: 25px; /* Increased margin */
+    padding: 12px 15px; /* Adjusted padding */
+    background-color: var(--mcp-bg-light);
+    border-radius: 6px; /* Consistent rounding */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px; /* Increased gap */
+    border: 1px solid var(--mcp-border-light); /* Added subtle border */
 }
-
-/* Pagination Styles (Centralized) */
-.mcp-pagination {
-    margin-top: 30px;
-    text-align: center;
+.mcp-filter-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
-
-.mcp-pagination-list { /* Class used by the pagination helper's output ul */
+.mcp-filter-label {
+    font-weight: 500;
+    margin-right: 12px;
+    color: var(--mcp-text-dark);
+}
+.mcp-language-filters, .mcp-status-filters, .mcp-sort-filters {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+.mcp-language-filters li, .mcp-status-filters li, .mcp-sort-filters li {
+    margin-right: 8px; /* Adjusted margin */
+    margin-bottom: 5px;
+}
+.mcp-language-filters li a,
+.mcp-status-filters li a,
+.mcp-sort-filters li a {
+    text-decoration: none;
+    color: var(--mcp-primary-blue);
+    padding: 6px 12px; /* Adjusted padding */
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 0.875em; /* Adjusted font size */
     display: inline-block;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.mcp-language-filters li a:hover,
+.mcp-status-filters li a:hover,
+.mcp-sort-filters li a:hover {
+    background-color: var(--mcp-tech-badge-bg); /* Using tech badge bg for hover */
+    border-color: var(--mcp-border-medium);
+    color: var(--mcp-primary-blue-darker);
+}
+.mcp-language-filters li a.active-filter,
+.mcp-status-filters li a.active-filter,
+.mcp-sort-filters li a.active-filter {
+    background-color: var(--mcp-primary-blue);
+    color: var(--mcp-bg-white);
+    font-weight: 500; /* Slightly less than bold */
+    border-color: var(--mcp-primary-blue);
+}
+.mcp-language-filters li a.active-filter:hover,
+.mcp-status-filters li a.active-filter:hover,
+.mcp-sort-filters li a.active-filter:hover {
+    background-color: var(--mcp-primary-blue-darker);
+    border-color: var(--mcp-primary-blue-darker);
 }
 
-.mcp-pagination-list li {
-    display: inline;
-    margin: 0 2px;
+
+/* Pagination Styles (Centralized) */
+.mcp-pagination {
+    margin-top: 35px; /* Increased margin */
+    text-align: center;
 }
 
 .mcp-pagination-list li a,
 .mcp-pagination-list li span {
-    display: inline-block;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    color: #007bff;
-    text-decoration: none;
-    border-radius: 4px;
+    padding: 8px 14px; /* Slightly larger padding */
+    border: 1px solid var(--mcp-border-medium); /* Consistent border */
+    color: var(--mcp-primary-blue);
     font-size: 0.9em;
 }
 
 .mcp-pagination-list li a:hover {
-    background-color: #e9ecef;
-    border-color: #ddd;
+    background-color: var(--mcp-tech-badge-bg); /* Consistent hover */
+    border-color: var(--mcp-border-medium);
 }
 
 .mcp-pagination-list li.disabled span {
-    color: #aaa;
-    background-color: #f9f9f9;
-    cursor: not-allowed;
-    border-color: #eee;
+    color: var(--mcp-text-disabled);
+    background-color: var(--mcp-bg-light);
+    border-color: var(--mcp-border-light); /* Lighter border for disabled */
 }
 
 .mcp-pagination-list li.current-page span {
-    font-weight: bold;
-    color: white;
-    background-color: #007bff;
-    border-color: #007bff;
+    font-weight: 600; /* Adjusted weight */
+    color: var(--mcp-bg-white);
+    background-color: var(--mcp-primary-blue);
+    border-color: var(--mcp-primary-blue);
 }
 
 /* No Results Message Styling */
 .mcp-no-results {
-    padding: 25px;
-    margin-top: 20px;
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
+    padding: 30px; /* Increased padding */
+    margin-top: 25px; /* Increased margin */
+    background-color: var(--mcp-bg-light);
+    border: 1px solid var(--mcp-border-medium);
     border-radius: 6px;
     text-align: center;
-    color: #495057;
-    font-size: 1.1em;
+    color: var(--mcp-text-medium); /* Adjusted color */
+    font-size: 1.05em; /* Slightly adjusted */
 }
 
 .mcp-no-results p {
-    margin-bottom: 10px;
+    margin-bottom: 12px; /* Increased margin */
 }
 
 .mcp-no-results ul {
-    list-style-type: disc;
-    padding-left: 20px; /* Relative to its container, which is centered */
-    display: inline-block; /* Allows text-align:left to work on the ul itself */
-    text-align: left;
-    margin-top: 10px;
-    font-size: 0.95em;
-}
-
-.mcp-no-results ul li {
-    margin-bottom: 5px;
+    font-size: 0.9em; /* Slightly smaller for list items */
 }
 
 .mcp-no-results a {
-    color: #007bff;
-    text-decoration: underline;
+    color: var(--mcp-primary-blue);
 }
 
 .mcp-no-results a:hover {
-    color: #0056b3;
+    color: var(--mcp-primary-blue-darker);
 }

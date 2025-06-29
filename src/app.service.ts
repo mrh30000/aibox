@@ -35,7 +35,8 @@ export class AppService {
     };
   }
 
-  private getLatestNews() {
+  // Making these methods public so they can be called by AppController
+  public getLatestNews() {
     return [
       {
         id: 1,
@@ -67,7 +68,7 @@ export class AppService {
     ];
   }
 
-  private getHotTools() {
+  public getHotTools() {
     return [
       {
         id: 1,
@@ -117,7 +118,7 @@ export class AppService {
     ];
   }
 
-  private getCategories() {
+  public getCategories() {
     return [
       { id: 1, name: '全部', icon: '📱', count: 20150 },
       { id: 2, name: '智天机器人', icon: '🤖', count: 1250 },
@@ -134,7 +135,7 @@ export class AppService {
     ];
   }
 
-  private getOpenSourceProjects() {
+  public getOpenSourceProjects() {
     return [
       {
         id: 1,
@@ -179,7 +180,7 @@ export class AppService {
     ];
   }
 
-  private getFeaturedContent() {
+  public getFeaturedContent() {
     return [
       {
         id: 1,

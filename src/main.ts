@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import * as hbs from 'hbs';
+// import * as hbs from 'hbs'; // No longer needed
 import { SeederService } from './database/seeder.service';
 import { Logger } from '@nestjs/common';
 
@@ -10,18 +10,10 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('Bootstrap'); // Create a logger instance
 
-  // HBS模板引擎配置 (将被移除或注释掉)
-  // app.setBaseViewsDir(join(__dirname, '..', 'views'));
-  // app.setViewEngine('hbs');
+  // Removed HBS template engine configuration and helpers
 
-  // HBS助手 (将被移除或注释掉)
-  // hbs.registerHelper('add', function(a: number, b: number) { ... });
-  // ... (other hbs helpers) ...
-  // const paginationHelper = require('./common/hbs-helpers/pagination.helper');
-  // paginationHelper.registerPaginationHelper();
-
-  // 配置静态文件服务
-  // 1. 'public' 文件夹中的现有静态资源
+  // Configure static assets serving
+  // 1. Existing static assets from 'public' folder
   app.useStaticAssets(join(__dirname, '..', 'public'));
   // 2. 'client' 文件夹中的静态资源 (例如 React 构建输出和 index.html)
   //    假设 React 构建输出到 'client/dist' 并且 index.html 在 'client' 根目录

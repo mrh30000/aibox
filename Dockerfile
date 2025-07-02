@@ -25,7 +25,7 @@ COPY --from=builder /usr/src/app/package.json /usr/src/app/package-lock.json ./
 RUN npm ci --only=production
 
 COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/views ./views
+# COPY --from=builder /usr/src/app/views ./views # Views directory has been removed
 COPY --from=builder /usr/src/app/public ./public
 
 # Expose the port the app runs on

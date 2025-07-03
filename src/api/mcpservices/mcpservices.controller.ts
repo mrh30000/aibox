@@ -13,9 +13,9 @@ export class MCPServicesController {
 
   @Get()
   async findAll(
-    @Query('tag') tag?: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('tag') tag?: string, // Optional parameter moved to the end
   ): Promise<{data: MCPServceEntity[], total: number, page: number, limit: number}> {
     return this.mcpservicesService.findAll(tag, limit, page);
   }

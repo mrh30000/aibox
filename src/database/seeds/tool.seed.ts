@@ -15,7 +15,7 @@ export interface SeedTool {
     isFeatured?: boolean;
     hasFreeTrial?: boolean;
     isFreemium?: boolean;
-    pricingModel?: 'subscription' | 'one-time' | 'usage-based' | 'free' | 'contact_us';
+  pricingModel?: 'subscription' | 'one-time' | 'usage-based' | 'free' | 'contact_us' | 'freemium';
     pricingDetails?: string;
     developer?: string;
     useCases?: string[];

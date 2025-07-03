@@ -1,8 +1,9 @@
 // Using a class for structure, Mongoose schema will be defined separately.
 // This entity will guide the Mongoose schema for MCP Services.
 
-export class MCPServceEntity {
-  id: string; // MongoDB uses string IDs
+import { Document } from 'mongoose';
+
+export interface MCPServceEntity extends Document {
   name: string;
   description: string; // Short description shown on the card
   longDescription?: string; // Optional: For a detailed page view if we build one
@@ -21,8 +22,5 @@ export class MCPServceEntity {
   tags?: string[]; // For categories like "开发效率工具", "聊天机器人" etc.
                    // These could also be references to a new MCPCategoryEntity if we need to manage these categories
 
-  // Timestamps
-  createdAt: Date;
-  updatedAt: Date;
-  addedToPlatformAt?: Date; // When it was added to our cloned list
+  // Timestamps are handled by Mongoose Document
 }

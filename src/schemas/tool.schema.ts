@@ -32,7 +32,7 @@ export class Tool extends Document {
   tags?: string[];
 
   @Prop({ type: String, enum: ['zh', 'en', 'other'], required: true })
-  language: string; // 'zh' | 'en' | 'other'
+  language: 'zh' | 'en' | 'other';
 
   @Prop()
   rating?: number;
@@ -46,8 +46,8 @@ export class Tool extends Document {
   @Prop()
   isFreemium?: boolean;
 
-  @Prop({ type: String, enum: ['subscription', 'one-time', 'usage-based', 'free', 'contact_us'] })
-  pricingModel?: string; // 'subscription' | 'one-time' | 'usage-based' | 'free' | 'contact_us'
+  @Prop({ type: String, enum: ['subscription', 'one-time', 'usage-based', 'free', 'contact_us', 'freemium'] })
+  pricingModel?: 'subscription' | 'one-time' | 'usage-based' | 'free' | 'contact_us' | 'freemium';
 
   @Prop()
   pricingDetails?: string;

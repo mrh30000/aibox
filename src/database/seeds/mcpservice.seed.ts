@@ -1,18 +1,5 @@
 // Sample MCP Service Seed Data
-import { SeedMCPServce } from './seed.interface'; // Assuming a common interface file or define here
-
-export interface SeedMCPServce { // Renaming to avoid conflict if interface is also in service.ts
-    name: string;
-    description: string;
-    languageOrTech?: string;
-    userCountOrStars?: number;
-    rating?: number;
-    isVerified?: boolean;
-    externalServiceUrl?: string;
-    imageUrl?: string;
-    tags?: string[]; // These are the categories like "开发效率工具"
-    addedToPlatformAt?: Date;
-}
+import { SeedMCPServce } from './seed.interface';
 
 export const mcpservicesSeed: SeedMCPServce[] = [
     {

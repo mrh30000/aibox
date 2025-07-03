@@ -38,11 +38,13 @@ export class ToolsService {
 
   async create(createToolDto: CreateToolDto): Promise<ToolEntity> {
     const newTool = new this.toolModel(createToolDto);
-    return newTool.save();
+    const savedTool = await newTool.save();
+    return savedTool.toObject({ getters: true, virtuals: true });
   }
 
   async findAll(): Promise<ToolEntity[]> {
-    return this.toolModel.find().exec();
+    const tools = await this.toolModel.find().exec();
+    return tools.map(tool => tool.toObject({ getters: true, virtuals: true }));
   }
 
   async findOne(id: string): Promise<ToolEntity> {
@@ -50,7 +52,7 @@ export class ToolsService {
     if (!tool) {
       throw new NotFoundException(`Tool with ID "${id}" not found`);
     }
-    return tool;
+    return tool.toObject({ getters: true, virtuals: true });
   }
 
   async update(id: string, updateToolDto: UpdateToolDto): Promise<ToolEntity> {
@@ -58,7 +60,7 @@ export class ToolsService {
     if (!updatedTool) {
       throw new NotFoundException(`Tool with ID "${id}" not found`);
     }
-    return updatedTool;
+    return updatedTool.toObject({ getters: true, virtuals: true });
   }
 
   async remove(id: string): Promise<ToolEntity> {
@@ -66,6 +68,6 @@ export class ToolsService {
     if (!deletedTool) {
       throw new NotFoundException(`Tool with ID "${id}" not found`);
     }
-    return deletedTool;
+    return deletedTool.toObject({ getters: true, virtuals: true });
   }
 }

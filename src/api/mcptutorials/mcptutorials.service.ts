@@ -26,12 +26,21 @@ export class MCPTutorialsService {
     return newTutorial.save();
   }
 
+  async findLatest(limit: number = 4): Promise<MCPTutorialEntity[]> {
+    return this.mcptutorialModel
+      .find()
+      .sort({ publishDate: -1, createdAt: -1 }) // Sort by newest first
+      .limit(limit)
+      .exec();
+  }
+
   async findAll(
     limit: number = 4, // Default to 4 as seen on the site for tutorials section
-    page: number = 1
-  ): Promise<{data: MCPTutorialEntity[], total: number, page: number, limit: number}> {
+    page: number = 1,
+  ): Promise<{ data: MCPTutorialEntity[]; total: number; page: number; limit: number }> {
     const skip = (page - 1) * limit;
-    const data = await this.mcptutorialModel.find()
+    const data = await this.mcptutorialModel
+      .find()
       .sort({ publishDate: -1, viewCount: -1 }) // Sort by newest and then by views
       .skip(skip)
       .limit(limit)

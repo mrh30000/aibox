@@ -1,8 +1,9 @@
 // Using a class for structure, Mongoose schema will be defined separately.
 // This entity will guide the Mongoose schema for MCP Tutorials.
 
-export class MCPTutorialEntity {
-  id: string; // MongoDB uses string IDs
+import { Document } from 'mongoose';
+
+export interface MCPTutorialEntity extends Document {
   title: string;
   summary: string; // Short summary/excerpt shown on the card
 
@@ -17,7 +18,5 @@ export class MCPTutorialEntity {
 
   tags?: string[]; // Optional tags for categorization
 
-  // Timestamps
-  createdAt: Date; // When this entry was created in our DB
-  updatedAt: Date; // When this entry was last updated in our DB
+  // Timestamps are handled by Mongoose Document
 }

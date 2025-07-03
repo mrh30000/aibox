@@ -1,8 +1,9 @@
 // Using a class for structure, Mongoose schema will be defined separately.
 // This entity will guide the Mongoose schema.
 
-export class ToolEntity {
-  id: string; // MongoDB uses string IDs
+import { Document } from 'mongoose';
+
+export interface ToolEntity extends Document {
   name: string;
   description: string;
   longDescription?: string; // For more detailed descriptions
@@ -25,7 +26,7 @@ export class ToolEntity {
   // Pricing info - simplified for now, can be expanded
   hasFreeTrial?: boolean;
   isFreemium?: boolean;
-  pricingModel?: 'subscription' | 'one-time' | 'usage-based' | 'free' | 'contact_us';
+  pricingModel?: 'subscription' | 'one-time' | 'usage-based' | 'free' | 'contact_us' | 'freemium';
   pricingDetails?: string; // Text description of pricing if complex
 
   // Additional useful fields
@@ -33,8 +34,6 @@ export class ToolEntity {
   useCases?: string[]; // What is this tool good for?
   features?: string[]; // Key features
 
-  // Timestamps
-  createdAt: Date;
-  updatedAt: Date;
+  // Timestamps are handled by Mongoose Document
   publishedAt?: Date; // When the tool was made public on the platform
 }

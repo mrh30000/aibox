@@ -1,8 +1,9 @@
 // Using a class for structure, Mongoose schema will be defined separately.
 // This entity will guide the Mongoose schema.
 
-export class ProjectEntity {
-  id: string; // MongoDB uses string IDs
+import { Document } from 'mongoose';
+
+export interface ProjectEntity extends Document {
   name: string; // Name of the project
   description: string; // Short description
   longDescription?: string; // More detailed description of the project
@@ -35,8 +36,7 @@ export class ProjectEntity {
   isFeatured?: boolean; // For highlighting specific projects
 
   // Timestamps
-  createdAt: Date; // When the project was added to our platform
-  updatedAt: Date; // Last update on our platform
+  // createdAt and updatedAt are handled by Mongoose Document
   projectCreatedAt?: Date; // Original creation date of the project itself, if known
   projectUpdatedAt?: Date; // Last update date of the project itself, if known
 }

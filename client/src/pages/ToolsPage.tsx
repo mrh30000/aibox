@@ -271,7 +271,8 @@ const ToolsPage: React.FC = () => {
               <button className="load-more-btn" onClick={handleLoadMore} disabled={isLoadingMore}>
                 {isLoadingMore ? '正在加载...' : '加载更多工具'}
               </button>
-          </div>
+            </div>
+          )}
         </section>
 
         {/* Tools Sidebar */}

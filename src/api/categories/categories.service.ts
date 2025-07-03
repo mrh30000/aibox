@@ -37,11 +37,13 @@ export class CategoriesService {
       throw new ConflictException(`Category with slug "${createCategoryDto.slug}" already exists.`);
     }
     const newCategory = new this.categoryModel(createCategoryDto);
-    return newCategory.save();
+    const savedCategory = await newCategory.save();
+    return savedCategory.toObject({ getters: true, virtuals: true }); // Convert to plain object and apply getters
   }
 
   async findAll(): Promise<CategoryEntity[]> {
-    return this.categoryModel.find().populate('parentCategory').sort({ displayOrder: 1, name: 1 }).exec();
+    const categories = await this.categoryModel.find().populate('parentCategory').sort({ displayOrder: 1, name: 1 }).exec();
+    return categories.map(category => category.toObject({ getters: true, virtuals: true }));
   }
 
   async findOne(id: string): Promise<CategoryEntity> {
@@ -49,7 +51,7 @@ export class CategoriesService {
     if (!category) {
       throw new NotFoundException(`Category with ID "${id}" not found`);
     }
-    return category;
+    return category.toObject({ getters: true, virtuals: true });
   }
 
   async findBySlug(slug: string): Promise<CategoryEntity> {
@@ -57,7 +59,7 @@ export class CategoriesService {
     if (!category) {
       throw new NotFoundException(`Category with slug "${slug}" not found`);
     }
-    return category;
+    return category.toObject({ getters: true, virtuals: true });
   }
 
 
@@ -72,7 +74,7 @@ export class CategoriesService {
     if (!updatedCategory) {
       throw new NotFoundException(`Category with ID "${id}" not found`);
     }
-    return updatedCategory;
+    return updatedCategory.toObject({ getters: true, virtuals: true });
   }
 
   async remove(id: string): Promise<CategoryEntity> {
@@ -82,6 +84,6 @@ export class CategoriesService {
     if (!deletedCategory) {
       throw new NotFoundException(`Category with ID "${id}" not found`);
     }
-    return deletedCategory;
+    return deletedCategory.toObject({ getters: true, virtuals: true });
   }
 }

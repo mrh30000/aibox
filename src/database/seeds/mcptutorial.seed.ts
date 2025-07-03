@@ -1,15 +1,5 @@
 // Sample MCP Tutorial Seed Data
-import { SeedMCPTutorial } from './seed.interface'; // Assuming a common interface file
-
-export interface SeedMCPTutorial { // Renaming to avoid conflict
-    title: string;
-    summary: string;
-    imageUrl?: string;
-    externalTutorialUrl?: string;
-    publishDate?: Date;
-    viewCount?: number;
-    tags?: string[];
-}
+import { SeedMCPTutorial } from './seed.interface';
 
 export const mcptutorialsSeed: SeedMCPTutorial[] = [
     {

@@ -36,11 +36,13 @@ export class ProjectsService {
 
   async create(createProjectDto: CreateProjectDto): Promise<ProjectEntity> {
     const newProject = new this.projectModel(createProjectDto);
-    return newProject.save();
+    const savedProject = await newProject.save();
+    return savedProject.toObject({ getters: true, virtuals: true });
   }
 
   async findAll(): Promise<ProjectEntity[]> {
-    return this.projectModel.find().exec();
+    const projects = await this.projectModel.find().exec();
+    return projects.map(project => project.toObject({ getters: true, virtuals: true }));
   }
 
   async findOne(id: string): Promise<ProjectEntity> {
@@ -48,7 +50,7 @@ export class ProjectsService {
     if (!project) {
       throw new NotFoundException(`Project with ID "${id}" not found`);
     }
-    return project;
+    return project.toObject({ getters: true, virtuals: true });
   }
 
   async update(id: string, updateProjectDto: UpdateProjectDto): Promise<ProjectEntity> {
@@ -56,7 +58,7 @@ export class ProjectsService {
     if (!updatedProject) {
       throw new NotFoundException(`Project with ID "${id}" not found`);
     }
-    return updatedProject;
+    return updatedProject.toObject({ getters: true, virtuals: true });
   }
 
   async remove(id: string): Promise<ProjectEntity> {
@@ -64,6 +66,6 @@ export class ProjectsService {
     if (!deletedProject) {
       throw new NotFoundException(`Project with ID "${id}" not found`);
     }
-    return deletedProject;
+    return deletedProject.toObject({ getters: true, virtuals: true });
   }
 }

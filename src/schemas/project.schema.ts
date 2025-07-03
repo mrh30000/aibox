@@ -29,7 +29,7 @@ export class Project extends Document {
   tags?: string[];
 
   @Prop({ type: String, enum: ['active', 'archived', 'in-development'] })
-  status?: string; // 'active' | 'archived' | 'in-development'
+  status?: 'active' | 'archived' | 'in-development';
 
   @Prop()
   license?: string;

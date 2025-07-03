@@ -1,8 +1,9 @@
 // Using a class for structure, Mongoose schema will be defined separately.
 // This entity will guide the Mongoose schema.
 
-export class NewsEntity {
-  id: string; // MongoDB uses string IDs
+import { Document } from 'mongoose';
+
+export interface NewsEntity extends Document {
   title: string;
   excerpt: string; // Short summary of the news
   content: string; // Full content, likely HTML or Markdown
@@ -22,7 +23,5 @@ export class NewsEntity {
   views?: number;
   // likes?: number; // Simplified for now, can add later if needed
 
-  // Timestamps
-  createdAt: Date;
-  updatedAt: Date;
+  // Timestamps are handled by Mongoose Document
 }

@@ -110,7 +110,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             For now, I'm omitting it. We can address its functionality later if needed.
         */}
         {/* <script src="/js/script.js"></script> */}
-      </footer>
       {/* The main HTML file (e.g., public/index.html) will contain the necessary script tags if script.js is global.
           Alternatively, its functionality might be integrated into specific React components or hooks.
        */}

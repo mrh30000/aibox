@@ -1,10 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SeederService } from './seeder.service';
-import { Tool, ToolSchema } from '../../schemas/tool.schema';
-import { News, NewsSchema } from '../../schemas/news.schema';
-import { Project, ProjectSchema } from '../../schemas/project.schema';
-import { Category, CategorySchema } from '../../schemas/category.schema';
+import { Tool, ToolSchema } from '../schemas/tool.schema';
+import { News, NewsSchema } from '../schemas/news.schema';
+import { Project, ProjectSchema } from '../schemas/project.schema';
+import { Category, CategorySchema } from '../schemas/category.schema';
+import { MCPServce, MCPServceSchema } from '../schemas/mcpservice.schema';
+import { MCPTutorial, MCPTutorialSchema } from '../schemas/mcptutorial.schema';
+import { InfoCard, InfoCardSchema } from '../schemas/infocard.schema';
+import { FAQItem, FAQItemSchema } from '../schemas/faqitem.schema';
 // Import your data modules if seeders need to use their services, though direct model injection is often simpler for seeding.
 // For example: import { CategoriesModule } from '../../api/categories/categories.module';
 
@@ -20,8 +24,8 @@ import { Category, CategorySchema } from '../../schemas/category.schema';
       { name: Category.name, schema: CategorySchema },
       { name: MCPServce.name, schema: MCPServceSchema },
       { name: MCPTutorial.name, schema: MCPTutorialSchema },
-      { name: InfoCard.name, schema: InfoCardSchema }, // Add InfoCard
-      { name: FAQItem.name, schema: FAQItemSchema }, // Add FAQItem
+      { name: InfoCard.name, schema: InfoCardSchema },
+      { name: FAQItem.name, schema: FAQItemSchema },
     ]),
   ],
   providers: [SeederService],

@@ -453,3 +453,207 @@
 .mcp-no-results a:hover {
     color: var(--mcp-primary-blue-darker);
 }
+
+/* Responsive Adjustments */
+
+/* Small devices (phones, 768px and below) */
+@media (max-width: 768px) {
+    .mcp-page-container {
+        padding: 0 10px;
+    }
+
+    .mcp-main-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem 10px;
+    }
+
+    .mcp-main-nav ul {
+        flex-direction: column;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .mcp-main-nav ul li {
+        margin: 5px 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .mcp-hero-section {
+        padding: 30px 15px;
+    }
+
+    .mcp-hero-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .mcp-hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .mcp-search-bar {
+        flex-direction: column;
+    }
+
+    .mcp-search-input {
+        border-radius: 4px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .mcp-search-button {
+        border-radius: 4px;
+        width: 100%;
+    }
+
+    .mcp-info-cards-grid,
+    .mcp-service-grid,
+    .mcp-tutorial-grid {
+        grid-template-columns: 1fr; /* Single column for small screens */
+    }
+
+    .mcp-section-title {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .mcp-filters-bar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .mcp-filter-group {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .mcp-filter-label {
+        margin-bottom: 8px;
+        margin-right: 0;
+    }
+
+    .mcp-language-filters, .mcp-status-filters, .mcp-sort-filters {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .mcp-language-filters li, .mcp-status-filters li, .mcp-sort-filters li {
+        margin-right: 0;
+        margin-bottom: 8px;
+        width: 100%;
+    }
+
+    .mcp-language-filters li a,
+    .mcp-status-filters li a,
+    .mcp-sort-filters li a {
+        width: 100%;
+        text-align: center;
+    }
+
+    .mcp-main-footer .mcp-footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .mcp-footer-about,
+    .mcp-footer-links-section {
+        margin-bottom: 30px;
+        width: 100%;
+    }
+
+    .mcp-footer-links-section ul {
+        padding-left: 0;
+    }
+
+    .mcp-footer-links-section ul li {
+        margin-bottom: 8px;
+    }
+
+    .mcp-footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .mcp-footer-legal-nav {
+        margin-top: 10px;
+    }
+}
+
+/* Medium devices (tablets, 768px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .mcp-page-container {
+        padding: 0 20px;
+    }
+
+    .mcp-hero-content h1 {
+        font-size: 2.2rem;
+    }
+
+    .mcp-hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .mcp-info-cards-grid,
+    .mcp-service-grid,
+    .mcp-tutorial-grid {
+        grid-template-columns: repeat(2, 1fr); /* Two columns for medium screens */
+        gap: 20px;
+    }
+
+    .mcp-filters-bar {
+        gap: 20px;
+    }
+
+    .mcp-main-footer .mcp-footer-content {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+}
+
+/* Large devices (desktops, 1025px and up) - Base styles already cover this */
+@media (min-width: 1025px) {
+    .mcp-info-cards-grid {
+        grid-template-columns: repeat(4, 1fr); /* Four columns for info cards on large screens */
+        gap: 25px;
+    }
+
+    .mcp-service-grid {
+        grid-template-columns: repeat(4, 1fr); /* Four columns for services on large screens */
+        gap: 25px;
+    }
+
+    .mcp-tutorial-grid {
+        grid-template-columns: repeat(3, 1fr); /* Three columns for tutorials on large screens */
+        gap: 25px;
+    }
+
+    .mcp-main-nav ul {
+        display: flex;
+        gap: 20px;
+    }
+
+    .mcp-search-bar {
+        display: flex;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .mcp-main-footer .mcp-footer-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .mcp-footer-about {
+        flex: 2;
+        margin-right: 40px;
+    }
+
+    .mcp-footer-links-section {
+        flex: 1;
+        min-width: 150px;
+    }
+}

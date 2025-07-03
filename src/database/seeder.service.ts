@@ -1,10 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Tool } from '../../schemas/tool.schema';
-import { News } from '../../schemas/news.schema';
-import { Project } from '../../schemas/project.schema';
-import { Category } from '../../schemas/category.schema';
+import { Tool } from '../schemas/tool.schema';
+import { News } from '../schemas/news.schema';
+import { Project } from '../schemas/project.schema';
+import { Category } from '../schemas/category.schema';
+import { CategoryEntity } from '../entities/category.entity'; // Import CategoryEntity
 // Import DTOs or Entities if needed for structuring seed data
 // For example: import { CreateCategoryDto } from '../../api/categories/categories.service';
 
@@ -18,10 +19,10 @@ import { mcptutorialsSeed } from './seeds/mcptutorial.seed';
 import { infocardsSeed } from './seeds/infocard.seed'; // Import InfoCard seed
 import { faqitemsSeed } from './seeds/faqitem.seed'; // Import FAQItem seed
 
-import { MCPServce } from '../../schemas/mcpservice.schema';
-import { MCPTutorial } from '../../schemas/mcptutorial.schema';
-import { InfoCard } from '../../schemas/infocard.schema'; // Import InfoCard schema model
-import { FAQItem } from '../../schemas/faqitem.schema'; // Import FAQItem schema model
+import { MCPServce } from '../schemas/mcpservice.schema';
+import { MCPTutorial } from '../schemas/mcptutorial.schema';
+import { InfoCard } from '../schemas/infocard.schema';
+import { FAQItem } from '../schemas/faqitem.schema';
 
 
 @Injectable()
@@ -63,11 +64,11 @@ export class SeederService {
         // Simple slug generation, can be more robust
         const slug = categoryData.slug || categoryData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 
-        let parentId = null;
+        let parentId: string | null = null; // Explicitly type parentId as string or null
         if (categoryData.parentCategorySlug) {
             const parent = await this.categoryModel.findOne({ slug: categoryData.parentCategorySlug }).exec();
             if (parent) {
-                parentId = parent._id;
+                parentId = (parent as any)._id.toString(); // Convert ObjectId to string
             } else {
                 this.logger.warn(`Parent category with slug "${categoryData.parentCategorySlug}" not found for "${categoryData.name}". Seeding as top-level.`);
             }

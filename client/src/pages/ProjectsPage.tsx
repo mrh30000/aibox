@@ -277,7 +277,8 @@ const ProjectsPage: React.FC = () => {
               <button className="load-more-btn" onClick={handleLoadMore} disabled={isLoadingMore}>
                 {isLoadingMore ? '正在加载...' : '加载更多项目'}
               </button>
-          </div>
+            </div>
+          )}
         </div>
       </section>
       {/* Note: CSS and JS from projects.hbs need to be handled */}

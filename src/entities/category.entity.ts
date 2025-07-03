@@ -1,13 +1,15 @@
 // Using a class for structure, Mongoose schema will be defined separately.
 // This entity will guide the Mongoose schema.
 
-export class CategoryEntity {
-  id: string; // MongoDB uses string IDs
+import { Document } from 'mongoose';
+
+export interface CategoryEntity extends Document {
+  id?: string; // Make id optional, as it's a virtual property derived from _id
   name: string; // Name of the category (e.g., "AI绘画", "AI写作")
   slug: string; // URL-friendly slug (e.g., "ai-painting")
   description?: string; // Optional description for the category
 
-  parentCategory?: string; // ID of the parent category, if this is a sub-category
+  parentCategory?: string | CategoryEntity; // ID of the parent category, or populated CategoryEntity
                            // This allows for hierarchical categories.
                            // For top-level categories, this would be null or undefined.
 
@@ -27,7 +29,5 @@ export class CategoryEntity {
 
   isFeatured?: boolean; // To highlight certain categories
 
-  // Timestamps
-  createdAt: Date;
-  updatedAt: Date;
+  // Timestamps are handled by Mongoose Document
 }

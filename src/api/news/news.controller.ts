@@ -6,11 +6,25 @@ import { NewsEntity } from '../../entities/news.entity';
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
+import { Types } from 'mongoose'; // Import Types
+
   private mapNewsEntityToDto(entity: NewsEntity): NewsItemDto {
+    // entity.id is a virtual getter from Mongoose that returns string version of _id
+    // Prefer entity.id as it's usually available and correctly typed.
+    // If _id must be accessed directly and its type is 'unknown' or 'any',
+    // casting might be needed for toString(), e.g., (entity._id as Types.ObjectId).toString()
+    // or (entity._id as any).toString().
+    // However, entity.id should be sufficient and safer.
+    const id = entity.id || (entity._id as Types.ObjectId)?.toString();
+    if (!id) {
+      // This case should ideally not happen for a saved Mongoose document
+      console.error('Error mapping NewsEntity: ID is missing.', entity);
+      throw new Error('Failed to map NewsEntity due to missing ID.');
+    }
     return {
-      id: entity.id || entity._id.toString(), // Mongoose documents have .id virtual or ._id
+      id: id,
       title: entity.title,
-      date: entity.publishedAt.toISOString(), // Or any other preferred string format
+      date: entity.publishedAt.toISOString(),
       category: entity.category,
       image: entity.imageUrl,
       excerpt: entity.excerpt,

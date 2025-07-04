@@ -20,6 +20,25 @@ export class CreateNewsDto {
 
 export class UpdateNewsDto extends CreateNewsDto {}
 
+// DTO for individual news items tailored for NewsPage.tsx
+export class NewsItemDto {
+  id: string; // MongoDB IDs are strings
+  title: string;
+  date: string; // Will be formatted string from Date
+  category?: string;
+  image?: string;
+  excerpt?: string;
+  views?: number; // Keep as number
+  // likes are not in NewsEntity, so not included unless we add them
+}
+
+// DTO for the /api/news-page-data endpoint response
+export class NewsPageDataDto {
+  newsItems: NewsItemDto[];
+  recommendedTools: { id: number; name: string; description: string; icon: string; }[];
+  popularTopics: { id: string; name: string; }[];
+}
+
 @Injectable()
 export class NewsService {
   constructor(@InjectModel(News.name) private newsModel: Model<News>) {}

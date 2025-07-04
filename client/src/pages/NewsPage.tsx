@@ -3,9 +3,9 @@ import Layout from '../components/Layout';
 
 // Interfaces for data structures (can be moved to a common types file)
 interface NewsItem {
-  id: number;
+  id: string; // Changed from number to string to match backend DTO
   title: string;
-  date: string;
+  date: string; // Backend sends ISO string, which is fine
   category?: string;
   image?: string;
   excerpt?: string; // Added for news card
@@ -48,7 +48,7 @@ const NewsPage: React.FC = () => {
   useEffect(() => {
     const fetchNewsPageData = async () => {
       try {
-        const response = await fetch('/api/news-page-data'); // Updated API endpoint
+        const response = await fetch('/api/news/page-data'); // Corrected API endpoint
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

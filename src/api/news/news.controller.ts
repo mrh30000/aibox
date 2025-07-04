@@ -1,17 +1,52 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, NotFoundException } from '@nestjs/common';
-import { NewsService, CreateNewsDto, UpdateNewsDto } from './news.service';
+import { NewsService, CreateNewsDto, UpdateNewsDto, NewsPageDataDto, NewsItemDto } from './news.service';
 import { NewsEntity } from '../../entities/news.entity';
 
-@Controller('api/news') // Standardized API prefix
+@Controller('api/news') // Standardized API prefix for news-related endpoints
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
-  @Post()
+  private mapNewsEntityToDto(entity: NewsEntity): NewsItemDto {
+    return {
+      id: entity.id || entity._id.toString(), // Mongoose documents have .id virtual or ._id
+      title: entity.title,
+      date: entity.publishedAt.toISOString(), // Or any other preferred string format
+      category: entity.category,
+      image: entity.imageUrl,
+      excerpt: entity.excerpt,
+      views: entity.views,
+    };
+  }
+
+  @Get('page-data') // This will be accessible at GET /api/news/page-data
+  async getNewsPageData(): Promise<NewsPageDataDto> {
+    const newsEntities = await this.newsService.findAll();
+    const newsItems = newsEntities.map(entity => this.mapNewsEntityToDto(entity));
+
+    const recommendedTools = [
+      { id: 1, name: 'ChatGPT', description: '智能对话助手', icon: 'https://ext.same-assets.com/155488376/946268843.jpeg'},
+      { id: 2, name: 'Claude 4', description: '高级AI助手', icon: 'https://ext.same-assets.com/155488376/614836080.jpeg'},
+    ];
+    const popularTopics = [
+      { id: 'ai-ethics', name: 'AI Ethics' },
+      { id: 'generative-ai', name: 'Generative AI' },
+      { id: 'llms', name: 'Large Language Models' },
+    ];
+
+    return {
+      newsItems,
+      recommendedTools,
+      popularTopics,
+    };
+  }
+
+  // Existing CRUD operations for news articles
+  @Post() // Path becomes POST /api/news
   async create(@Body() createNewsDto: CreateNewsDto): Promise<NewsEntity> {
     return this.newsService.create(createNewsDto);
   }
 
-  @Get()
+  @Get() // Path becomes GET /api/news
   async findAll(
     @Query('category') category?: string,
     @Query('isFeatured') isFeatured?: string,

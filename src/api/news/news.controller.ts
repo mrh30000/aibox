@@ -1,17 +1,66 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, NotFoundException } from '@nestjs/common';
-import { NewsService, CreateNewsDto, UpdateNewsDto } from './news.service';
+import { NewsService, CreateNewsDto, UpdateNewsDto, NewsPageDataDto, NewsItemDto } from './news.service';
 import { NewsEntity } from '../../entities/news.entity';
 
-@Controller('api/news') // Standardized API prefix
+@Controller('api/news') // Standardized API prefix for news-related endpoints
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
-  @Post()
+import { Types } from 'mongoose'; // Import Types
+
+  private mapNewsEntityToDto(entity: NewsEntity): NewsItemDto {
+    // entity.id is a virtual getter from Mongoose that returns string version of _id
+    // Prefer entity.id as it's usually available and correctly typed.
+    // If _id must be accessed directly and its type is 'unknown' or 'any',
+    // casting might be needed for toString(), e.g., (entity._id as Types.ObjectId).toString()
+    // or (entity._id as any).toString().
+    // However, entity.id should be sufficient and safer.
+    const id = entity.id || (entity._id as Types.ObjectId)?.toString();
+    if (!id) {
+      // This case should ideally not happen for a saved Mongoose document
+      console.error('Error mapping NewsEntity: ID is missing.', entity);
+      throw new Error('Failed to map NewsEntity due to missing ID.');
+    }
+    return {
+      id: id,
+      title: entity.title,
+      date: entity.publishedAt.toISOString(),
+      category: entity.category,
+      image: entity.imageUrl,
+      excerpt: entity.excerpt,
+      views: entity.views,
+    };
+  }
+
+  @Get('page-data') // This will be accessible at GET /api/news/page-data
+  async getNewsPageData(): Promise<NewsPageDataDto> {
+    const newsEntities = await this.newsService.findAll();
+    const newsItems = newsEntities.map(entity => this.mapNewsEntityToDto(entity));
+
+    const recommendedTools = [
+      { id: 1, name: 'ChatGPT', description: '智能对话助手', icon: 'https://ext.same-assets.com/155488376/946268843.jpeg'},
+      { id: 2, name: 'Claude 4', description: '高级AI助手', icon: 'https://ext.same-assets.com/155488376/614836080.jpeg'},
+    ];
+    const popularTopics = [
+      { id: 'ai-ethics', name: 'AI Ethics' },
+      { id: 'generative-ai', name: 'Generative AI' },
+      { id: 'llms', name: 'Large Language Models' },
+    ];
+
+    return {
+      newsItems,
+      recommendedTools,
+      popularTopics,
+    };
+  }
+
+  // Existing CRUD operations for news articles
+  @Post() // Path becomes POST /api/news
   async create(@Body() createNewsDto: CreateNewsDto): Promise<NewsEntity> {
     return this.newsService.create(createNewsDto);
   }
 
-  @Get()
+  @Get() // Path becomes GET /api/news
   async findAll(
     @Query('category') category?: string,
     @Query('isFeatured') isFeatured?: string,

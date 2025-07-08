@@ -5,34 +5,36 @@ import { Project } from '../../schemas/project.schema';
 import { ProjectEntity } from '../../entities/project.entity'; // For DTOs or type hints
 
 export class CreateProjectDto {
-    name: string;
-    description: string;
-    category: string; // Later, this could be Category ID
-    longDescription?: string;
-    projectUrl?: string;
-    repositoryUrl?: string;
-    demoUrl?: string;
-    tags?: string[];
-    status?: 'active' | 'archived' | 'in-development';
-    license?: string;
-    imageUrl?: string;
-    screenshots?: string[];
-    programmingLanguages?: string[];
-    technologiesUsed?: string[];
-    stars?: number;
-    forks?: number;
-    contributors?: number;
-    lastCommitDate?: Date;
-    isFeatured?: boolean;
-    projectCreatedAt?: Date;
-    projectUpdatedAt?: Date;
+  name: string;
+  description: string;
+  category: string; // Later, this could be Category ID
+  longDescription?: string;
+  projectUrl?: string;
+  repositoryUrl?: string;
+  demoUrl?: string;
+  tags?: string[];
+  status?: 'active' | 'archived' | 'in-development';
+  license?: string;
+  imageUrl?: string;
+  screenshots?: string[];
+  programmingLanguages?: string[];
+  technologiesUsed?: string[];
+  stars?: number;
+  forks?: number;
+  contributors?: number;
+  lastCommitDate?: Date;
+  isFeatured?: boolean;
+  projectCreatedAt?: Date;
+  projectUpdatedAt?: Date;
 }
 
 export class UpdateProjectDto extends CreateProjectDto {}
 
 @Injectable()
 export class ProjectsService {
-  constructor(@InjectModel(Project.name) private projectModel: Model<Project>) {}
+  constructor(
+    @InjectModel(Project.name) private projectModel: Model<Project>,
+  ) {}
 
   async create(createProjectDto: CreateProjectDto): Promise<ProjectEntity> {
     const newProject = new this.projectModel(createProjectDto);
@@ -42,7 +44,9 @@ export class ProjectsService {
 
   async findAll(): Promise<ProjectEntity[]> {
     const projects = await this.projectModel.find().exec();
-    return projects.map(project => project.toObject({ getters: true, virtuals: true }));
+    return projects.map((project) =>
+      project.toObject({ getters: true, virtuals: true }),
+    );
   }
 
   async findOne(id: string): Promise<ProjectEntity> {
@@ -53,8 +57,13 @@ export class ProjectsService {
     return project.toObject({ getters: true, virtuals: true });
   }
 
-  async update(id: string, updateProjectDto: UpdateProjectDto): Promise<ProjectEntity> {
-    const updatedProject = await this.projectModel.findByIdAndUpdate(id, updateProjectDto, { new: true }).exec();
+  async update(
+    id: string,
+    updateProjectDto: UpdateProjectDto,
+  ): Promise<ProjectEntity> {
+    const updatedProject = await this.projectModel
+      .findByIdAndUpdate(id, updateProjectDto, { new: true })
+      .exec();
     if (!updatedProject) {
       throw new NotFoundException(`Project with ID "${id}" not found`);
     }

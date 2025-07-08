@@ -2,7 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema({ timestamps: true }) // Enables createdAt and updatedAt
-export class MCPServce extends Document { // Changed class name to MCPServce for convention
+export class MCPServce extends Document {
+  // Changed class name to MCPServce for convention
   @Prop({ required: true, trim: true })
   name: string;
 

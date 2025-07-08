@@ -1,13 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Tool } from '../schemas/tool.schema';
 import { News } from '../schemas/news.schema';
 import { Project } from '../schemas/project.schema';
 import { Category } from '../schemas/category.schema';
-import { CategoryEntity } from '../entities/category.entity'; // Import CategoryEntity
-// Import DTOs or Entities if needed for structuring seed data
-// For example: import { CreateCategoryDto } from '../../api/categories/categories.service';
 
 // Import individual seeder functions/data arrays
 import { categoriesSeed } from './seeds/category.seed';
@@ -24,7 +21,6 @@ import { MCPTutorial } from '../schemas/mcptutorial.schema';
 import { InfoCard } from '../schemas/infocard.schema';
 import { FAQItem } from '../schemas/faqitem.schema';
 
-
 @Injectable()
 export class SeederService {
   private readonly logger = new Logger(SeederService.name);
@@ -34,8 +30,10 @@ export class SeederService {
     @InjectModel(News.name) private readonly newsModel: Model<News>,
     @InjectModel(Project.name) private readonly projectModel: Model<Project>,
     @InjectModel(Category.name) private readonly categoryModel: Model<Category>,
-    @InjectModel(MCPServce.name) private readonly mcpServiceModel: Model<MCPServce>,
-    @InjectModel(MCPTutorial.name) private readonly mcpTutorialModel: Model<MCPTutorial>,
+    @InjectModel(MCPServce.name)
+    private readonly mcpServiceModel: Model<MCPServce>,
+    @InjectModel(MCPTutorial.name)
+    private readonly mcpTutorialModel: Model<MCPTutorial>,
     @InjectModel(InfoCard.name) private readonly infoCardModel: Model<InfoCard>, // Inject InfoCard model
     @InjectModel(FAQItem.name) private readonly faqItemModel: Model<FAQItem>, // Inject FAQItem model
   ) {}
@@ -52,7 +50,6 @@ export class SeederService {
     await this.seedInfoCards(); // Add InfoCards to seed process
     await this.seedFAQItems(); // Add FAQItems to seed process
 
-
     this.logger.log('Database seeding completed.');
   }
 
@@ -62,21 +59,36 @@ export class SeederService {
     if (existingCategoriesCount === 0) {
       for (const categoryData of categoriesSeed) {
         // Simple slug generation, can be more robust
-        const slug = categoryData.slug || categoryData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+        const slug =
+          categoryData.slug ||
+          categoryData.name
+            .toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w-]+/g, '');
 
-        let parentId: string | null = null; // Explicitly type parentId as string or null
+        let parentId: Types.ObjectId | null = null;
         if (categoryData.parentCategorySlug) {
-            const parent = await this.categoryModel.findOne({ slug: categoryData.parentCategorySlug }).exec();
-            if (parent) {
-                parentId = (parent as any)._id.toString(); // Convert ObjectId to string
-            } else {
-                this.logger.warn(`Parent category with slug "${categoryData.parentCategorySlug}" not found for "${categoryData.name}". Seeding as top-level.`);
-            }
+          const parent = await this.categoryModel
+            .findOne({ slug: categoryData.parentCategorySlug })
+            .exec();
+          if (parent) {
+            parentId = parent._id as Types.ObjectId;
+          } else {
+            this.logger.warn(
+              `Parent category with slug "${categoryData.parentCategorySlug}" not found for "${categoryData.name}". Seeding as top-level.`,
+            );
+          }
         }
         try {
-            await this.categoryModel.create({ ...categoryData, slug, parentCategory: parentId });
+          await this.categoryModel.create({
+            ...categoryData,
+            slug,
+            parentCategory: parentId,
+          });
         } catch (error) {
-            this.logger.error(`Error seeding category "${categoryData.name}": ${error.message}`);
+          this.logger.error(
+            `Error seeding category "${categoryData.name}": ${(error as Error).message}`,
+          );
         }
       }
       this.logger.log('Categories seeded.');
@@ -90,11 +102,15 @@ export class SeederService {
     const existingToolsCount = await this.toolModel.countDocuments();
     if (existingToolsCount === 0) {
       for (const toolData of toolsSeed) {
-        const category = await this.categoryModel.findOne({ slug: toolData.categorySlug }).exec();
+        const category = await this.categoryModel
+          .findOne({ slug: toolData.categorySlug })
+          .exec();
         if (category) {
           await this.toolModel.create({ ...toolData, category: category._id }); // Store category ID
         } else {
-          this.logger.warn(`Category with slug "${toolData.categorySlug}" not found for tool "${toolData.name}". Skipping this tool.`);
+          this.logger.warn(
+            `Category with slug "${toolData.categorySlug}" not found for tool "${toolData.name}". Skipping this tool.`,
+          );
         }
       }
       this.logger.log('Tools seeded.');
@@ -107,12 +123,16 @@ export class SeederService {
     this.logger.log('Seeding news...');
     const existingNewsCount = await this.newsModel.countDocuments();
     if (existingNewsCount === 0) {
-       for (const newsData of newsSeed) {
-        const category = await this.categoryModel.findOne({ slug: newsData.categorySlug }).exec();
+      for (const newsData of newsSeed) {
+        const category = await this.categoryModel
+          .findOne({ slug: newsData.categorySlug })
+          .exec();
         if (category) {
           await this.newsModel.create({ ...newsData, category: category._id });
         } else {
-          this.logger.warn(`Category with slug "${newsData.categorySlug}" not found for news "${newsData.title}". Skipping this news item.`);
+          this.logger.warn(
+            `Category with slug "${newsData.categorySlug}" not found for news "${newsData.title}". Skipping this news item.`,
+          );
         }
       }
       this.logger.log('News seeded.');
@@ -126,11 +146,18 @@ export class SeederService {
     const existingProjectsCount = await this.projectModel.countDocuments();
     if (existingProjectsCount === 0) {
       for (const projectData of projectsSeed) {
-        const category = await this.categoryModel.findOne({ slug: projectData.categorySlug }).exec();
+        const category = await this.categoryModel
+          .findOne({ slug: projectData.categorySlug })
+          .exec();
         if (category) {
-          await this.projectModel.create({ ...projectData, category: category._id });
+          await this.projectModel.create({
+            ...projectData,
+            category: category._id,
+          });
         } else {
-          this.logger.warn(`Category with slug "${projectData.categorySlug}" not found for project "${projectData.name}". Skipping this project.`);
+          this.logger.warn(
+            `Category with slug "${projectData.categorySlug}" not found for project "${projectData.name}". Skipping this project.`,
+          );
         }
       }
       this.logger.log('Projects seeded.');
@@ -147,10 +174,14 @@ export class SeederService {
         await this.mcpServiceModel.insertMany(mcpservicesSeed);
         this.logger.log('MCP Services seeded.');
       } catch (error) {
-        this.logger.error(`Error seeding MCP Services: ${error.message}`);
+        this.logger.error(
+          `Error seeding MCP Services: ${(error as Error).message}`,
+        );
       }
     } else {
-      this.logger.log('MCP Services collection is not empty. Skipping seeding.');
+      this.logger.log(
+        'MCP Services collection is not empty. Skipping seeding.',
+      );
     }
   }
 
@@ -158,47 +189,67 @@ export class SeederService {
     this.logger.log('Seeding MCP Tutorials...');
     const existingCount = await this.mcpTutorialModel.countDocuments();
     if (existingCount === 0) {
-       try {
+      try {
         await this.mcpTutorialModel.insertMany(mcptutorialsSeed);
         this.logger.log('MCP Tutorials seeded.');
       } catch (error) {
-        this.logger.error(`Error seeding MCP Tutorials: ${error.message}`);
+        this.logger.error(
+          `Error seeding MCP Tutorials: ${(error as Error).message}`,
+        );
       }
     } else {
-      this.logger.log('MCP Tutorials collection is not empty. Skipping seeding.');
+      this.logger.log(
+        'MCP Tutorials collection is not empty. Skipping seeding.',
+      );
     }
   }
 
   private async seedInfoCards() {
     this.logger.log('Seeding InfoCards...');
-    const existingCount = await this.infoCardModel.countDocuments({ targetAudience: 'mcpPage' });
+    const existingCount = await this.infoCardModel.countDocuments({
+      targetAudience: 'mcpPage',
+    });
     if (existingCount === 0) {
       try {
         // Filter seed data just in case, though it's already specific
-        const mcpInfoCards = infocardsSeed.filter(card => card.targetAudience === 'mcpPage');
+        const mcpInfoCards = infocardsSeed.filter(
+          (card) => card.targetAudience === 'mcpPage',
+        );
         await this.infoCardModel.insertMany(mcpInfoCards);
         this.logger.log('MCP InfoCards seeded.');
       } catch (error) {
-        this.logger.error(`Error seeding MCP InfoCards: ${error.message}`);
+        this.logger.error(
+          `Error seeding MCP InfoCards: ${(error as Error).message}`,
+        );
       }
     } else {
-      this.logger.log('MCP InfoCards (for mcpPage) collection is not empty. Skipping seeding.');
+      this.logger.log(
+        'MCP InfoCards (for mcpPage) collection is not empty. Skipping seeding.',
+      );
     }
   }
 
   private async seedFAQItems() {
     this.logger.log('Seeding FAQItems...');
-    const existingCount = await this.faqItemModel.countDocuments({ category: 'mcpGeneral' });
+    const existingCount = await this.faqItemModel.countDocuments({
+      category: 'mcpGeneral',
+    });
     if (existingCount === 0) {
-       try {
-        const mcpFAQItems = faqitemsSeed.filter(item => item.category === 'mcpGeneral');
+      try {
+        const mcpFAQItems = faqitemsSeed.filter(
+          (item) => item.category === 'mcpGeneral',
+        );
         await this.faqItemModel.insertMany(mcpFAQItems);
         this.logger.log('MCP FAQItems seeded.');
       } catch (error) {
-        this.logger.error(`Error seeding MCP FAQItems: ${error.message}`);
+        this.logger.error(
+          `Error seeding MCP FAQItems: ${(error as Error).message}`,
+        );
       }
     } else {
-      this.logger.log('MCP FAQItems (for mcpGeneral) collection is not empty. Skipping seeding.');
+      this.logger.log(
+        'MCP FAQItems (for mcpGeneral) collection is not empty. Skipping seeding.',
+      );
     }
   }
 }

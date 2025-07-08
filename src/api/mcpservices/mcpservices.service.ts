@@ -1,31 +1,35 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, FilterQuery, SortOrder } from 'mongoose';
 import { MCPServce } from '../../schemas/mcpservice.schema'; // Corrected class name
 import { MCPServceEntity } from '../../entities/mcpservice.entity';
 
 // DTOs for MCPServce
 export class CreateMCPServceDto {
-    name: string;
-    description: string;
-    longDescription?: string;
-    imageUrl?: string;
-    languageOrTech?: string;
-    userCountOrStars?: number;
-    rating?: number;
-    isVerified?: boolean;
-    externalServiceUrl?: string;
-    tags?: string[];
-    addedToPlatformAt?: Date;
+  name: string;
+  description: string;
+  longDescription?: string;
+  imageUrl?: string;
+  languageOrTech?: string;
+  userCountOrStars?: number;
+  rating?: number;
+  isVerified?: boolean;
+  externalServiceUrl?: string;
+  tags?: string[];
+  addedToPlatformAt?: Date;
 }
 
 export class UpdateMCPServceDto extends CreateMCPServceDto {}
 
 @Injectable()
 export class MCPServicesService {
-  constructor(@InjectModel(MCPServce.name) private mcpserviceModel: Model<MCPServce>) {}
+  constructor(
+    @InjectModel(MCPServce.name) private mcpserviceModel: Model<MCPServce>,
+  ) {}
 
-  async create(createMCPServceDto: CreateMCPServceDto): Promise<MCPServceEntity> {
+  async create(
+    createMCPServceDto: CreateMCPServceDto,
+  ): Promise<MCPServceEntity> {
     const newService = new this.mcpserviceModel(createMCPServceDto);
     return newService.save();
   }
@@ -34,12 +38,18 @@ export class MCPServicesService {
     // Basic filtering options, can be expanded
     tag?: string,
     limit: number = 10,
-    page: number = 1
-  ): Promise<{data: MCPServceEntity[], total: number, page: number, limit: number}> {
-    const query = tag ? { tags: tag } : {};
+    page: number = 1,
+  ): Promise<{
+    data: MCPServceEntity[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
+    const query: FilterQuery<MCPServce> = tag ? { tags: tag } : {};
     const skip = (page - 1) * limit;
 
-    const data = await this.mcpserviceModel.find(query)
+    const data = await this.mcpserviceModel
+      .find(query)
       .sort({ userCountOrStars: -1, rating: -1, name: 1 }) // Example sort
       .skip(skip)
       .limit(limit)
@@ -76,8 +86,13 @@ export class MCPServicesService {
     searchTerm: string,
     limit: number = 10,
     page: number = 1,
-  ): Promise<{ data: MCPServceEntity[]; total: number; page: number; limit: number }> {
-    const query = {
+  ): Promise<{
+    data: MCPServceEntity[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
+    const query: FilterQuery<MCPServce> = {
       $or: [
         { name: { $regex: searchTerm, $options: 'i' } },
         { description: { $regex: searchTerm, $options: 'i' } },
@@ -93,10 +108,13 @@ export class MCPServicesService {
     return { data, total, page, limit };
   }
 
-  async findCategorizedServices(
-    limitPerCategory: number = 3,
-  ): Promise<
-    { categoryName: string; categorySlug: string; services: MCPServceEntity[]; hasMore: boolean }[]
+  async findCategorizedServices(limitPerCategory: number = 3): Promise<
+    {
+      categoryName: string;
+      categorySlug: string;
+      services: MCPServceEntity[];
+      hasMore: boolean;
+    }[]
   > {
     const categories = await this.mcpserviceModel.distinct('tags').exec();
     const result = await Promise.all(
@@ -131,8 +149,12 @@ export class MCPServicesService {
     sort?: string;
     languageOrTech?: string;
     isVerified?: boolean;
-  }): Promise<{ services: MCPServceEntity[]; total: number; totalPages: number }> {
-    const findQuery: any = {};
+  }): Promise<{
+    services: MCPServceEntity[];
+    total: number;
+    totalPages: number;
+  }> {
+    const findQuery: FilterQuery<MCPServce> = {};
     if (query) {
       findQuery.$or = [
         { name: { $regex: query, $options: 'i' } },
@@ -147,7 +169,7 @@ export class MCPServicesService {
       findQuery.isVerified = isVerified;
     }
 
-    const sortQuery: any = {};
+    const sortQuery: { [key: string]: SortOrder } = {};
     switch (sort) {
       case 'popularity':
         sortQuery.userCountOrStars = -1;
@@ -189,8 +211,12 @@ export class MCPServicesService {
     sort?: string;
     languageOrTech?: string;
     isVerified?: boolean;
-  }): Promise<{ services: MCPServceEntity[]; total: number; totalPages: number }> {
-    const findQuery: any = { tags: tag };
+  }): Promise<{
+    services: MCPServceEntity[];
+    total: number;
+    totalPages: number;
+  }> {
+    const findQuery: FilterQuery<MCPServce> = { tags: tag };
     if (languageOrTech) {
       findQuery.languageOrTech = languageOrTech;
     }
@@ -198,7 +224,7 @@ export class MCPServicesService {
       findQuery.isVerified = isVerified;
     }
 
-    const sortQuery: any = {};
+    const sortQuery: { [key: string]: SortOrder } = {};
     switch (sort) {
       case 'popularity':
         sortQuery.userCountOrStars = -1;
@@ -248,7 +274,9 @@ export class MCPServicesService {
   }
 
   async remove(id: string): Promise<MCPServceEntity> {
-    const deletedService = await this.mcpserviceModel.findByIdAndDelete(id).exec();
+    const deletedService = await this.mcpserviceModel
+      .findByIdAndDelete(id)
+      .exec();
     if (!deletedService) {
       throw new NotFoundException(`MCP Service with ID "${id}" not found`);
     }

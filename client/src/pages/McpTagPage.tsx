@@ -99,8 +99,17 @@ const McpTagPage: React.FC = () => {
     return <Layout><div className="mcp-page-container"><McpHeader /><p style={{ textAlign: 'center', padding: '40px' }}>Could not load data for tag: {tagSlug}.</p></div></Layout>;
   }
 
-  const { tagName, services, availableLanguages, availableSortOptions, selectedLang, selectedVerifiedStatus, selectedSort, pagination } = pageData;
+  const { tagName, services, availableLanguages, availableSortOptions, pagination } = pageData;
   const paginationBaseUrl = `/mcp/tag/${tagSlug}?${searchParams.toString().replace(/&?page=\d+/, '')}`;
+
+  // Use the handleFilterChange to simplify filter links
+  const getFilterLinkProps = (paramName: string, value: string) => ({
+    onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        handleFilterChange(paramName, value);
+    },
+    href: `/mcp/tag/${tagSlug}?${new URLSearchParams(searchParams).toString()}` // href for context, though onClick is primary
+  });
 
 
   return (
@@ -116,21 +125,21 @@ const McpTagPage: React.FC = () => {
                 <span className="mcp-filter-label">Language/Tech:</span>
                 <ul className="mcp-language-filters">
                   <li>
-                    <Link
-                        to={`/mcp/tag/${tagSlug}?verified=${selectedVerifiedStatus || ''}&sort=${selectedSort || ''}&page=1`}
-                        className={!selectedLang ? 'active-filter' : ''}
+                    <a
+                        {...getFilterLinkProps('lang', '')}
+                        className={!currentLang ? 'active-filter' : ''}
                     >
                        All
-                    </Link>
+                    </a>
                   </li>
                   {availableLanguages.map(lang => (
                     <li key={lang}>
-                      <Link
-                        to={`/mcp/tag/${tagSlug}?lang=${encodeURIComponent(lang)}&verified=${selectedVerifiedStatus || ''}&sort=${selectedSort || ''}&page=1`}
-                        className={selectedLang === lang ? 'active-filter' : ''}
+                      <a
+                        {...getFilterLinkProps('lang', lang)}
+                        className={currentLang === lang ? 'active-filter' : ''}
                       >
                         {lang}
-                      </Link>
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -139,13 +148,13 @@ const McpTagPage: React.FC = () => {
                 <span className="mcp-filter-label">Status:</span>
                 <ul className="mcp-status-filters">
                     <li>
-                        <Link to={`/mcp/tag/${tagSlug}?lang=${selectedLang || ''}&sort=${selectedSort || ''}&page=1`} className={!selectedVerifiedStatus ? 'active-filter' : ''}>All</Link>
+                        <a {...getFilterLinkProps('verified', '')} className={!currentVerified ? 'active-filter' : ''}>All</a>
                     </li>
                     <li>
-                        <Link to={`/mcp/tag/${tagSlug}?lang=${selectedLang || ''}&verified=true&sort=${selectedSort || ''}&page=1`} className={selectedVerifiedStatus === 'true' ? 'active-filter' : ''}>Verified</Link>
+                        <a {...getFilterLinkProps('verified', 'true')} className={currentVerified === 'true' ? 'active-filter' : ''}>Verified</a>
                     </li>
                     <li>
-                        <Link to={`/mcp/tag/${tagSlug}?lang=${selectedLang || ''}&verified=false&sort=${selectedSort || ''}&page=1`} className={selectedVerifiedStatus === 'false' ? 'active-filter' : ''}>Not Verified</Link>
+                        <a {...getFilterLinkProps('verified', 'false')} className={currentVerified === 'false' ? 'active-filter' : ''}>Not Verified</a>
                     </li>
                 </ul>
               </div>
@@ -154,21 +163,21 @@ const McpTagPage: React.FC = () => {
                  <ul className="mcp-sort-filters">
                     {/* Default / Clear Sort Option */}
                     <li>
-                        <Link
-                            to={`/mcp/tag/${tagSlug}?lang=${selectedLang || ''}&verified=${selectedVerifiedStatus || ''}&page=1`}
-                            className={!selectedSort ? 'active-filter' : ''}
+                        <a
+                            {...getFilterLinkProps('sort', '')}
+                            className={!currentSort ? 'active-filter' : ''}
                         >
                             Default
-                        </Link>
+                        </a>
                     </li>
                     {availableSortOptions.map(opt => (
                         <li key={opt.value}>
-                            <Link
-                                to={`/mcp/tag/${tagSlug}?lang=${selectedLang || ''}&verified=${selectedVerifiedStatus || ''}&sort=${opt.value}&page=1`}
-                                className={selectedSort === opt.value ? 'active-filter' : ''}
+                            <a
+                                {...getFilterLinkProps('sort', opt.value)}
+                                className={currentSort === opt.value ? 'active-filter' : ''}
                             >
                                 {opt.label}
-                            </Link>
+                            </a>
                         </li>
                     ))}
                 </ul>

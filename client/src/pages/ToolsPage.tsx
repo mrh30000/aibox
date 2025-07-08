@@ -62,10 +62,10 @@ const placeholderSidebarNews: SidebarNewsItem[] = [
 
 
 const ToolsPage: React.FC = () => {
-  const [categories, setCategories] = useState<ToolCategory[]>(placeholderCategories);
-  const [tools, setTools] = useState<Tool[]>(placeholderTools);
-  const [trendingTools, setTrendingTools] = useState<SidebarTrendTool[]>(placeholderTrendingTools);
-  const [sidebarNews, setSidebarNews] = useState<SidebarNewsItem[]>(placeholderSidebarNews);
+  const [categories, setCategories] = useState<ToolCategory[]>([]);
+  const [tools, setTools] = useState<Tool[]>([]);
+  const [trendingTools, setTrendingTools] = useState<SidebarTrendTool[]>([]);
+  const [sidebarNews, setSidebarNews] = useState<SidebarNewsItem[]>([]);
 
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [sortOrder, setSortOrder] = useState<string>('popularity');
@@ -73,68 +73,66 @@ const ToolsPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalToolsCount, setTotalToolsCount] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 
 
-  const fetchToolsData = async (page: number, loadMore = false) => {
-    if (loadMore) setIsLoadingMore(true);
-    else setIsLoading(true);
-
-    try {
-      const params = new URLSearchParams({
-        category: activeCategory,
-        sort: sortOrder,
-        page: String(page),
-        limit: '10' // Or make limit configurable
-      });
-      const response = await fetch(`/api/tools-page-data?${params.toString()}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-
-      setCategories(data.categories.map((cat: ToolCategory, index: number) => ({...cat, active: cat.id === activeCategory || (activeCategory === 'all' && index === 0 && !data.categories.find((c:ToolCategory) => c.id === 'all')) }))); // Ensure 'all' or first category is active
-
-      if (loadMore) {
-        setTools(prevTools => [...prevTools, ...data.tools]);
-      } else {
-        setTools(data.tools);
-      }
-      setTrendingTools(data.trendingTools || []);
-      setSidebarNews(data.sidebarNews || []);
-      setTotalPages(data.totalPages || 1);
-      setTotalToolsCount(data.totalTools || 0);
-      setCurrentPage(data.currentPage || 1);
-
-    } catch (error) {
-      console.error("Failed to fetch tools page data:", error);
-      // Handle error state in UI, e.g., show an error message
-    } finally {
-      setIsLoading(false);
-      setIsLoadingMore(false);
-    }
-  };
-
   useEffect(() => {
-    fetchToolsData(1); // Fetch initial data on component mount or when filters change
-  }, [activeCategory, sortOrder]);
+    const fetchToolsData = async (page: number, loadMore = false) => {
+        if (loadMore) setIsLoadingMore(true);
+        else setIsLoading(true);
+
+        try {
+        const params = new URLSearchParams({
+            category: activeCategory,
+            sort: sortOrder,
+            page: String(page),
+            limit: '10' // Or make limit configurable
+        });
+        const response = await fetch(`/api/tools-page-data?${params.toString()}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        setCategories(data.categories.map((cat: ToolCategory) => ({...cat, active: cat.id === activeCategory })));
+
+        if (loadMore) {
+            setTools(prevTools => [...prevTools, ...data.tools]);
+        } else {
+            setTools(data.tools);
+        }
+        setTrendingTools(data.trendingTools || []);
+        setSidebarNews(data.sidebarNews || []);
+        setTotalPages(data.pagination?.totalPages || 1);
+        setTotalToolsCount(data.pagination?.totalItems || 0);
+        setCurrentPage(data.pagination?.currentPage || 1);
+
+        } catch (error) {
+        console.error("Failed to fetch tools page data:", error);
+        // Handle error state in UI, e.g., show an error message
+        } finally {
+        setIsLoading(false);
+        setIsLoadingMore(false);
+        }
+    };
+
+    fetchToolsData(currentPage, currentPage > 1);
+  }, [activeCategory, sortOrder, currentPage]);
 
   const handleCategoryFilter = (categoryId: string) => {
     setActiveCategory(categoryId);
     setCurrentPage(1); // Reset to first page when category changes
-    // fetchToolsData(1) will be called by useEffect due to activeCategory change
   };
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOrder(event.target.value);
     setCurrentPage(1); // Reset to first page when sort order changes
-     // fetchToolsData(1) will be called by useEffect due to sortOrder change
   };
 
   const handleLoadMore = () => {
     if (currentPage < totalPages && !isLoadingMore) {
-      fetchToolsData(currentPage + 1, true);
+      setCurrentPage(prevPage => prevPage + 1);
     }
   };
 

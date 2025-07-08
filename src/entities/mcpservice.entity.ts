@@ -20,7 +20,7 @@ export interface MCPServceEntity extends Document {
   // internalDetailPageSlug?: string;
 
   tags?: string[]; // For categories like "开发效率工具", "聊天机器人" etc.
-                   // These could also be references to a new MCPCategoryEntity if we need to manage these categories
+  // These could also be references to a new MCPCategoryEntity if we need to manage these categories
 
   // Timestamps are handled by Mongoose Document
 }

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, SchemaTypes } from 'mongoose';
+import { Document } from 'mongoose';
 // import { Category } from './category.schema'; // If referencing Category schema directly
 
 @Schema({ timestamps: true }) // Enables createdAt and updatedAt
@@ -46,8 +46,24 @@ export class Tool extends Document {
   @Prop()
   isFreemium?: boolean;
 
-  @Prop({ type: String, enum: ['subscription', 'one-time', 'usage-based', 'free', 'contact_us', 'freemium'] })
-  pricingModel?: 'subscription' | 'one-time' | 'usage-based' | 'free' | 'contact_us' | 'freemium';
+  @Prop({
+    type: String,
+    enum: [
+      'subscription',
+      'one-time',
+      'usage-based',
+      'free',
+      'contact_us',
+      'freemium',
+    ],
+  })
+  pricingModel?:
+    | 'subscription'
+    | 'one-time'
+    | 'usage-based'
+    | 'free'
+    | 'contact_us'
+    | 'freemium';
 
   @Prop()
   pricingDetails?: string;

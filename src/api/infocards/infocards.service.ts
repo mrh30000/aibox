@@ -7,16 +7,25 @@ import { InfoCardEntity } from '../../entities/infocard.entity';
 
 @Injectable()
 export class InfoCardsService {
-  constructor(@InjectModel(InfoCard.name) private infoCardModel: Model<InfoCard>) {}
+  constructor(
+    @InjectModel(InfoCard.name) private infoCardModel: Model<InfoCard>,
+  ) {}
 
   async findAll(targetAudience?: string): Promise<InfoCardEntity[]> {
     const query = targetAudience ? { targetAudience: targetAudience } : {};
-    const infoCards = await this.infoCardModel.find(query).sort({ displayOrder: 1 }).exec();
-    return infoCards.map(card => card.toObject({ getters: true, virtuals: true }));
+    const infoCards = await this.infoCardModel
+      .find(query)
+      .sort({ displayOrder: 1 })
+      .exec();
+    return infoCards.map((card) =>
+      card.toObject({ getters: true, virtuals: true }),
+    );
   }
 
   // Basic CRUD if needed later for an admin panel
-  async create(createInfoCardDto: Partial<InfoCardEntity>): Promise<InfoCardEntity> {
+  async create(
+    createInfoCardDto: Partial<InfoCardEntity>,
+  ): Promise<InfoCardEntity> {
     const newInfoCard = new this.infoCardModel(createInfoCardDto);
     const savedInfoCard = await newInfoCard.save();
     return savedInfoCard.toObject({ getters: true, virtuals: true });
@@ -30,8 +39,13 @@ export class InfoCardsService {
     return infoCard.toObject({ getters: true, virtuals: true });
   }
 
-  async update(id: string, updateInfoCardDto: Partial<InfoCardEntity>): Promise<InfoCardEntity> {
-    const updatedInfoCard = await this.infoCardModel.findByIdAndUpdate(id, updateInfoCardDto, { new: true }).exec();
+  async update(
+    id: string,
+    updateInfoCardDto: Partial<InfoCardEntity>,
+  ): Promise<InfoCardEntity> {
+    const updatedInfoCard = await this.infoCardModel
+      .findByIdAndUpdate(id, updateInfoCardDto, { new: true })
+      .exec();
     if (!updatedInfoCard) {
       throw new NotFoundException(`InfoCard with ID "${id}" not found`);
     }
@@ -39,7 +53,9 @@ export class InfoCardsService {
   }
 
   async remove(id: string): Promise<InfoCardEntity> {
-    const deletedInfoCard = await this.infoCardModel.findByIdAndDelete(id).exec();
+    const deletedInfoCard = await this.infoCardModel
+      .findByIdAndDelete(id)
+      .exec();
     if (!deletedInfoCard) {
       throw new NotFoundException(`InfoCard with ID "${id}" not found`);
     }

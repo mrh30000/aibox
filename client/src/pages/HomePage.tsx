@@ -52,42 +52,59 @@ const HomePage: React.FC = () => {
   const [hotTools, setHotTools] = useState<HotTool[]>([]);
   const [categories, setCategories] = useState<CategoryInfo[]>([]);
   const [featuredGuides, setFeaturedGuides] = useState<FeaturedGuide[]>([]);
-  // const [openSourceProjects, setOpenSourceProjects] = useState<OpenSourceProject[]>([]); // For AI开源项目 section
+
+  const [activeNewsTab, setActiveNewsTab] = useState('latest');
+  const [activeRankingTab, setActiveRankingTab] = useState('latest');
+  const [activeCategoryTab, setActiveCategoryTab] = useState<number | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (endpoint: string, setter: Function) => {
       try {
-        const newsResponse = await fetch('/api/home-data/news');
-        setNewsItems(await newsResponse.json());
-
-        const toolsResponse = await fetch('/api/home-data/hot-tools');
-        // Add rank to hot tools based on order, as original HBS template used @index
-        const toolsData = await toolsResponse.json();
-        setHotTools(toolsData.map((tool: HotTool, index: number) => ({ ...tool, rank: index + 1 })));
-
-
-        const categoriesResponse = await fetch('/api/home-data/categories');
-        // Set first category as active, similar to HBS
-        const catData = await categoriesResponse.json();
-        if (catData.length > 0) {
-            catData[0].active = true;
-        }
-        setCategories(catData);
-
-        const guidesResponse = await fetch('/api/home-data/featured-guides');
-        setFeaturedGuides(await guidesResponse.json());
-
-        // const projectsResponse = await fetch('/api/home-data/open-source-projects');
-        // setOpenSourceProjects(await projectsResponse.json());
-
+        const response = await fetch(`/api/home-data/${endpoint}`);
+        const data = await response.json();
+        setter(data);
       } catch (error) {
-        console.error("Failed to fetch homepage data:", error);
-        // Handle error state appropriately in UI
+        console.error(`Failed to fetch ${endpoint}:`, error);
       }
     };
 
-    fetchData();
+    const fetchAllData = async () => {
+        await Promise.all([
+            fetchData('news', setNewsItems),
+            fetchData('hot-tools', (data: HotTool[]) => 
+                setHotTools(data.map((tool, index) => ({ ...tool, rank: index + 1 })))
+            ),
+            fetchData('categories', (data: CategoryInfo[]) => {
+                if (data.length > 0) {
+                    data[0].active = true;
+                    setActiveCategoryTab(data[0].id);
+                }
+                setCategories(data);
+            }),
+            fetchData('featured-guides', setFeaturedGuides),
+        ]);
+    };
+
+    fetchAllData();
   }, []);
+
+  const handleNewsTabClick = (tab: string) => {
+    setActiveNewsTab(tab);
+    // Here you would typically fetch new data, e.g., fetchNews(tab)
+    console.log(`Fetching news for tab: ${tab}`);
+  };
+
+  const handleRankingTabClick = (tab: string) => {
+    setActiveRankingTab(tab);
+    // Fetch new data for the selected ranking list
+    console.log(`Fetching rankings for tab: ${tab}`);
+  };
+
+  const handleCategoryClick = (categoryId: number) => {
+    setActiveCategoryTab(categoryId);
+    // Fetch tools for the selected category
+    console.log(`Fetching tools for category: ${categoryId}`);
+  };
 
   return (
     <Layout>
@@ -114,9 +131,9 @@ const HomePage: React.FC = () => {
             <h2 className="section-title">新鲜AI资讯</h2>
             <p className="section-subtitle">实时更新AI行业的最新资讯</p>
             <div className="section-tabs">
-              <span className="tab active">最新</span>
-              <span className="tab">视频</span>
-              <span className="tab">热门</span>
+              <span className={`tab ${activeNewsTab === 'latest' ? 'active' : ''}`} onClick={() => handleNewsTabClick('latest')}>最新</span>
+              <span className={`tab ${activeNewsTab === 'video' ? 'active' : ''}`} onClick={() => handleNewsTabClick('video')}>视频</span>
+              <span className={`tab ${activeNewsTab === 'hot' ? 'active' : ''}`} onClick={() => handleNewsTabClick('hot')}>热门</span>
             </div>
           </div>
 
@@ -143,17 +160,17 @@ const HomePage: React.FC = () => {
           <div className="section-header">
             <h2 className="section-title">热门AI榜单</h2>
             <div className="ranking-tabs">
-              <div className="ranking-tab active">
+              <div className={`ranking-tab ${activeRankingTab === 'latest' ? 'active' : ''}`} onClick={() => handleRankingTabClick('latest')}>
                 <span className="tab-icon">🔥</span>
                 <span className="tab-text">最新收录推荐</span>
                 <small className="tab-desc">全面展示优质AI产品推荐</small>
               </div>
-              <div className="ranking-tab">
+              <div className={`ranking-tab ${activeRankingTab === 'weekly' ? 'active' : ''}`} onClick={() => handleRankingTabClick('weekly')}>
                 <span className="tab-icon">📈</span>
                 <span className="tab-text">周流量暴涨升级</span>
                 <small className="tab-desc">周流量暴涨的AI产品排行</small>
               </div>
-              <div className="ranking-tab">
+              <div className={`ranking-tab ${activeRankingTab === 'monthly' ? 'active' : ''}`} onClick={() => handleRankingTabClick('monthly')}>
                 <span className="tab-icon">📊</span>
                 <span className="tab-text">月流量暴涨升级</span>
                 <small className="tab-desc">月流量暴涨AI产品排行</small>
@@ -198,7 +215,11 @@ const HomePage: React.FC = () => {
           <div className="categories-nav">
             {categories.length > 0 ? (
               categories.map((category) => (
-                <div className={`category-tab ${category.active ? 'active' : ''}`} key={category.id}>
+                <div 
+                    className={`category-tab ${activeCategoryTab === category.id ? 'active' : ''}`} 
+                    key={category.id}
+                    onClick={() => handleCategoryClick(category.id)}
+                >
                   <span className="category-icon">{category.icon}</span>
                   <span className="category-name">{category.name}</span>
                 </div>

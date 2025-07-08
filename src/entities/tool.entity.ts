@@ -26,7 +26,13 @@ export interface ToolEntity extends Document {
   // Pricing info - simplified for now, can be expanded
   hasFreeTrial?: boolean;
   isFreemium?: boolean;
-  pricingModel?: 'subscription' | 'one-time' | 'usage-based' | 'free' | 'contact_us' | 'freemium';
+  pricingModel?:
+    | 'subscription'
+    | 'one-time'
+    | 'usage-based'
+    | 'free'
+    | 'contact_us'
+    | 'freemium';
   pricingDetails?: string; // Text description of pricing if complex
 
   // Additional useful fields

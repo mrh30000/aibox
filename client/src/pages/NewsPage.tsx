@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
+import PaginationControls from '../components/common/PaginationControls'; // Assuming this component exists and is suitable
 
-// Interfaces for data structures (can be moved to a common types file)
+// Interfaces for data structures
 interface NewsItem {
-  id: string; // Changed from number to string to match backend DTO
+  id: string;
   title: string;
-  date: string; // Backend sends ISO string, which is fine
+  date: string;
   category?: string;
   image?: string;
-  excerpt?: string; // Added for news card
+  excerpt?: string;
   views?: string | number;
   likes?: string | number;
 }
@@ -20,35 +21,34 @@ interface HotTool {
     icon: string;
 }
 
-// Placeholder data - to be replaced with API calls
-const placeholderNews: NewsItem[] = [
-  { id: 1, title: 'AI News Title 1', date: '2024-06-05', category: 'AI头条', image: 'https://via.placeholder.com/200x150', excerpt: 'This is a sample excerpt for the news item, showcasing the latest developments.', views: '1.2K', likes: 56 },
-  { id: 2, title: 'Another AI Breakthrough', date: '2024-06-04', category: '技术进展', image: 'https://via.placeholder.com/200x150', excerpt: 'Details about a significant advancement in AI technology and its potential impact.', views: '2.5K', likes: 120 },
-];
-
-const placeholderRecommendedTools: HotTool[] = [
-    { id: 1, name: 'ChatGPT', description: '智能对话助手', icon: 'https://ext.same-assets.com/155488376/946268843.jpeg'},
-    { id: 2, name: 'Claude 4', description: '高级AI助手', icon: 'https://ext.same-assets.com/155488376/614836080.jpeg'},
-];
+interface NewsCategory {
+    id: string;
+    name: string;
+}
 
 const NewsPage: React.FC = () => {
-  const [newsItems, setNewsItems] = useState<NewsItem[]>(placeholderNews);
-  const [recommendedTools, setRecommendedTools] = useState<HotTool[]>(placeholderRecommendedTools);
-  // TODO: Add states for filters, search, pagination, topics
-
-  // useEffect(() => {
-  //   // Fetch actual news items, topics, recommended tools etc.
-  //   // Example:
-  //   // const fetchNews = async () => {
-  //   //   const response = await fetch('/api/news-page/news-items?page=1&limit=10'); // Adjust API endpoint
-  //   //   const data = await response.json();
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [recommendedTools, setRecommendedTools] = useState<HotTool[]>([]);
   const [popularTopics, setPopularTopics] = useState<{id: string, name: string}[]>([]);
-  // TODO: Add states for filters, search, pagination
+  const [categories, setCategories] = useState<NewsCategory[]>([]);
+
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchNewsPageData = async () => {
+      setIsLoading(true);
       try {
-        const response = await fetch('/api/news/page-data'); // Corrected API endpoint
+        const params = new URLSearchParams({
+            category: activeCategory,
+            q: searchTerm,
+            page: String(currentPage),
+            limit: '10', // Or make this configurable
+        });
+        const response = await fetch(`/api/news/page-data?${params.toString()}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -56,17 +56,34 @@ const NewsPage: React.FC = () => {
         setNewsItems(data.newsItems || []);
         setRecommendedTools(data.recommendedTools || []);
         setPopularTopics(data.popularTopics || []);
-        // TODO: set pagination data if available from API (currentPage, totalPages)
+        setCategories(data.categories || []); // Assuming API provides categories
+        setTotalPages(data.pagination?.totalPages || 1);
+        setCurrentPage(data.pagination?.currentPage || 1);
       } catch (error) {
         console.error("Failed to fetch news page data:", error);
-        // Set empty arrays or show error message in UI
         setNewsItems([]);
         setRecommendedTools([]);
         setPopularTopics([]);
+        setCategories([]);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchNewsPageData();
-  }, []);
+  }, [activeCategory, searchTerm, currentPage]);
+
+  const handleCategoryClick = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    setCurrentPage(1); // Reset to first page
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // The search term is already in state, useEffect will trigger the fetch
+    setCurrentPage(1); // Reset to first page for new search
+  };
+
+  const paginationBaseUrl = `/news?category=${activeCategory}&q=${encodeURIComponent(searchTerm)}`;
 
   return (
     <Layout>
@@ -78,17 +95,33 @@ const NewsPage: React.FC = () => {
 
           <div className="news-filters">
             <div className="filter-tabs">
-              <span className="filter-tab active">全部</span>
-              <span className="filter-tab">AI头条</span>
-              <span className="filter-tab">产品发布</span>
-              <span className="filter-tab">技术进展</span>
-              <span className="filter-tab">行业动态</span>
+              <span 
+                className={`filter-tab ${activeCategory === 'all' ? 'active' : ''}`}
+                onClick={() => handleCategoryClick('all')}
+              >
+                全部
+              </span>
+              {categories.map(cat => (
+                 <span 
+                    key={cat.id}
+                    className={`filter-tab ${activeCategory === cat.id ? 'active' : ''}`}
+                    onClick={() => handleCategoryClick(cat.id)}
+                  >
+                    {cat.name}
+                  </span>
+              ))}
             </div>
 
-            <div className="news-search">
-              <input type="text" placeholder="搜索资讯..." className="news-search-input" />
-              <button className="news-search-btn">🔍</button>
-            </div>
+            <form onSubmit={handleSearchSubmit} className="news-search">
+              <input 
+                type="text" 
+                placeholder="搜索资讯..." 
+                className="news-search-input" 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button type="submit" className="news-search-btn">🔍</button>
+            </form>
           </div>
         </div>
       </section>
@@ -96,48 +129,45 @@ const NewsPage: React.FC = () => {
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px', display: 'grid', gridTemplateColumns: '1fr 300px', gap: '40px' }}>
         {/* News List Section */}
         <section className="news-list-section" style={{ gridColumn: '1 / 2' }}>
-          {/* The parent div with grid styles is outside this section now */}
-          {/* <div className="section-container"> Removed, as max-width is on parent now */}
-            <div className="news-list">
-              {newsItems.map(item => (
-                <article className="news-card" key={item.id}>
-                  {item.image && (
-                    <div className="news-image">
-                      <img src={item.image} alt={item.title} className="news-img" />
+            {isLoading ? (
+                <p>Loading news...</p>
+            ) : newsItems.length > 0 ? (
+                <div className="news-list">
+                {newsItems.map(item => (
+                    <article className="news-card" key={item.id}>
+                    {item.image && (
+                        <div className="news-image">
+                        <img src={item.image} alt={item.title} className="news-img" />
+                        </div>
+                    )}
+                    <div className="news-content">
+                        <div className="news-meta">
+                        {item.category && <span className="news-category">{item.category}</span>}
+                        <time className="news-date">{new Date(item.date).toLocaleDateString()}</time>
+                        </div>
+                        <h2 className="news-title">{item.title}</h2>
+                        {item.excerpt && <p className="news-excerpt">{item.excerpt}</p>}
+                        <div className="news-actions">
+                        <button className="news-read-btn">阅读全文</button>
+                        <div className="news-stats">
+                            {item.views && <span className="news-views">👁 {item.views}</span>}
+                            {item.likes && <span className="news-likes">❤️ {item.likes}</span>}
+                        </div>
+                        </div>
                     </div>
-                  )}
-                  <div className="news-content">
-                    <div className="news-meta">
-                      {item.category && <span className="news-category">{item.category}</span>}
-                      <time className="news-date">{item.date}</time>
-                    </div>
-                    <h2 className="news-title">{item.title}</h2>
-                    {item.excerpt && <p className="news-excerpt">{item.excerpt}</p>}
-                    <div className="news-actions">
-                      <button className="news-read-btn">阅读全文</button>
-                      <div className="news-stats">
-                        {item.views && <span className="news-views">👁 {item.views}</span>}
-                        {item.likes && <span className="news-likes">❤️ {item.likes}</span>}
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+                    </article>
+                ))}
+                </div>
+            ) : (
+                <p>No news items found.</p>
+            )}
 
             {/* Pagination */}
-            <div className="pagination">
-              <button className="pagination-btn" disabled>上一页</button>
-              <div className="pagination-numbers">
-                <span className="pagination-number active">1</span>
-                <span className="pagination-number">2</span>
-                <span className="pagination-number">3</span>
-                <span className="pagination-dots">...</span>
-                <span className="pagination-number">10</span>
-              </div>
-              <button className="pagination-btn">下一页</button>
-            </div>
-          {/* </div> */}
+            <PaginationControls 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                baseUrl={paginationBaseUrl}
+            />
         </section>
 
         {/* News Sidebar */}
@@ -167,11 +197,6 @@ const NewsPage: React.FC = () => {
           </div>
         </aside>
       </div>
-      {/* Note: The <style> block from news.hbs should be moved to a global CSS file
-          or handled with CSS Modules / CSS-in-JS.
-          For example, its content can be added to public/css/style.css or a new public/css/news-page.css
-          and linked in client/index.html
-      */}
     </Layout>
   );
 };

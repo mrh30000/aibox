@@ -19,6 +19,6 @@
       "noFallthroughCasesInSwitch": false,
       "jsx": "react-jsx"
     },
-    "include": ["src", "client"]
+    "include": ["src", "client", "test"]
 }
   

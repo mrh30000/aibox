@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, SchemaTypes } from 'mongoose';
+import { Document } from 'mongoose';
 // import { Category } from './category.schema';
 
 @Schema({ timestamps: true })

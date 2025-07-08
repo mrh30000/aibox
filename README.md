@@ -51,7 +51,13 @@ $ npm run start:prod
 $ npm run test
 
 # e2e tests
+# To run all E2E tests:
 $ npm run test:e2e
+
+# To run E2E tests for a specific module (e.g., tools):
+$ npm run test:e2e -- test/tools.e2e-spec.ts
+# Replace 'test/tools.e2e-spec.ts' with the path to the desired E2E test file.
+# Note: E2E tests use MongoMemoryServer for an in-memory MongoDB instance, so no external MongoDB is required to run them.
 
 # test coverage
 $ npm run test:cov

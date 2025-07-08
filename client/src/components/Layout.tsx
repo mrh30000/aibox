@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface LayoutProps {
   children: ReactNode;
@@ -11,34 +12,51 @@ interface LayoutProps {
 // The Layout component will focus on the repeating structure within the <body>.
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      // Assuming a general site-wide search page exists at /search
+      navigate(`/mcp/search-results?q=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
   return (
     <>
       {/* Header, Nav, Main, Footer structure */}
       <header className="header">
         <nav className="nav">
           <div className="nav-container">
-              <a href="/" className="nav-logo">
+              <Link to="/" className="nav-logo">
                 <img src="https://ext.same-assets.com/155488376/1420179480.png" alt="AIbase" className="logo-img" />
-              </a>
+              </Link>
               <div className="nav-menu">
                 <div className="nav-item dropdown">
-                  <a href="/news" className="nav-link">AI资讯 <span className="dropdown-arrow">▼</span></a>
+                  <Link to="/news" className="nav-link">AI资讯 <span className="dropdown-arrow">▼</span></Link>
                 </div>
                 <div className="nav-item dropdown">
-                  <a href="/tools" className="nav-link">AI产品库 <span className="dropdown-arrow">▼</span></a>
+                  <Link to="/tools" className="nav-link">AI产品库 <span className="dropdown-arrow">▼</span></Link>
                 </div>
                 <div className="nav-item dropdown">
-                  <a href="/projects" className="nav-link">AI项目库 <span className="dropdown-arrow">▼</span></a>
+                  <Link to="/projects" className="nav-link">AI项目库 <span className="dropdown-arrow">▼</span></Link>
                 </div>
                 <div className="nav-item">
-                  <a href="/mcp" className="nav-link">MCP服务库</a>
+                  <Link to="/mcp" className="nav-link">MCP服务库</Link>
                 </div>
               </div>
               <div className="nav-actions">
-                <div className="search-box">
-                  <input type="text" placeholder="搜索..." className="search-input" />
-                  <button className="search-btn">🔍</button>
-                </div>
+                <form onSubmit={handleSearchSubmit} className="search-box">
+                  <input
+                    type="text"
+                    placeholder="搜索..."
+                    className="search-input"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <button type="submit" className="search-btn">🔍</button>
+                </form>
                 <div className="language-switch">
                   <span className="language-current">🌐 ZH ▼</span>
                 </div>

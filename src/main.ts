@@ -2,23 +2,24 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import * as express from 'express';
-import * as hbs from 'hbs'; // Re-import hbs
+import * as hbs from 'hbs';
 import { SeederService } from './database/seeder.service';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { AllExceptionsFilter } from './all-exceptions.filter'; // Re-enable
+import { AllExceptionsFilter } from './all-exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('Bootstrap');
 
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true,
-    whitelist: true,
-    forbidNonWhitelisted: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
-  app.useGlobalFilters(new AllExceptionsFilter()); // Re-enable global exception filter
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   // Configure Handlebars template engine
   app.useStaticAssets(join(process.cwd(), 'public'));
@@ -27,27 +28,29 @@ async function bootstrap() {
   hbs.registerPartials(join(process.cwd(), 'views', 'partials'));
 
   // Register Handlebars helpers
-  hbs.registerHelper('eq', (a, b) => a === b);
-  hbs.registerHelper('ne', (a, b) => a !== b);
-  hbs.registerHelper('json', (context) => JSON.stringify(context));
-  hbs.registerHelper('gt', (a, b) => a > b);
-  hbs.registerHelper('lt', (a, b) => a < b);
-  hbs.registerHelper('add', (a, b) => a + b);
-  hbs.registerHelper('subtract', (a, b) => a - b);
-  hbs.registerHelper('multiply', (a, b) => a * b);
-  hbs.registerHelper('divide', (a, b) => a / b);
-  hbs.registerHelper('mod', (a, b) => a % b);
-  hbs.registerHelper('and', (a, b) => a && b);
-  hbs.registerHelper('or', (a, b) => a || b);
-  hbs.registerHelper('not', (a) => !a);
-  hbs.registerHelper('ternary', (condition, trueValue, falseValue) =>
-    condition ? trueValue : falseValue,
+  hbs.registerHelper('eq', (a: any, b: any): boolean => a === b);
+  hbs.registerHelper('ne', (a: any, b: any): boolean => a !== b);
+  hbs.registerHelper('json', (context: any): string => JSON.stringify(context));
+  hbs.registerHelper('gt', (a: any, b: any): boolean => a > b);
+  hbs.registerHelper('lt', (a: any, b: any): boolean => a < b);
+  hbs.registerHelper('add', (a: any, b: any): number => a + b);
+  hbs.registerHelper('subtract', (a: any, b: any): number => a - b);
+  hbs.registerHelper('multiply', (a: any, b: any): number => a * b);
+  hbs.registerHelper('divide', (a: any, b: any): number => a / b);
+  hbs.registerHelper('mod', (a: any, b: any): number => a % b);
+  hbs.registerHelper('and', (a: any, b: any): boolean => a && b);
+  hbs.registerHelper('or', (a: any, b: any): boolean => a || b);
+  hbs.registerHelper('not', (a: any): boolean => !a);
+  hbs.registerHelper(
+    'ternary',
+    (condition: any, trueValue: any, falseValue: any): any =>
+      condition ? trueValue : falseValue,
   );
-  hbs.registerHelper('concat', (...args) => {
+  hbs.registerHelper('concat', (...args: string[]): string => {
     args.pop(); // Remove the options object
     return args.join('');
   });
-  hbs.registerHelper('formatDate', (dateString) => {
+  hbs.registerHelper('formatDate', (dateString: string | Date): string => {
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
       month: 'long',
@@ -55,23 +58,26 @@ async function bootstrap() {
     };
     return new Date(dateString).toLocaleDateString(undefined, options);
   });
-  hbs.registerHelper('truncate', (text, length) => {
+  hbs.registerHelper('truncate', (text: string, length: number): string => {
     if (text.length > length) {
       return text.substring(0, length) + '...';
     }
     return text;
   });
 
-  // Configure static assets serving using express.static
-  app.use(express.static(join(process.cwd(), 'public')));
-  app.use(express.static(join(process.cwd(), 'dist', 'client')));
+  // Configure static assets serving
+  app.useStaticAssets(join(process.cwd(), 'dist', 'client'));
 
   // Get SeederService instance from the application context
   const seederService = app.get(SeederService);
 
-  // Re-enable seeding
-  if (process.env.NODE_ENV === 'development' || process.env.SEED_DB === 'true') {
-    logger.log('Development environment detected or SEED_DB is true. Attempting to run seeders...');
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.SEED_DB === 'true'
+  ) {
+    logger.log(
+      'Development environment detected or SEED_DB is true. Attempting to run seeders...',
+    );
     try {
       await seederService.seedAll();
       logger.log('Seeding process completed successfully via bootstrap.');
@@ -79,16 +85,14 @@ async function bootstrap() {
       logger.error('Error during database seeding:', error);
     }
   } else {
-    logger.log('Skipping automatic seeding (NODE_ENV is not "development" or SEED_DB is not "true").');
+    logger.log(
+      'Skipping automatic seeding (NODE_ENV is not "development" or SEED_DB is not "true").',
+    );
   }
-
-  // IMPORTANT: Ensure NestJS routes are processed BEFORE the catch-all for React app
-  // The order of app.use and app.setGlobalPrefix matters.
-  // If you have controllers with specific routes, they should be handled by NestJS.
-  // The `app.use('*', ...)` should be the very last route handler.
 
   logger.log('Attempting to listen on port...');
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
   logger.log(`Application is running on: ${await app.getUrl()}`);
 }
-bootstrap();
+
+void bootstrap();

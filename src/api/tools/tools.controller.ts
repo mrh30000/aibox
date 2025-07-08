@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  Query,
+  NotFoundException,
+} from '@nestjs/common';
 import { ToolsService, CreateToolDto, UpdateToolDto } from './tools.service';
 import { ToolEntity } from '../../entities/tool.entity';
 
@@ -18,7 +28,12 @@ export class ToolsController {
     @Query('isFeatured') isFeatured?: string,
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
-  ): Promise<{ data: ToolEntity[], total: number, page: number, limit: number }> {
+  ): Promise<{
+    data: ToolEntity[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
     // More sophisticated filtering/sorting would be added in the service
     // For now, a simple findAll
     const pageNum = parseInt(page, 10);
@@ -29,14 +44,21 @@ export class ToolsController {
     // Basic manual filtering for demonstration if service doesn't support it yet
     let filteredTools = tools;
     if (category) {
-      filteredTools = filteredTools.filter(tool => tool.category === category);
+      filteredTools = filteredTools.filter(
+        (tool) => tool.category === category,
+      );
     }
     if (isFeatured !== undefined) {
-      filteredTools = filteredTools.filter(tool => tool.isFeatured === (isFeatured === 'true'));
+      filteredTools = filteredTools.filter(
+        (tool) => tool.isFeatured === (isFeatured === 'true'),
+      );
     }
 
     const total = filteredTools.length;
-    const paginatedTools = filteredTools.slice((pageNum - 1) * limitNum, pageNum * limitNum);
+    const paginatedTools = filteredTools.slice(
+      (pageNum - 1) * limitNum,
+      pageNum * limitNum,
+    );
 
     return { data: paginatedTools, total, page: pageNum, limit: limitNum };
   }
@@ -51,7 +73,10 @@ export class ToolsController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateToolDto: UpdateToolDto): Promise<ToolEntity> {
+  async update(
+    @Param('id') id: string,
+    @Body() updateToolDto: UpdateToolDto,
+  ): Promise<ToolEntity> {
     return this.toolsService.update(id, updateToolDto);
   }
 

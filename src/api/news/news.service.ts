@@ -5,17 +5,17 @@ import { News } from '../../schemas/news.schema';
 import { NewsEntity } from '../../entities/news.entity'; // For DTOs or type hints
 
 export class CreateNewsDto {
-    title: string;
-    excerpt: string;
-    content: string;
-    category: string; // Later, this could be Category ID
-    publishedAt: Date;
-    imageUrl?: string;
-    tags?: string[];
-    author?: string;
-    sourceUrl?: string;
-    isFeatured?: boolean;
-    views?: number;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string; // Later, this could be Category ID
+  publishedAt: Date;
+  imageUrl?: string;
+  tags?: string[];
+  author?: string;
+  sourceUrl?: string;
+  isFeatured?: boolean;
+  views?: number;
 }
 
 export class UpdateNewsDto extends CreateNewsDto {}
@@ -35,8 +35,13 @@ export class NewsItemDto {
 // DTO for the /api/news-page-data endpoint response
 export class NewsPageDataDto {
   newsItems: NewsItemDto[];
-  recommendedTools: { id: number; name: string; description: string; icon: string; }[];
-  popularTopics: { id: string; name: string; }[];
+  recommendedTools: {
+    id: number;
+    name: string;
+    description: string;
+    icon: string;
+  }[];
+  popularTopics: { id: string; name: string }[];
 }
 
 @Injectable()
@@ -61,7 +66,9 @@ export class NewsService {
   }
 
   async update(id: string, updateNewsDto: UpdateNewsDto): Promise<NewsEntity> {
-    const updatedNews = await this.newsModel.findByIdAndUpdate(id, updateNewsDto, { new: true }).exec();
+    const updatedNews = await this.newsModel
+      .findByIdAndUpdate(id, updateNewsDto, { new: true })
+      .exec();
     if (!updatedNews) {
       throw new NotFoundException(`News with ID "${id}" not found`);
     }

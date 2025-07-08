@@ -1,5 +1,19 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, NotFoundException } from '@nestjs/common';
-import { ProjectsService, CreateProjectDto, UpdateProjectDto } from './projects.service';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  Query,
+  NotFoundException,
+} from '@nestjs/common';
+import {
+  ProjectsService,
+  CreateProjectDto,
+  UpdateProjectDto,
+} from './projects.service';
 import { ProjectEntity } from '../../entities/project.entity';
 
 @Controller('api/projects') // Standardized API prefix
@@ -7,7 +21,9 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Post()
-  async create(@Body() createProjectDto: CreateProjectDto): Promise<ProjectEntity> {
+  async create(
+    @Body() createProjectDto: CreateProjectDto,
+  ): Promise<ProjectEntity> {
     return this.projectsService.create(createProjectDto);
   }
 
@@ -17,7 +33,12 @@ export class ProjectsController {
     @Query('isFeatured') isFeatured?: string,
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
-  ): Promise<{ data: ProjectEntity[], total: number, page: number, limit: number }> {
+  ): Promise<{
+    data: ProjectEntity[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
     const pageNum = parseInt(page, 10);
     const limitNum = parseInt(limit, 10);
 
@@ -26,14 +47,21 @@ export class ProjectsController {
 
     let filteredProjects = projects;
     if (category) {
-      filteredProjects = filteredProjects.filter(project => project.category === category);
+      filteredProjects = filteredProjects.filter(
+        (project) => project.category === category,
+      );
     }
-     if (isFeatured !== undefined) {
-      filteredProjects = filteredProjects.filter(project => project.isFeatured === (isFeatured === 'true'));
+    if (isFeatured !== undefined) {
+      filteredProjects = filteredProjects.filter(
+        (project) => project.isFeatured === (isFeatured === 'true'),
+      );
     }
 
     const total = filteredProjects.length;
-    const paginatedProjects = filteredProjects.slice((pageNum - 1) * limitNum, pageNum * limitNum);
+    const paginatedProjects = filteredProjects.slice(
+      (pageNum - 1) * limitNum,
+      pageNum * limitNum,
+    );
 
     return { data: paginatedProjects, total, page: pageNum, limit: limitNum };
   }
@@ -48,7 +76,10 @@ export class ProjectsController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto): Promise<ProjectEntity> {
+  async update(
+    @Param('id') id: string,
+    @Body() updateProjectDto: UpdateProjectDto,
+  ): Promise<ProjectEntity> {
     return this.projectsService.update(id, updateProjectDto);
   }
 

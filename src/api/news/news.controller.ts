@@ -1,6 +1,26 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, NotFoundException } from '@nestjs/common';
-import { NewsService, CreateNewsDto, UpdateNewsDto, NewsPageDataDto, NewsItemDto } from './news.service';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  Query,
+  NotFoundException,
+} from '@nestjs/common';
+import {
+  NewsService,
+  CreateNewsDto,
+  UpdateNewsDto,
+  NewsPageDataDto,
+  NewsItemDto,
+} from './news.service';
 import { NewsEntity } from '../../entities/news.entity';
+import { Types } from 'mongoose';
+
+// Helper to convert Mongoose ObjectId to string
+const getMongooseId = (id: Types.ObjectId | string): string => id.toString();
 
 @Controller('api/news') // Standardized API prefix for news-related endpoints
 export class NewsController {
@@ -8,7 +28,7 @@ export class NewsController {
 
   private mapNewsEntityToDto(entity: NewsEntity): NewsItemDto {
     return {
-      id: entity.id || entity._id.toString(), // Mongoose documents have .id virtual or ._id
+      id: getMongooseId((entity._id as Types.ObjectId) || entity.id),
       title: entity.title,
       date: entity.publishedAt.toISOString(), // Or any other preferred string format
       category: entity.category,
@@ -21,11 +41,23 @@ export class NewsController {
   @Get('page-data') // This will be accessible at GET /api/news/page-data
   async getNewsPageData(): Promise<NewsPageDataDto> {
     const newsEntities = await this.newsService.findAll();
-    const newsItems = newsEntities.map(entity => this.mapNewsEntityToDto(entity));
+    const newsItems = newsEntities.map((entity) =>
+      this.mapNewsEntityToDto(entity),
+    );
 
     const recommendedTools = [
-      { id: 1, name: 'ChatGPT', description: '智能对话助手', icon: 'https://ext.same-assets.com/155488376/946268843.jpeg'},
-      { id: 2, name: 'Claude 4', description: '高级AI助手', icon: 'https://ext.same-assets.com/155488376/614836080.jpeg'},
+      {
+        id: 1,
+        name: 'ChatGPT',
+        description: '智能对话助手',
+        icon: 'https://ext.same-assets.com/155488376/946268843.jpeg',
+      },
+      {
+        id: 2,
+        name: 'Claude 4',
+        description: '高级AI助手',
+        icon: 'https://ext.same-assets.com/155488376/614836080.jpeg',
+      },
     ];
     const popularTopics = [
       { id: 'ai-ethics', name: 'AI Ethics' },
@@ -52,7 +84,12 @@ export class NewsController {
     @Query('isFeatured') isFeatured?: string,
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
-  ): Promise<{ data: NewsEntity[], total: number, page: number, limit: number }> {
+  ): Promise<{
+    data: NewsEntity[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
     const pageNum = parseInt(page, 10);
     const limitNum = parseInt(limit, 10);
 
@@ -61,14 +98,19 @@ export class NewsController {
 
     let filteredNews = newsItems;
     if (category) {
-      filteredNews = filteredNews.filter(item => item.category === category);
+      filteredNews = filteredNews.filter((item) => item.category === category);
     }
     if (isFeatured !== undefined) {
-      filteredNews = filteredNews.filter(item => item.isFeatured === (isFeatured === 'true'));
+      filteredNews = filteredNews.filter(
+        (item) => item.isFeatured === (isFeatured === 'true'),
+      );
     }
 
     const total = filteredNews.length;
-    const paginatedNews = filteredNews.slice((pageNum - 1) * limitNum, pageNum * limitNum);
+    const paginatedNews = filteredNews.slice(
+      (pageNum - 1) * limitNum,
+      pageNum * limitNum,
+    );
 
     return { data: paginatedNews, total, page: pageNum, limit: limitNum };
   }
@@ -83,7 +125,10 @@ export class NewsController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateNewsDto: UpdateNewsDto): Promise<NewsEntity> {
+  async update(
+    @Param('id') id: string,
+    @Body() updateNewsDto: UpdateNewsDto,
+  ): Promise<NewsEntity> {
     return this.newsService.update(id, updateNewsDto);
   }
 

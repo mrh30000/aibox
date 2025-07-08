@@ -6,22 +6,26 @@ import { MCPTutorialEntity } from '../../entities/mcptutorial.entity';
 
 // DTOs for MCPTutorial
 export class CreateMCPTutorialDto {
-    title: string;
-    summary: string;
-    imageUrl?: string;
-    externalTutorialUrl?: string;
-    publishDate?: Date;
-    viewCount?: number;
-    tags?: string[];
+  title: string;
+  summary: string;
+  imageUrl?: string;
+  externalTutorialUrl?: string;
+  publishDate?: Date;
+  viewCount?: number;
+  tags?: string[];
 }
 
 export class UpdateMCPTutorialDto extends CreateMCPTutorialDto {}
 
 @Injectable()
 export class MCPTutorialsService {
-  constructor(@InjectModel(MCPTutorial.name) private mcptutorialModel: Model<MCPTutorial>) {}
+  constructor(
+    @InjectModel(MCPTutorial.name) private mcptutorialModel: Model<MCPTutorial>,
+  ) {}
 
-  async create(createMCPTutorialDto: CreateMCPTutorialDto): Promise<MCPTutorialEntity> {
+  async create(
+    createMCPTutorialDto: CreateMCPTutorialDto,
+  ): Promise<MCPTutorialEntity> {
     const newTutorial = new this.mcptutorialModel(createMCPTutorialDto);
     return newTutorial.save();
   }
@@ -37,7 +41,12 @@ export class MCPTutorialsService {
   async findAll(
     limit: number = 4, // Default to 4 as seen on the site for tutorials section
     page: number = 1,
-  ): Promise<{ data: MCPTutorialEntity[]; total: number; page: number; limit: number }> {
+  ): Promise<{
+    data: MCPTutorialEntity[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
     const skip = (page - 1) * limit;
     const data = await this.mcptutorialModel
       .find()
@@ -57,8 +66,13 @@ export class MCPTutorialsService {
     return tutorial;
   }
 
-  async update(id: string, updateMCPTutorialDto: UpdateMCPTutorialDto): Promise<MCPTutorialEntity> {
-    const updatedTutorial = await this.mcptutorialModel.findByIdAndUpdate(id, updateMCPTutorialDto, { new: true }).exec();
+  async update(
+    id: string,
+    updateMCPTutorialDto: UpdateMCPTutorialDto,
+  ): Promise<MCPTutorialEntity> {
+    const updatedTutorial = await this.mcptutorialModel
+      .findByIdAndUpdate(id, updateMCPTutorialDto, { new: true })
+      .exec();
     if (!updatedTutorial) {
       throw new NotFoundException(`MCP Tutorial with ID "${id}" not found`);
     }
@@ -66,7 +80,9 @@ export class MCPTutorialsService {
   }
 
   async remove(id: string): Promise<MCPTutorialEntity> {
-    const deletedTutorial = await this.mcptutorialModel.findByIdAndDelete(id).exec();
+    const deletedTutorial = await this.mcptutorialModel
+      .findByIdAndDelete(id)
+      .exec();
     if (!deletedTutorial) {
       throw new NotFoundException(`MCP Tutorial with ID "${id}" not found`);
     }

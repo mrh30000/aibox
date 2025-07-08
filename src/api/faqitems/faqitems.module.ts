@@ -6,7 +6,9 @@ import { FAQItem, FAQItemSchema } from '../../schemas/faqitem.schema';
 // No controller for now, service to be used by MCPPageController
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: FAQItem.name, schema: FAQItemSchema }])],
+  imports: [
+    MongooseModule.forFeature([{ name: FAQItem.name, schema: FAQItemSchema }]),
+  ],
   providers: [FAQItemsService],
   exports: [FAQItemsService],
 })

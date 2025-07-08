@@ -7,30 +7,34 @@ import { ToolEntity } from '../../entities/tool.entity'; // For DTOs or type hin
 // Basic DTOs for create and update operations
 // These can be expanded with validation later (e.g., class-validator)
 export class CreateToolDto {
-    name: string;
-    description: string;
-    category: string; // Later, this could be Category ID
-    websiteUrl: string;
-    language: 'zh' | 'en' | 'other';
-    iconUrl?: string;
-    imageUrl?: string;
-    longDescription?: string;
-    subCategory?: string;
-    tags?: string[];
-    rating?: number;
-    isFeatured?: boolean;
-    hasFreeTrial?: boolean;
-    isFreemium?: boolean;
-    pricingModel?: 'subscription' | 'one-time' | 'usage-based' | 'free' | 'contact_us';
-    pricingDetails?: string;
-    developer?: string;
-    useCases?: string[];
-    features?: string[];
-    publishedAt?: Date;
+  name: string;
+  description: string;
+  category: string; // Later, this could be Category ID
+  websiteUrl: string;
+  language: 'zh' | 'en' | 'other';
+  iconUrl?: string;
+  imageUrl?: string;
+  longDescription?: string;
+  subCategory?: string;
+  tags?: string[];
+  rating?: number;
+  isFeatured?: boolean;
+  hasFreeTrial?: boolean;
+  isFreemium?: boolean;
+  pricingModel?:
+    | 'subscription'
+    | 'one-time'
+    | 'usage-based'
+    | 'free'
+    | 'contact_us';
+  pricingDetails?: string;
+  developer?: string;
+  useCases?: string[];
+  features?: string[];
+  publishedAt?: Date;
 }
 
 export class UpdateToolDto extends CreateToolDto {}
-
 
 @Injectable()
 export class ToolsService {
@@ -44,7 +48,9 @@ export class ToolsService {
 
   async findAll(): Promise<ToolEntity[]> {
     const tools = await this.toolModel.find().exec();
-    return tools.map(tool => tool.toObject({ getters: true, virtuals: true }));
+    return tools.map((tool) =>
+      tool.toObject({ getters: true, virtuals: true }),
+    );
   }
 
   async findOne(id: string): Promise<ToolEntity> {
@@ -56,7 +62,9 @@ export class ToolsService {
   }
 
   async update(id: string, updateToolDto: UpdateToolDto): Promise<ToolEntity> {
-    const updatedTool = await this.toolModel.findByIdAndUpdate(id, updateToolDto, { new: true }).exec();
+    const updatedTool = await this.toolModel
+      .findByIdAndUpdate(id, updateToolDto, { new: true })
+      .exec();
     if (!updatedTool) {
       throw new NotFoundException(`Tool with ID "${id}" not found`);
     }

@@ -5,7 +5,11 @@ import { MCPServicesService } from './mcpservices.service';
 import { MCPServce, MCPServceSchema } from '../../schemas/mcpservice.schema'; // Corrected class name
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: MCPServce.name, schema: MCPServceSchema }])],
+  imports: [
+    MongooseModule.forFeature([
+      { name: MCPServce.name, schema: MCPServceSchema },
+    ]),
+  ],
   controllers: [MCPServicesController],
   providers: [MCPServicesService],
   exports: [MCPServicesService], // Export if needed by other modules (e.g. page rendering controllers)

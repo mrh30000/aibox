@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import McpHeader from '../components/mcp/McpHeader';
 import McpHero from '../components/mcp/McpHero';
@@ -176,7 +177,7 @@ const McpLandingPage: React.FC = () => {
             {categorySection.hasMore && (
               <div className="mcp-view-all-link">
                 {/* Use Link component for internal navigation */}
-                <a href={`/mcp/services/category/${categorySection.categorySlug}`}>查看全部 &gt;</a>
+                <Link to={`/mcp/tag/${categorySection.categorySlug}`}>查看全部 &gt;</Link>
               </div>
             )}
           </section>

@@ -7,7 +7,11 @@ import { InfoCard, InfoCardSchema } from '../../schemas/infocard.schema';
 // If direct API access to InfoCards is needed, a controller would be added.
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: InfoCard.name, schema: InfoCardSchema }])],
+  imports: [
+    MongooseModule.forFeature([
+      { name: InfoCard.name, schema: InfoCardSchema },
+    ]),
+  ],
   providers: [InfoCardsService],
   exports: [InfoCardsService], // Export service for injection into other modules (e.g., MCPPageController's module)
 })

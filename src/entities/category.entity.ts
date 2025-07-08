@@ -10,8 +10,8 @@ export interface CategoryEntity extends Document {
   description?: string; // Optional description for the category
 
   parentCategory?: string | CategoryEntity; // ID of the parent category, or populated CategoryEntity
-                           // This allows for hierarchical categories.
-                           // For top-level categories, this would be null or undefined.
+  // This allows for hierarchical categories.
+  // For top-level categories, this would be null or undefined.
 
   // Type of content this category applies to.
   // This helps in namespacing categories if "热门推荐" can exist for Tools, News, and Projects.

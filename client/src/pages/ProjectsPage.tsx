@@ -71,87 +71,79 @@ const placeholderProjectsByCategory: ProjectGroup[] = [
 
 
 const ProjectsPage: React.FC = () => {
-  const [stats, setStats] = useState<ProjectStatCard[]>(placeholderStats);
-  const [categoryTabs, setCategoryTabs] = useState<ProjectCategoryTab[]>(placeholderCategoryTabs);
-  const [projectGroups, setProjectGroups] = useState<ProjectGroup[]>(placeholderProjectsByCategory);
+  const [stats, setStats] = useState<ProjectStatCard[]>([]);
+  const [categoryTabs, setCategoryTabs] = useState<ProjectCategoryTab[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
 
   const [activeMainCategory, setActiveMainCategory] = useState<string>('all');
   const [sortOption, setSortOption] = useState<string>('stars');
-  const [timeFilter, setTimeFilter] = useState<string>('today'); // Default to 'today' or 'all'
+  const [timeFilter, setTimeFilter] = useState<string>('today');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [projects, setProjects] = useState<Project[]>([]); // Flat list of projects for current view
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 
-
-  const fetchProjectsData = async (page: number, loadMore = false) => {
-    if (loadMore) setIsLoadingMore(true);
-    else setIsLoading(true);
-
-    try {
-      const params = new URLSearchParams({
-        category: activeMainCategory,
-        sort: sortOption,
-        time: timeFilter,
-        page: String(page),
-        limit: '5' // Or make limit configurable
-      });
-      const response = await fetch(`/api/projects-page-data?${params.toString()}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-
-      setStats(data.stats || []);
-      setCategoryTabs(data.categoryTabs.map((tab:ProjectCategoryTab) => ({...tab, active: tab.id === activeMainCategory })) || placeholderCategoryTabs);
-
-      if (loadMore) {
-        setProjects(prevProjects => [...prevProjects, ...data.projects]);
-      } else {
-        setProjects(data.projects || []);
-      }
-      setTotalPages(data.totalPages || 1);
-      setCurrentPage(data.currentPage || 1);
-      // setProjectGroups might not be needed if API returns flat `projects` list based on filters
-      // If API returns grouped structure for 'all', then update projectGroups
-
-    } catch (error) {
-      console.error("Failed to fetch projects page data:", error);
-    } finally {
-      setIsLoading(false);
-      setIsLoadingMore(false);
-    }
-  };
-
   useEffect(() => {
-    fetchProjectsData(1); // Fetch initial data
-  }, [activeMainCategory, sortOption, timeFilter]);
+    const fetchProjectsData = async (page: number, loadMore = false) => {
+      if (loadMore) setIsLoadingMore(true);
+      else setIsLoading(true);
+
+      try {
+        const params = new URLSearchParams({
+          category: activeMainCategory,
+          sort: sortOption,
+          time: timeFilter,
+          page: String(page),
+          limit: '10' // Or make limit configurable
+        });
+        const response = await fetch(`/api/projects-page-data?${params.toString()}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        setStats(data.stats || []);
+        setCategoryTabs(data.categoryTabs.map((tab:ProjectCategoryTab) => ({...tab, active: tab.id === activeMainCategory })) || []);
+
+        if (loadMore) {
+          setProjects(prevProjects => [...prevProjects, ...data.projects]);
+        } else {
+          setProjects(data.projects || []);
+        }
+        setTotalPages(data.pagination?.totalPages || 1);
+        setCurrentPage(data.pagination?.currentPage || 1);
+
+      } catch (error) {
+        console.error("Failed to fetch projects page data:", error);
+      } finally {
+        setIsLoading(false);
+        setIsLoadingMore(false);
+      }
+    };
+
+    fetchProjectsData(currentPage, currentPage > 1);
+
+  }, [activeMainCategory, sortOption, timeFilter, currentPage]);
 
 
   const handleMainCategoryClick = (categoryId: string) => {
     setActiveMainCategory(categoryId);
     setCurrentPage(1); // Reset page
-    // fetchProjectsData(1) will be called by useEffect
   };
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOption(event.target.value);
     setCurrentPage(1); // Reset page
-    // fetchProjectsData(1) will be called by useEffect
   };
 
   const handleTimeFilterClick = (filter: string) => {
-    // Map UI display "今日" to "today" for API consistency if needed, or handle in API
-    const apiFilter = filter === '今日' ? 'today' : filter;
-    setTimeFilter(apiFilter);
+    setTimeFilter(filter);
     setCurrentPage(1); // Reset page
-    // fetchProjectsData(1) will be called by useEffect
   };
 
   const handleLoadMore = () => {
     if (currentPage < totalPages && !isLoadingMore) {
-      fetchProjectsData(currentPage + 1, true);
+      setCurrentPage(prevPage => prevPage + 1);
     }
   };
 
